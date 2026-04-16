@@ -76,7 +76,7 @@ body {
   }
   .week-col {
     border-left: none !important;
-    border-top: 1px solid #EEEDF0;
+    border-top: 1px solid #C8C6D4;
   }
 }
 
@@ -124,7 +124,7 @@ body {
 
 /* ─── WEEK COLUMN (desktop) ──────────────────────── */
 .week-col {
-  border-left: 1px solid #EEEDF0;
+  border-left: 1px solid #C8C6D4;
   padding: 28px 28px 24px;
   display: flex;
   flex-direction: column;
@@ -140,7 +140,7 @@ body {
   margin: 0 auto;
 }
 .section + .section {
-  border-top: 1px solid #EEEDF0;
+  border-top: 1px solid #C8C6D4;
 }
 .section-label {
   font-size: var(--text-label);
@@ -304,7 +304,7 @@ body {
   height: 34px;
   padding: 0 12px;
   background: transparent;
-  border: 1.5px solid #E0DFF0;
+  border: 1.5px solid #C8C6D4;
   border-radius: var(--radius-sm);
   font-family: var(--font-main);
   font-size: 12px;
@@ -342,7 +342,7 @@ body {
   cursor: pointer;
   padding: 3px 8px;
   border-radius: 4px;
-  border: 1.5px solid #E0DFF0;
+  border: 1.5px solid #C8C6D4;
   color: var(--color-text-soft);
   background: #fff;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
@@ -355,7 +355,7 @@ body {
 .week-list {
   display: flex;
   flex-direction: column;
-  border: 1px solid #EEEDF0;
+  border: 1px solid #C8C6D4;
   border-radius: var(--radius-lg);
   overflow-y: auto;
   overflow-x: hidden;
@@ -379,7 +379,7 @@ body {
   align-items: flex-start;
   min-height: 64px;
   padding: 14px 20px 16px;
-  border-bottom: 1px solid #EEEDF0;
+  border-bottom: 1px solid #C8C6D4;
   gap: var(--space-sm);
   color: var(--color-text);
   cursor: default;
@@ -398,7 +398,7 @@ body {
   display: none;
   padding: 12px 20px 16px 20px;
   background: #FAFAF8;
-  border-bottom: 1px solid #EEEDF0;
+  border-bottom: 1px solid #C8C6D4;
   gap: var(--space-md);
   flex-direction: column;
 }
@@ -408,7 +408,7 @@ body {
   flex-direction: column;
   gap: 4px;
   padding-bottom: var(--space-sm);
-  border-bottom: 1px solid #EEEDF0;
+  border-bottom: 1px solid #C8C6D4;
 }
 .week-detail-event:last-of-type { border-bottom: none; padding-bottom: 0; }
 .week-detail-name { font-size: var(--text-body); font-weight: 700; }
@@ -588,7 +588,7 @@ body {
 
 /* ─── RESOURCE LINKS ─────────────────────────────── */
 .resource-list {
-  border: 1px solid #EEEDF0;
+  border: 1px solid #C8C6D4;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #fff;
@@ -599,7 +599,7 @@ body {
   justify-content: space-between;
   min-height: 60px;
   padding: 14px 20px;
-  border-bottom: 1px solid #EEEDF0;
+  border-bottom: 1px solid #C8C6D4;
   text-decoration: none;
   color: var(--color-text);
   gap: var(--space-md);
@@ -645,7 +645,7 @@ body {
 }
 .form-input {
   height: 52px;
-  border: 2px solid #E5E4F0;
+  border: 2px solid #C8C6D4;
   border-radius: var(--radius-md);
   padding: 0 16px;
   font-family: var(--font-main);
@@ -710,7 +710,7 @@ body {
 }
 .subscribe-share-block {
   background: var(--color-bg);
-  border: 1.5px solid #E0DFF0;
+  border: 1.5px solid #C8C6D4;
   border-radius: var(--radius-md);
   padding: 16px;
   margin-bottom: 4px;
@@ -754,7 +754,7 @@ body {
 .btn-share.facebook { background: #1877F2; color: #fff; }
 .btn-share.sms      { background: #34C759; color: #fff; }
 .btn-share.email    { background: var(--color-purple); color: #fff; }
-.btn-share.copy     { background: var(--color-bg-surface); color: var(--color-text); border: 1.5px solid #E0DFF0; }
+.btn-share.copy     { background: var(--color-bg-surface); color: var(--color-text); border: 1.5px solid #C8C6D4; }
 .email-note {
   font-size: 11px;
   color: var(--color-text-soft);
@@ -790,7 +790,7 @@ body {
   gap: var(--space-sm);
 }
 .form-textarea {
-  border: 2px solid #E5E4F0;
+  border: 2px solid #C8C6D4;
   border-radius: var(--radius-md);
   padding: 14px 16px;
   font-family: var(--font-main);
@@ -960,7 +960,7 @@ body {
   padding: 20px 20px 16px;
   background: #fff;
   border-radius: var(--radius-md);
-  border: 1px solid #EEEDF0;
+  border: 1px solid #C8C6D4;
   border-left: 3px solid var(--color-purple);
   text-decoration: none;
   color: var(--color-text);
@@ -1035,7 +1035,7 @@ body {
   background: #fff;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid #EEEDF0;
+  border: 1px solid #C8C6D4;
   text-decoration: none;
   color: var(--color-text);
   display: flex;

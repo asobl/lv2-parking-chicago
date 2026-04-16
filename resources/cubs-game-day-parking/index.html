@@ -44,7 +44,7 @@
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
     @media (max-width: 480px) { .nav-links { display: none; } }
     .article-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad); }
-    .article-hero { padding: 48px 0 40px; border-bottom: 1px solid #EEEEF4; }
+    .article-hero { padding: 48px 0 40px; border-bottom: 1px solid #C8C6D4; }
     .article-badge { display: inline-block; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text); background: var(--color-yellow); padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 16px; }
     .article-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.02em; }
     .article-intro { font-size: 19px; color: var(--color-text-soft); line-height: 1.6; max-width: 560px; }
@@ -67,19 +67,19 @@
     .data-table-wrap { overflow-x: auto; margin: 24px 0; }
     .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
     .data-table th { background: var(--color-text); color: #fff; font-weight: 700; text-align: left; padding: 12px 16px; font-size: var(--text-label); text-transform: uppercase; letter-spacing: 0.06em; }
-    .data-table td { padding: 12px 16px; border-bottom: 1px solid #EEEEF4; vertical-align: top; }
+    .data-table td { padding: 12px 16px; border-bottom: 1px solid #C8C6D4; vertical-align: top; }
     .data-table tr:last-child td { border-bottom: none; }
     .data-table tr:nth-child(even) td { background: var(--color-bg-surface); }
 
     /* OPTION CARDS */
     .option-cards { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
     .option-card {
-      border-radius: var(--radius-lg); border: 1px solid #EEEEF4; overflow: hidden;
+      border-radius: var(--radius-lg); border: 1px solid #C8C6D4; overflow: hidden;
     }
     .option-card-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 20px 24px; background: var(--color-bg-surface);
-      border-bottom: 1px solid #EEEEF4; gap: 16px;
+      border-bottom: 1px solid #C8C6D4; gap: 16px;
     }
     .option-rank {
       font-size: 32px; font-weight: 900; color: var(--color-purple); line-height: 1; min-width: 40px;
@@ -118,15 +118,15 @@
     .lv2-block p:last-child { margin-bottom: 0; }
     .lv2-block a { color: var(--color-yellow); }
 
-    .related-section { border-top: 1px solid #EEEEF4; padding: 40px 0; }
+    .related-section { border-top: 1px solid #C8C6D4; padding: 40px 0; }
     .related-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
     .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-    .related-card { display: block; background: var(--color-bg-surface); border-radius: var(--radius-md); padding: 20px; text-decoration: none; color: var(--color-text); border: 1px solid #EEEEF4; transition: border-color 0.15s, box-shadow 0.15s; }
-    .related-card:hover { border-color: var(--color-purple); box-shadow: 0 2px 12px rgba(107,100,212,0.1); }
+    .related-card { display: block; background: #fff; border-radius: var(--radius-md); padding: 20px 20px 16px; text-decoration: none; color: var(--color-text); border: 1px solid #C8C6D4; border-left: 3px solid var(--color-purple); transition: box-shadow 0.15s; } .related-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); } .related-card.rc-map { border-left-color: #5B9EA0; } .related-card.rc-map .related-card-badge { color: #3d7d7f; } .related-card.rc-gameday { border-left-color: #c9ab00; } .related-card.rc-gameday .related-card-badge { color: #9a7f00; } .related-card.rc-foia { border-left-color: var(--color-purple); } .related-card.rc-foia .related-card-badge { color: var(--color-purple); } .related-card.rc-explorer { border-left-color: #5558cc; } .related-card.rc-explorer .related-card-badge { color: #5558cc; } .related-card.rc-bikes { border-left-color: #2e9e5a; } .related-card.rc-bikes .related-card-badge { color: #2e9e5a; } .related-card.rc-rules { border-left-color: var(--color-orange); } .related-card.rc-rules .related-card-badge { color: #b85a00; }
+    
     .related-card-badge { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-purple); margin-bottom: 8px; }
     .related-card-title { font-size: var(--text-body); font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
     .related-card-desc { font-size: var(--text-small); color: var(--color-text-soft); line-height: 1.5; }
-    .email-section { background: var(--color-bg-warm); border-radius: var(--radius-lg); padding: 32px 28px; margin: 40px 0; border: 1px solid #EDE9D0; }
+    .email-section { background: #fff; border-radius: var(--radius-lg); padding: 32px 28px; margin: 40px 0; border: 1px solid #C8C6D4; }
     .email-heading { font-size: var(--text-h2); font-weight: 900; margin-bottom: 8px; }
     .email-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 20px; line-height: 1.5; }
     .email-form { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -339,22 +339,22 @@
       <div class="related-section">
         <div class="related-label">Related Resources</div>
         <div class="related-grid">
-          <a href="/resources/lv2-parking-rules/" class="related-card">
+          <a href="/resources/lv2-parking-rules/" class="related-card rc-rules">
             <div class="related-card-badge">Rules</div>
             <div class="related-card-title">LV2 Parking Rules Explained</div>
             <div class="related-card-desc">What LV2 is, when it activates, and what happens if you get ticketed.</div>
           </a>
-          <a href="/resources/wrigley-field-parking-guide/" class="related-card">
+          <a href="/resources/wrigley-field-parking-guide/" class="related-card rc-gameday">
             <div class="related-card-badge">Guide</div>
             <div class="related-card-title">Full Wrigley Field Parking Guide</div>
             <div class="related-card-desc">Every parking option near Wrigley ranked by cost, distance, and convenience.</div>
           </a>
-          <a href="/resources/wrigley-field-parking-shuttle/" class="related-card">
+          <a href="/resources/wrigley-field-parking-shuttle/" class="related-card rc-gameday">
             <div class="related-card-badge">Shuttle</div>
             <div class="related-card-title">Free Cubs Parking Shuttle Guide</div>
             <div class="related-card-desc">Location, timing, and when the shuttle makes more sense than driving directly.</div>
           </a>
-          <a href="/resources/lv2-parking-map/" class="related-card">
+          <a href="/resources/lv2-parking-map/" class="related-card rc-map">
             <div class="related-card-badge">Map</div>
             <div class="related-card-title">LV2 Zone Map</div>
             <div class="related-card-desc">Check if your address is in the zone. Interactive map with printable download.</div>
