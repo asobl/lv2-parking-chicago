@@ -3,6 +3,23 @@
 const DATA_TODAY        = '/data/today.json';
 const DATA_WEEK         = '/data/week.json';
 const SPOTHERO_URL      = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park';
+
+// ── Affiliate config ──────────────────────────────────────────────────────────
+// SeatGeek: apply at impact.com → search "SeatGeek". Replace SEATGEEK_AFF_ID below.
+// Ticketmaster: apply at flexoffers.com (already verified). Replace TM_AFF_ID below.
+const SEATGEEK_AFF_ID   = '';   // e.g. '12345'  — Impact affiliate ID
+const TM_AFF_ID         = '';   // e.g. '67890'  — FlexOffers publisher ID
+
+function ticketUrl(ev) {
+  const q = encodeURIComponent(ev.name || 'Wrigley Field');
+  if (ev.type === 'game') {
+    const base = 'https://seatgeek.com/chicago-cubs-tickets';
+    return SEATGEEK_AFF_ID ? `${base}?aid=${SEATGEEK_AFF_ID}&utm_source=lv2park` : base;
+  }
+  // Concert / comedy — Ticketmaster deep search
+  const base = `https://www.ticketmaster.com/search?q=${q}`;
+  return TM_AFF_ID ? `${base}&track=${TM_AFF_ID}&utm_source=lv2park` : base;
+}
 const WORKER_URL        = 'https://lv2park-email.adam-945.workers.dev';
 const TURNSTILE_SITE_KEY = '0x4AAAAAAC-Mur2UjOBs1zDs';
 
@@ -258,11 +275,21 @@ function buildDetailPanel(day) {
       </div>`;
   }
 
+  // Ticket button — one per unique event type
+  const ticketLinks = day.events
+    .filter(ev => ev.changed !== 'cancelled')
+    .map(ev => {
+      const label = ev.type === 'game' ? '🎟 Buy tickets' : '🎟 Get tickets';
+      const url   = ticketUrl(ev);
+      return `<a class="week-detail-link tickets" href="${url}" target="_blank" rel="noopener">${label}</a>`;
+    })
+    .filter((v, i, a) => a.indexOf(v) === i); // dedupe identical links
+
   const parkingLink = day.lv2Active
     ? `<a class="week-detail-link" href="${SPOTHERO_URL}" target="_blank" rel="noopener">🅿 Book parking</a>`
     : '';
 
-  html += `<div class="week-detail-actions">${parkingLink}</div>`;
+  html += `<div class="week-detail-actions">${ticketLinks.join('')}${parkingLink}</div>`;
   return html;
 }
 

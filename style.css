@@ -431,6 +431,20 @@ body {
   padding: 6px 12px;
   border: 1.5px solid var(--color-purple);
   border-radius: var(--radius-sm);
+  transition: background 0.12s, color 0.12s;
+}
+.week-detail-link:hover {
+  background: var(--color-purple);
+  color: #fff;
+}
+.week-detail-link.tickets {
+  background: var(--color-purple);
+  color: #fff;
+  border-color: var(--color-purple);
+}
+.week-detail-link.tickets:hover {
+  background: #4a4aaa;
+  border-color: #4a4aaa;
 }
 
 /* Event type icon */
@@ -936,30 +950,36 @@ body {
 }
 .resource-card:hover::after { opacity: 1; transform: translateX(3px); }
 
-/* Category color variants */
-.resource-card.rc-map      { background: #EDF6F6; border-left-color: #5B9EA0; }
-.resource-card.rc-map      .resource-card-label { color: #3d7d7f; }
+/* Category color variants — white bg, colored left border + label only
+   Teal   = location / maps / zone
+   Yellow = game day / events
+   Purple = data / FOIA / analysis
+   Indigo = interactive tools
+   Green  = getting around
+   Orange = rules / regulations */
+.resource-card.rc-map      { border-left-color: #5B9EA0; }
+.resource-card.rc-map      .resource-card-label,
 .resource-card.rc-map::after { color: #5B9EA0; }
 
-.resource-card.rc-gameday  { background: #FEFBE8; border-left-color: #c9ab00; }
-.resource-card.rc-gameday  .resource-card-label { color: #9a7f00; }
-.resource-card.rc-gameday::after { color: #c9ab00; }
+.resource-card.rc-gameday  { border-left-color: #c9ab00; }
+.resource-card.rc-gameday  .resource-card-label,
+.resource-card.rc-gameday::after { color: #9a7f00; }
 
-.resource-card.rc-foia     { background: #F0EFFC; border-left-color: var(--color-purple); }
-.resource-card.rc-foia     .resource-card-label { color: var(--color-purple); }
+.resource-card.rc-foia     { border-left-color: var(--color-purple); }
+.resource-card.rc-foia     .resource-card-label,
 .resource-card.rc-foia::after { color: var(--color-purple); }
 
-.resource-card.rc-explorer { background: #EEF0FB; border-left-color: #5558cc; }
-.resource-card.rc-explorer .resource-card-label { color: #5558cc; }
+.resource-card.rc-explorer { border-left-color: #5558cc; }
+.resource-card.rc-explorer .resource-card-label,
 .resource-card.rc-explorer::after { color: #5558cc; }
 
-.resource-card.rc-bikes    { background: #EDF7F0; border-left-color: #2e9e5a; }
-.resource-card.rc-bikes    .resource-card-label { color: #2e9e5a; }
+.resource-card.rc-bikes    { border-left-color: #2e9e5a; }
+.resource-card.rc-bikes    .resource-card-label,
 .resource-card.rc-bikes::after { color: #2e9e5a; }
 
-.resource-card.rc-rules    { background: #FEF3E8; border-left-color: var(--color-orange); }
-.resource-card.rc-rules    .resource-card-label { color: #b85a00; }
-.resource-card.rc-rules::after { color: var(--color-orange); }
+.resource-card.rc-rules    { border-left-color: var(--color-orange); }
+.resource-card.rc-rules    .resource-card-label,
+.resource-card.rc-rules::after { color: #b85a00; }
 
 .resource-card-label {
   font-size: 11px;
