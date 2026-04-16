@@ -206,44 +206,71 @@
   </div>
 
   <script>
-    var map = L.map('print-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6560], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+    var map = L.map('print-map', {
+      center: [41.9490, -87.6660],
+      zoom: 14,
+      zoomControl: true,
+      scrollWheelZoom: false
+    });
+
+    // CartoDB light tiles — same as today page, much cleaner for print
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 19
     }).addTo(map);
 
-    // Wrigley Field
+    // Wrigley Field marker — same as today page
     var wrigleyIcon = L.divIcon({
-      html: '<div style="background:#5B9EA0;color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;white-space:nowrap;font-family:Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);">Wrigley Field</div>',
-      className: '', iconAnchor: [40, 20]
+      html: '<div style="position:relative;width:0;height:0;">'
+          + '<div style="position:absolute;bottom:9px;left:0;transform:translateX(-50%);background:#1A1A2E;color:#F5E030;font-size:12px;font-weight:900;padding:6px 12px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.5);border:2px solid #F5E030;letter-spacing:.05em;">&#127967; WRIGLEY FIELD</div>'
+          + '<div style="position:absolute;bottom:0;left:0;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1A1A2E;"></div>'
+          + '</div>',
+      className: '', iconSize: [0, 0], iconAnchor: [0, 0]
     });
-    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map);
+    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
+      .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
 
-    // LV2 zone polygon
+    // LV2 zone polygon — correct coordinates (Chicago Municipal Code 9-68-023)
     L.polygon([
-      [41.9580, -87.6700],
-      [41.9580, -87.6480],
-      [41.9360, -87.6480],
-      [41.9360, -87.6700]
+      [41.9536, -87.6749],  // NW: Irving Park & Ravenswood
+      [41.9536, -87.6690],  // NE: Irving Park & Ashland
+      [41.9435, -87.6690],  // SE: Roscoe & Ashland
+      [41.9435, -87.6749],  // SW: Roscoe & Ravenswood
     ], {
-      color: '#6B64D4', weight: 2.5, opacity: 0.9,
-      fillColor: '#6B64D4', fillOpacity: 0.12
-    }).addTo(map).bindTooltip('LV2 Permit Zone', { permanent: true, direction: 'center',
-      className: 'leaflet-tooltip' });
+      color: '#6B64D4', weight: 3, opacity: 0.85,
+      fillColor: '#6B64D4', fillOpacity: 0.12,
+      dashArray: '6 4'
+    }).addTo(map)
+      .bindTooltip('LV2 Zone', { permanent: true, direction: 'center' });
 
-    // High-ticket street markers
-    [
-      { name: 'Sheffield Ave', lat: 41.950, lon: -87.6490, risk: 'high' },
-      { name: 'Kenmore Ave',   lat: 41.948, lon: -87.6540, risk: 'high' },
-      { name: 'Clifton Ave',   lat: 41.946, lon: -87.6560, risk: 'high' },
-      { name: 'Seminary Ave',  lat: 41.947, lon: -87.6580, risk: 'med'  },
-    ].forEach(function(s) {
-      var color = s.risk === 'high' ? '#E84040' : '#F0A030';
-      var icon = L.divIcon({
-        html: '<div style="background:' + color + ';color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;white-space:nowrap;font-family:Inter,sans-serif;">' + s.name + '</div>',
-        className: '', iconAnchor: [30, 10]
-      });
-      L.marker([s.lat, s.lon], { icon: icon }).addTo(map);
-    });
+    // FOIA street heatmap — same GeoJSON as today page
+    function ticketColor(t) {
+      if (t > 1500) return '#E84040';
+      if (t > 800)  return '#F0A030';
+      if (t > 300)  return '#F5E030';
+      return '#5B9EA0';
+    }
+
+    fetch('/data/lv2-streets.geojson')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(geojson) {
+        if (!geojson) return;
+        L.geoJSON(geojson, {
+          style: function(f) {
+            return {
+              color: ticketColor(f.properties.tickets),
+              weight: f.properties.tickets > 1500 ? 6 : f.properties.tickets > 900 ? 5 : 4,
+              opacity: 0.9
+            };
+          },
+          onEachFeature: function(f, layer) {
+            if (f.properties) layer.bindPopup(
+              '<strong>' + f.properties.street + '</strong><br>~' + f.properties.tickets.toLocaleString() + ' LV2 tickets (2018–2023)'
+            );
+          }
+        }).addTo(map);
+      })
+      .catch(function() {});
   </script>
 </body>
 </html>

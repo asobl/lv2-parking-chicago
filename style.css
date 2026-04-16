@@ -1133,3 +1133,9 @@ footer {
   font-size: 12px;
   color: #505068;
 }
+
+/* Resource page email + checker forms — mobile stack */
+@media (max-width: 540px) {
+  .email-btn, .checker-btn { width: 100%; justify-content: center; }
+  .email-input, .checker-input { min-width: 0; }
+}
