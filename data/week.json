@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-16T05:05:01.660656+00:00",
+  "updated": "2026-04-16T11:25:30.696627+00:00",
   "source": "mlb",
   "days": [
     {
@@ -20,9 +20,7 @@
         {
           "name": "New York Mets vs. Cubs",
           "time": "1:20 PM",
-          "type": "game",
-          "changed": "time",
-          "prevTime": "4:05 PM"
+          "type": "game"
         }
       ]
     },
@@ -191,6 +189,12 @@
           "name": "Arizona Diamondbacks vs. Cubs",
           "time": "1:20 PM",
           "type": "game"
+        },
+        {
+          "name": "Chicago HBCU Baseball Classic",
+          "time": "TBD",
+          "type": "sports",
+          "changed": "new"
         }
       ]
     },
@@ -315,34 +319,58 @@
     {
       "date": "2026-05-14",
       "dayLabel": "Thu May 14",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Upper Deck Golf",
+          "time": "TBD",
+          "type": "sports"
+        }
+      ]
     },
     {
       "date": "2026-05-15",
       "dayLabel": "Fri May 15",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Upper Deck Golf",
+          "time": "TBD",
+          "type": "sports"
+        }
+      ]
     },
     {
       "date": "2026-05-16",
       "dayLabel": "Sat May 16",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Upper Deck Golf",
+          "time": "TBD",
+          "type": "sports"
+        }
+      ]
     },
     {
       "date": "2026-05-17",
       "dayLabel": "Sun May 17",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Mayday Parade (Gallagher Way)",
+          "time": "6:45 PM",
+          "type": "concert"
+        }
+      ]
     },
     {
       "date": "2026-05-18",
@@ -638,10 +666,16 @@
     {
       "date": "2026-06-13",
       "dayLabel": "Sat Jun 13",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "OK Go (Gallagher Way)",
+          "time": "6:45 PM",
+          "type": "concert"
+        }
+      ]
     },
     {
       "date": "2026-06-14",
@@ -778,10 +812,16 @@
     {
       "date": "2026-06-26",
       "dayLabel": "Fri Jun 26",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Guster (Gallagher Way)",
+          "time": "6:45 PM",
+          "type": "concert"
+        }
+      ]
     },
     {
       "date": "2026-06-27",
@@ -1425,10 +1465,16 @@
     {
       "date": "2026-08-23",
       "dayLabel": "Sun Aug 23",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Golf Day with First Tee Greater Chicago (Gallagher Way)",
+          "time": "10:00 AM",
+          "type": "other"
+        }
+      ]
     },
     {
       "date": "2026-08-24",
@@ -1793,18 +1839,30 @@
     {
       "date": "2026-09-26",
       "dayLabel": "Sat Sep 26",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "WingOut Chicago (Gallagher Way)",
+          "time": "TBD",
+          "type": "other"
+        }
+      ]
     },
     {
       "date": "2026-09-27",
       "dayLabel": "Sun Sep 27",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "WingOut Chicago (Gallagher Way)",
+          "time": "TBD",
+          "type": "other"
+        }
+      ]
     },
     {
       "date": "2026-09-28",
