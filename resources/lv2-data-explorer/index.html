@@ -27,30 +27,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    :root {
-      --color-bg: #F5F4F0; --color-bg-warm: #FFFBF0; --color-bg-surface: #F5F4F0;
-      --color-text: #1A1A2E; --color-text-soft: #6B6B80; --color-yellow: #F5E030;
-      --color-purple: #6B64D4; --color-green: #5B9EA0; --color-orange: #F0A030;
-      --color-red: #E84040; --font-main: 'Inter', system-ui, sans-serif;
-      --text-h1: 36px; --text-h2: 24px; --text-h3: 20px; --text-body: 17px;
-      --text-small: 14px; --text-label: 12px; --radius-sm: 8px; --radius-md: 16px;
-      --radius-lg: 24px; --content-max: 860px; --content-pad: 20px;
-    }
-    body { font-family: var(--font-main); background: var(--color-bg-surface); color: var(--color-text); font-size: var(--text-body); line-height: 1.6; }
-
-    /* NAV */
-    .site-nav { background: var(--color-text); padding: 0 var(--content-pad); display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
-    .site-logo { font-size: 18px; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: 0.04em; }
-    .site-logo span { color: var(--color-yellow); }
-    .nav-links { display: flex; gap: 4px; }
-    .nav-link { color: #a0a0b8; text-decoration: none; font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; border-radius: var(--radius-sm); transition: color 0.15s, background 0.15s; }
-    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
-    @media (max-width: 540px) { .nav-links { display: none; } }
 
     /* PAGE SHELL */
     .page-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad) 80px; }
-
-    /* HERO */
     .page-hero { padding: 48px 0 40px; }
     .hero-badge { display: inline-block; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--color-red); padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 16px; }
     .hero-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; margin-bottom: 12px; letter-spacing: -0.02em; }
@@ -215,7 +194,7 @@
         </div>
 
         <div id="ticket-map" style="height:500px;border-radius:12px;overflow:hidden;border:1px solid #eeedf0;"></div>
-        <p class="chart-annotation" style="margin-top:10px;">Positions are block-accurate using the Chicago street grid. 2018–2023 FOIA dataset. 100% of tickets geocoded.</p>
+        <p class="chart-annotation" style="margin-top:10px;">Positions are block-accurate using the Chicago street grid. 2018–2023 FOIA dataset. Note: this dataset covers the western LV2 zone (Ashland corridor and west). The stadium-adjacent streets (Sheffield, Kenmore, Clifton) are not in this FOIA response — a second request is pending.</p>
       </div>
 
       <!-- STREET LOOKUP -->
@@ -866,11 +845,12 @@
       maxZoom: 19
     }).addTo(map);
 
-    // Wrigley Field landmark label
+    // Wrigley Field landmark label — centered above the stadium point
     var wrigleyIcon = L.divIcon({
       className: '',
-      html: '<div style="background:#1A1A2E;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.35);">&#9918; Wrigley Field</div>',
-      iconAnchor: [56, 10]
+      html: '<div style="background:#1A1A2E;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.35);text-align:center;">Wrigley Field</div>',
+      iconSize: [90, 22],
+      iconAnchor: [45, 22]  // center-bottom anchored to the stadium point
     });
     L.marker([41.9484, -87.6553], { icon: wrigleyIcon, interactive: false }).addTo(map);
 
