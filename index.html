@@ -57,8 +57,8 @@
 <body>
 
   <!-- ADD TO HOME SCREEN BANNER (iOS Safari + Android Chrome, dismissible) -->
-  <div id="a2hs-banner" style="display:none;width:100%;box-sizing:border-box;background:#1A1A2E;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;align-items:center;justify-content:space-between;gap:12px;">
-    <span id="a2hs-text">📱 Tap <strong style="color:#F5E030;">Share</strong> → "Add to Home Screen"</span>
+  <div id="a2hs-banner" style="display:none;width:100%;box-sizing:border-box;background:#2E2E4A;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <button onclick="iosShare()" style="background:none;border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;padding:0;text-align:left;">📱 Add <strong style="color:#F5E030;">LV2 Park</strong> to your home screen</button>
     <button id="a2hs-btn" onclick="dismissA2hs()" style="background:none;border:none;color:#9090a8;font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;">×</button>
   </div>
   <script>
@@ -67,6 +67,11 @@
       document.getElementById('a2hs-banner').style.display = 'none';
       localStorage.setItem('a2hs_dismissed', '1');
     }
+    function iosShare() {
+      if (navigator.share) {
+        navigator.share({ title: 'LV2 Park', url: window.location.href });
+      }
+    }
     (function(){
       if (localStorage.getItem('a2hs_dismissed')) return;
       var isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
@@ -74,21 +79,17 @@
 
       var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       if (isIOS) {
-        // iOS Safari: manual instructions
         document.getElementById('a2hs-banner').style.display = 'flex';
         return;
       }
 
-      // Android Chrome: listen for beforeinstallprompt (fires when site is installable)
+      // Android Chrome: native install prompt
       window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         _deferredPrompt = e;
         if (localStorage.getItem('a2hs_dismissed')) return;
-        document.getElementById('a2hs-text').innerHTML = '📱 Add LV2 Park to your home screen for one-tap access';
-        var btn = document.getElementById('a2hs-btn');
-        // Replace × with Install button + dismiss
         document.getElementById('a2hs-banner').innerHTML =
-          '<span>📱 Add <strong style="color:#F5E030;">LV2 Park</strong> to your home screen for one-tap access</span>' +
+          '<span>📱 Add <strong style="color:#F5E030;">LV2 Park</strong> to your home screen</span>' +
           '<div style="display:flex;gap:8px;flex-shrink:0;">' +
             '<button onclick="installA2hs()" style="background:#F5E030;color:#1A1A2E;border:none;border-radius:6px;padding:6px 14px;font-weight:900;font-size:12px;cursor:pointer;">Add</button>' +
             '<button onclick="dismissA2hs()" style="background:none;border:none;color:#9090a8;font-size:20px;cursor:pointer;padding:0;line-height:1;">×</button>' +
