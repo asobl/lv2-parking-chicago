@@ -377,8 +377,8 @@ body {
 .week-row {
   display: flex;
   align-items: flex-start;
-  min-height: 56px;
-  padding: 12px 20px;
+  min-height: 64px;
+  padding: 14px 20px 16px;
   border-bottom: 1px solid #EEEDF0;
   gap: var(--space-sm);
   color: var(--color-text);
@@ -497,6 +497,7 @@ body {
 .week-event-time {
   font-size: 12px;
   color: var(--color-text-soft);
+  margin-bottom: 2px;
 }
 
 /* Inline "was X:XX PM" note on time change */
@@ -915,6 +916,34 @@ body {
 /* Print header is hidden on screen, shown on print */
 .print-header { display: none; }
 
+/* ─── CATEGORY TAG ───────────────────────────────── */
+/* Used on individual resource/article pages to identify category.
+   Color system:
+   rc-map      = teal    — Location / Maps / Zone
+   rc-gameday  = yellow  — Game Day / Events
+   rc-foia     = purple  — Data / FOIA / Analysis
+   rc-explorer = indigo  — Interactive Tools
+   rc-bikes    = green   — Getting Around
+   rc-rules    = orange  — Rules / Regulations       */
+.cat-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border-left: 3px solid currentColor;
+  background: #fff;
+  margin-bottom: 16px;
+}
+.cat-tag.rc-map      { color: #3d7d7f;                border-color: #5B9EA0; background: #EDF6F6; }
+.cat-tag.rc-gameday  { color: #9a7f00;                border-color: #c9ab00; background: #FEFBE8; }
+.cat-tag.rc-foia     { color: var(--color-purple);    border-color: var(--color-purple); background: #F0EFFC; }
+.cat-tag.rc-explorer { color: #5558cc;                border-color: #5558cc; background: #EEF0FB; }
+.cat-tag.rc-bikes    { color: #2e9e5a;                border-color: #2e9e5a; background: #EDF7F0; }
+.cat-tag.rc-rules    { color: #b85a00;                border-color: var(--color-orange); background: #FEF3E8; }
+
 /* ─── RESOURCE CARD GRID ─────────────────────────── */
 .resource-card-grid {
   display: grid;
@@ -931,7 +960,7 @@ body {
   padding: 20px 20px 16px;
   background: #fff;
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: 1px solid #EEEDF0;
   border-left: 3px solid var(--color-purple);
   text-decoration: none;
   color: var(--color-text);
