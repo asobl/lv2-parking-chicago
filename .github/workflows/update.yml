@@ -6,6 +6,9 @@ on:
     - cron: '0 20 * * *'   # 3 PM CT (UTC-5) -- afternoon run catches postponements
   workflow_dispatch:         # Manual trigger from GitHub Actions UI
 
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
