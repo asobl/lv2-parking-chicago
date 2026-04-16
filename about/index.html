@@ -10,19 +10,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
   <style>
-    .about-wrap { max-width: 640px; margin: 0 auto; padding: 56px var(--content-pad) var(--space-xl); }
-    .about-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
-    .about-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 32px; }
-    .about-body p { font-size: var(--text-body); line-height: 1.8; color: var(--color-text); margin-bottom: 20px; }
+    .about-outer { max-width: 960px; margin: 0 auto; padding: 48px 24px 64px; }
+    .about-inner { max-width: 640px; }
+    .about-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 16px; }
+    .about-h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-text); margin-bottom: 36px; }
+    .about-body p { font-size: 16px; line-height: 1.8; color: var(--color-text); margin-bottom: 20px; }
     .about-body a { color: var(--color-purple); text-decoration: none; font-weight: 700; }
     .about-body a:hover { text-decoration: underline; }
     .about-divider { border: none; border-top: 1px solid #C8C6D4; margin: 40px 0; }
-    .about-links { display: flex; flex-direction: column; gap: 12px; }
-    .about-link { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #fff; border-radius: 12px; text-decoration: none; color: var(--color-text); border: 1px solid #C8C6D4; border-left: 3px solid var(--color-purple); transition: box-shadow 0.15s; }
+    .about-links { display: flex; flex-direction: column; gap: 12px; max-width: 640px; }
+    .about-link { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #fff; border-radius: 10px; text-decoration: none; color: var(--color-text); border: 1px solid #C8C6D4; border-left: 3px solid var(--color-purple); transition: box-shadow 0.15s; }
     .about-link:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
     .about-link-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-purple); margin-bottom: 4px; }
-    .about-link-title { font-size: var(--text-body); font-weight: 700; }
-    .about-link-arrow { font-size: 20px; color: var(--color-text-soft); }
+    .about-link-title { font-size: 15px; font-weight: 700; }
+    .about-link-arrow { font-size: 20px; color: var(--color-text-soft); flex-shrink: 0; }
     .about-link.rc-foia     { border-left-color: var(--color-purple); }
     .about-link.rc-foia     .about-link-label { color: var(--color-purple); }
     .about-link.rc-map      { border-left-color: #5B9EA0; }
@@ -47,7 +48,8 @@
   </div>
 
   <main>
-    <div class="about-wrap">
+    <div class="about-outer">
+      <div class="about-inner">
       <div class="about-label">About</div>
       <h1 class="about-h1">Built by someone who got tired of moving his car.</h1>
 
@@ -64,6 +66,8 @@
 
         <p style="color:var(--color-text-soft);font-size:var(--text-small);">I also work on <a href="https://educationwalkthrough.com" target="_blank" rel="noopener" style="font-weight:600;color:var(--color-text-soft);">Education Walkthrough</a> and <a href="https://carebandremembers.com" target="_blank" rel="noopener" style="font-weight:600;color:var(--color-text-soft);">CareBand</a>. If you want to connect: <a href="https://linkedin.com/in/adamrusseksobol" target="_blank" rel="noopener" style="font-weight:600;color:var(--color-text-soft);">LinkedIn</a>.</p>
       </div>
+
+      </div><!-- /.about-inner -->
 
       <hr class="about-divider">
 
@@ -90,7 +94,7 @@
           <div class="about-link-arrow">›</div>
         </a>
       </div>
-    </div>
+    </div><!-- /.about-outer -->
   </main>
 
   <footer>
