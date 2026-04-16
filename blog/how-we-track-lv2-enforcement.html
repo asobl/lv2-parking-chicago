@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How We Know LV2 Is Being Enforced Right Now — LV2 Park</title>
+  <meta name="description" content="The live ticket counter on LV2 Park isn't an estimate. It's a count of actual LV2 violations confirmed in the zone today. Here's exactly how it works.">
+  <link rel="canonical" href="https://lv2park.com/blog/how-we-track-lv2-enforcement.html">
+  <meta property="og:title" content="How We Know LV2 Is Being Enforced Right Now">
+  <meta property="og:description" content="The live ticket counter on LV2 Park isn't an estimate. It's a count of actual LV2 violations confirmed in the zone today. Here's exactly how it works.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lv2park.com/blog/how-we-track-lv2-enforcement.html">
+  <meta property="og:site_name" content="LV2 Park">
+  <meta property="og:image" content="https://lv2park.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How We Know LV2 Is Being Enforced Right Now">
+  <meta name="twitter:description" content="The live ticket counter isn't an estimate. Here's how LV2 Park tracks enforcement in real time using Chicago's public data.">
+  <meta name="twitter:image" content="https://lv2park.com/og-image.png">
+  <meta name="theme-color" content="#1A1A2E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-body { max-width: 680px; margin: 0 auto; padding: 0 var(--content-pad) var(--space-xl); }
+    .post-body h2 { font-size: var(--text-h2); font-weight: 700; margin: 40px 0 12px; }
+    .post-body p  { font-size: var(--text-body); line-height: 1.75; margin-bottom: 20px; color: var(--color-text); }
+    .post-body ul { margin: 0 0 20px 20px; }
+    .post-body li { font-size: var(--text-body); line-height: 1.75; margin-bottom: 8px; }
+    .post-stat    { background: var(--color-bg-warm); border-left: 4px solid var(--color-orange); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 16px 20px; margin: 28px 0; font-size: var(--text-body); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/resources/lv2-parking-map/" class="top-nav-link">Map</a>
+        <a href="/resources/cubs-game-day-parking/" class="top-nav-link">Game Day</a>
+        <a href="/resources/lv2-data-explorer/" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="post-body">
+    <div style="padding-top:40px;margin-bottom:32px;">
+      <span class="cat-tag" style="background:#7B2FBE;color:#fff;margin-bottom:12px;">Data</span>
+      <h1 style="font-size:42px;font-weight:900;line-height:1.1;margin-bottom:16px;">How we know LV2 is being enforced right now.</h1>
+      <p style="color:var(--color-text-soft);">The live ticket counter on the homepage isn't an estimate. Here's exactly where that number comes from.</p>
+    </div>
+
+    <div class="post-stat">On a typical Cubs game day, the first LV2 ticket is written at 5:00 PM. By 5:01, there are 40+ more. The scanner on this site catches them in real time.</div>
+
+    <h2>The source: Chicago's public e-hearing portal</h2>
+    <p>The City of Chicago publishes every parking ticket through a public portal called the e-hearing system. It's how residents contest tickets online. Every ticket ever written — LV2 violations included — shows up there with the street address, violation type, and issue date.</p>
+    <p>No login required. No API key. Fully public. We check it automatically on every game day.</p>
+
+    <h2>What we look for</h2>
+    <p>We filter for tickets coded "RESIDENTIAL PERMIT" on streets inside the LV2 zone. That's the violation type written when a car is parked without a valid LV2 permit. If it's on an LV2 street and it was issued today, it counts.</p>
+
+    <h2>How the scan works</h2>
+    <p>Chicago's parking tickets are assigned sequential IDs. On any given day, all the tickets written across the city fall within a predictable ID range. We track where that range is and probe a window of IDs to find today's LV2 violations.</p>
+    <p>The window shifts roughly 4,000 IDs per day as new tickets are written across the city. The scanner remembers where it left off and starts in the right place next time. No manual work after setup.</p>
+
+    <h2>When we scan</h2>
+    <p>On game days only. Four times per day: 6 AM, 3 PM, 5 PM, and 8 PM CT. The 5 PM and 8 PM scans are the ones that matter since LV2 enforcement runs 5-10 PM.</p>
+    <p>The 6 AM scan the morning after a game also feeds the data into the <a href="/game-recaps/" style="color:var(--color-purple);">game recap pages</a>, so each game gets a final ticket count recorded.</p>
+
+    <h2>What the number actually means</h2>
+    <p>When you see "47 tickets confirmed in the zone today," that's a floor, not a ceiling. There's always a small lag between when a ticket is written on the street and when it appears in the portal. The real count is always slightly higher than what we show.</p>
+    <p>More importantly: if the scanner finds any tickets at all, officers are actively in the zone. The tickets prove it.</p>
+
+    <div class="post-stat">The scanner finding tickets means enforcement is happening. If it shows zero, either LV2 isn't active today or it's too early in the enforcement window. Check back after 5 PM.</div>
+
+    <h2>Why this didn't exist before</h2>
+    <p>LV2 is supposed to be active on every Cubs home game day. But residents always wondered: are they actually out there tonight? Did the city send officers, or did they skip it?</p>
+    <p>There was no way to know. You either moved your car and hoped you were being paranoid, or you didn't move it and hoped they skipped enforcement. Neither felt good.</p>
+    <p>Now you don't have to guess.</p>
+
+    <h2>A note on the historical data</h2>
+    <p>The live scanner is one layer. This site also has 9,434 LV2 tickets from 2018 to 2023, obtained via a FOIA request to the City of Chicago. That historical data powers the heat map, the street-level ticket counts, and the game recap pages.</p>
+    <p>The live scanner adds the current season on top of it. Between the two, this is the most complete picture of LV2 enforcement available anywhere.</p>
+    <p><a href="/blog/lv2-data-analysis.html" style="color:var(--color-purple);font-weight:700;">Read the full FOIA data analysis →</a></p>
+    <p><a href="/resources/lv2-data-explorer/" style="color:var(--color-purple);font-weight:700;">Explore LV2 tickets by street →</a></p>
+
+    <div style="background:var(--color-bg-surface);border-radius:var(--radius-lg);padding:24px;margin:40px 0;">
+      <div style="font-size:var(--text-h2);font-weight:700;margin-bottom:8px;">Get LV2 alerts every Monday.</div>
+      <div style="font-size:var(--text-small);color:var(--color-text-soft);margin-bottom:16px;">Which days LV2 is in effect this week. Free email, no spam.</div>
+      <a href="/" style="display:inline-flex;align-items:center;gap:8px;height:52px;padding:0 24px;background:var(--color-purple);color:#fff;border-radius:var(--radius-md);font-weight:700;font-size:var(--text-body);text-decoration:none;">Sign up on the homepage →</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">LV2 Park pulls from the MLB schedule and Ticketmaster. Schedule data is updated daily. Always verify LV2 enforcement with the 44th Ward site or the signs on your block. Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
+      <div class="footer-nav">
+        <div class="footer-col">
+          <div class="footer-col-label">LV2 Zone</div>
+          <a href="/">Today's Status</a>
+          <a href="/resources/lv2-parking-rules/">LV2 Rules</a>
+          <a href="/resources/lv2-parking-map/">Zone Map</a>
+          <a href="/resources/chicago-permit-zones-wrigley/">Permit Zones</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Game Day</div>
+          <a href="/resources/cubs-game-day-parking/">Game Day Parking</a>
+          <a href="/resources/wrigley-field-parking-guide/">Parking Guide</a>
+          <a href="/resources/wrigley-field-parking-shuttle/">Shuttle Guide</a>
+          <a href="/resources/wrigley-divvy-scooters/">Divvy + Scooters</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Data</div>
+          <a href="/resources/lv2-data-explorer/">Data Explorer</a>
+          <a href="/resources/wrigley-parking-ticket-data/">Ticket Data</a>
+          <a href="/blog/lv2-data-analysis.html">FOIA Analysis</a>
+          <a href="/blog/what-is-lv2.html">What is LV2?</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Site</div>
+          <a href="/resources/">Resources</a>
+          <a href="/about/">About</a>
+        </div>
+      </div>
+      <div class="footer-copy">&copy; 2026 LV2 Park &middot; <span id="footer-updated"></span></div>
+    </div>
+  </footer>
+</body>
+</html>
