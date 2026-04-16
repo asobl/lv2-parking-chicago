@@ -595,7 +595,7 @@ function buildAllMonthsCalendar() {
         let inner = `<div class="dn">${dayNum}</div>`;
         if (d && d.hasEvent) {
           for (const ev of d.events) {
-            const icon = ev.type === 'game' ? '⚾' : '🎵';
+            const icon = ev.type === 'game' ? '⚾' : ev.type === 'comedy' ? '🎭' : '🎵';
             let shortName;
             if (ev.type === 'game') {
               // "New York Mets vs. Cubs" → "Mets"
@@ -623,7 +623,26 @@ function buildAllMonthsCalendar() {
       </div>`;
   }
 
-  const monthsHtml = sortedMonths.map(k => miniMonth(k)).join('');
+  // Split months into pages of 6 (3 columns × 2 rows fits landscape 11×8.5)
+  const chunks = [];
+  for (let i = 0; i < sortedMonths.length; i += 6) chunks.push(sortedMonths.slice(i, i + 6));
+
+  const footer = `<div class="page-footer">
+    <span>⚾ Game &nbsp; 🎵 Concert / Special &nbsp; <span style="background:#F0A030;color:#fff;padding:1px 4px;border-radius:2px;font-weight:900;">LV2</span> = tow zone active 5–10 PM</span>
+    <span>Schedule may change. Verify at lv2park.com. Not affiliated with the Chicago Cubs or MLB.</span>
+  </div>`;
+
+  const pagesHtml = chunks.map((chunk, idx) => {
+    const isLast = idx === chunks.length - 1;
+    return `<div class="print-page"${isLast ? '' : ' style="page-break-after:always"'}>
+      <div class="page-header">
+        <div class="logo">LV2 <span>PARK</span></div>
+        <div class="page-url">lv2park.com · Wrigley Field Schedule${chunks.length > 1 ? ` · ${idx + 1} of ${chunks.length}` : ''}</div>
+      </div>
+      <div class="grid">${chunk.map(k => miniMonth(k)).join('')}</div>
+      ${footer}
+    </div>`;
+  }).join('');
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title>Wrigley Field Schedule</title>
@@ -631,10 +650,11 @@ function buildAllMonthsCalendar() {
   @page { size: 11in 8.5in landscape; margin: 0.3in; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:-apple-system,'Inter',system-ui,sans-serif; background:#fff; color:#1A1A2E; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .print-page { display:flex; flex-direction:column; height:100%; }
   .page-header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:3px solid #1A1A2E; margin-bottom:10px; padding-bottom:6px; }
   .logo { font-size:16pt; font-weight:900; } .logo span { color:#C8AA00; }
   .page-url { font-size:8pt; color:#6B6B80; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; flex:1; }
   .mini-cal { border:1px solid #e0dff0; border-radius:6px; overflow:hidden; }
   .mini-hdr { background:#1A1A2E; color:#F5E030; font-size:8pt; font-weight:900; padding:4px 8px; letter-spacing:.04em; text-transform:uppercase; }
   table { width:100%; border-collapse:collapse; table-layout:fixed; }
@@ -649,15 +669,7 @@ function buildAllMonthsCalendar() {
   .lt { display:inline-block; margin-top:1px; font-size:5pt; font-weight:900; background:#F0A030; color:#fff; padding:1px 3px; border-radius:2px; text-transform:uppercase; }
   .page-footer { margin-top:8px; font-size:6.5pt; color:#9090a8; display:flex; justify-content:space-between; }
 </style></head><body>
-  <div class="page-header">
-    <div class="logo">LV2 <span>PARK</span></div>
-    <div class="page-url">lv2park.com · Wrigley Field Schedule</div>
-  </div>
-  <div class="grid">${monthsHtml}</div>
-  <div class="page-footer">
-    <span>⚾ Game &nbsp; 🎵 Concert &nbsp; <span style="background:#F0A030;color:#fff;padding:1px 4px;border-radius:2px;font-weight:900;">LV2</span> = tow zone active 5–10 PM</span>
-    <span>Schedule may change. Verify at lv2park.com. Not affiliated with the Chicago Cubs or MLB.</span>
-  </div>
+${pagesHtml}
 <script>window.addEventListener('load',function(){setTimeout(function(){window.print();},400);});<\/script>
 </body></html>`;
 }
