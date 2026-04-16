@@ -3,7 +3,7 @@
 const DATA_TODAY   = '/data/today.json';
 const DATA_WEEK    = '/data/week.json';
 const SPOTHERO_URL = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park';
-const WORKER_URL   = 'https://lv2park-email.YOUR_SUBDOMAIN.workers.dev'; // Update after Cloudflare deploy
+const WORKER_URL   = 'https://lv2park-email.adam-945.workers.dev';
 
 /* ─── EVENT ICONS ────────────────────────────────── */
 const ICONS = {
