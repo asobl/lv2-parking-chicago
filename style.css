@@ -58,9 +58,10 @@ body {
 /* Desktop two-column above the fold */
 .above-fold {
   max-width: 960px;
+  width: 100%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   min-height: 420px;
 }
 
@@ -73,15 +74,11 @@ body {
 
 @media (max-width: 700px) {
   .above-fold {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .week-col {
     border-left: none !important;
     border-top: 1px solid #C8C6D4;
-    padding: 20px 16px;
-  }
-  .week-actions {
-    display: none;
   }
 }
 
@@ -152,6 +149,7 @@ body {
   padding: 28px 28px 24px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .week-col .section-label {
   margin-bottom: var(--space-md);
@@ -178,6 +176,7 @@ body {
 /* ─── HERO CARD ──────────────────────────────────── */
 #hero {
   padding: 0;
+  min-width: 0;
 }
 .hero-card {
   padding: 0;
@@ -1174,7 +1173,8 @@ footer {
   .email-input, .checker-input { min-width: 0; }
 }
 
-/* Mobile: hide desktop-only week toolbar actions (must be after base .week-actions rule) */
+/* Mobile: week toolbar stacks vertically so actions don't overflow */
 @media (max-width: 700px) {
-  .week-actions { display: none; }
+  .week-toolbar { flex-wrap: wrap; }
+  .week-actions { width: 100%; }
 }
