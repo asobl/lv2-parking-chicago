@@ -119,9 +119,17 @@ def parse_address(raw):
     dirn   = m.group(2)
     street = m.group(3).strip()
 
+    # LV2 zone bounds: Belmont (3200N) to Irving Park (4000N), Broadway to Ashland
+    # Allow small buffer: ~3100N–4100N in lat, ~700W–2400W in lng
+    LAT_MIN = addr_to_lat(3100)   # 41.9381
+    LAT_MAX = addr_to_lat(4100)   # 41.9562
+    LNG_MIN = addr_to_lng(2400)   # westernmost
+    LNG_MAX = addr_to_lng(700)    # easternmost
+
     if dirn == 'N':
         lat = addr_to_lat(num)
-        # Need the W address of this N-S street
+        if not (LAT_MIN <= lat <= LAT_MAX):
+            return None
         w_addr = NS_STREET_W.get(street)
         if w_addr is None:
             return None
@@ -130,11 +138,14 @@ def parse_address(raw):
 
     elif dirn == 'W':
         lng = addr_to_lng(num)
-        # Need the N address of this E-W street
+        if not (LNG_MAX >= lng >= LNG_MIN):
+            return None
         n_addr = EW_STREET_N.get(street)
         if n_addr is None:
             return None
         lat = addr_to_lat(n_addr)
+        if not (LAT_MIN <= lat <= LAT_MAX):
+            return None
         return (lat, lng)
 
     # S and E addresses are outside our zone — ignore
