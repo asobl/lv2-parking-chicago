@@ -495,7 +495,7 @@
       const btn = pzForm.querySelector('button');
       btn.disabled = true; btn.textContent = 'Subscribing...';
       try {
-        const res = await fetch('https://lv2park-worker.adam-945.workers.dev/subscribe', {
+        const res = await fetch('https://lv2park-email.adam-945.workers.dev/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email })

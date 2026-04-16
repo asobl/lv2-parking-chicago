@@ -622,7 +622,7 @@
         const btn = pdfForm.querySelector('button');
         btn.disabled = true; btn.textContent = 'Sending...';
         try {
-          const res = await fetch('https://lv2park-worker.adam-945.workers.dev/download-pdf', {
+          const res = await fetch('https://lv2park-email.adam-945.workers.dev/download-pdf', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
