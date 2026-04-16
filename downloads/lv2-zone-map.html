@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LV2 Zone Map — Printable | LV2 Park</title>
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #fff;
+      color: #1A1A2E;
+      padding: 40px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .print-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 3px solid #1A1A2E;
+      padding-bottom: 16px;
+      margin-bottom: 28px;
+    }
+    .print-logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+    .print-logo span { color: #6B64D4; }
+    .print-title {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .print-sub {
+      font-size: 14px;
+      color: #6B6B80;
+    }
+    .print-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: #F0A030;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* MAP AREA */
+    .map-frame {
+      border: 2px solid #1A1A2E;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0 0 24px;
+      height: 460px;
+    }
+    #print-map { height: 100%; width: 100%; }
+
+    /* BOUNDARY TABLE */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .info-block h3 { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6B80; margin-bottom: 10px; border-bottom: 1px solid #e0dfe8; padding-bottom: 6px; }
+    .boundary-row { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; border-bottom: 1px solid #f0eff8; }
+    .boundary-dir { font-weight: 700; color: #6B6B80; width: 48px; flex-shrink: 0; }
+    .boundary-street { flex: 1; }
+    .ticket-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #f0eff8; font-size: 14px; }
+    .ticket-bar { height: 8px; border-radius: 3px; }
+    .ticket-street { flex: 1; }
+    .ticket-risk { font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .risk-high { color: #E84040; }
+    .risk-med  { color: #F0A030; }
+
+    /* ENFORCEMENT BOX */
+    .enforcement-box {
+      background: #FFF8ED;
+      border-left: 4px solid #F0A030;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      font-size: 14px;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .enforcement-box strong { color: #1A1A2E; }
+
+    /* FOOTER */
+    .print-footer {
+      border-top: 1px solid #e0dfe8;
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #6B6B80;
+    }
+
+    /* HOW TO PRINT BANNER (screen only) */
+    .print-tip {
+      background: #6B64D4;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .print-tip-btn {
+      background: #fff;
+      color: #6B64D4;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    @media print {
+      .print-tip { display: none; }
+      body { padding: 20px 28px; }
+      .map-frame { height: 400px; }
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <div class="print-tip">
+    To save as PDF: File &rarr; Print &rarr; set Destination to "Save as PDF" &rarr; Save
+    <button class="print-tip-btn" onclick="window.print()">Print / Save PDF</button>
+  </div>
+
+  <div class="print-header">
+    <div>
+      <div class="print-badge">LV2 Zone Map</div>
+      <div class="print-title">LV2 Permit Parking Zone<br>Wrigleyville, Chicago</div>
+      <div class="print-sub">Active 5–10 PM on Cubs home games and major Wrigley events &middot; lv2park.com</div>
+    </div>
+    <div class="print-logo">LV2 <span>PARK</span></div>
+  </div>
+
+  <div class="map-frame">
+    <div id="print-map"></div>
+  </div>
+
+  <div class="enforcement-box">
+    <strong>When LV2 is active:</strong> 5:00 PM to 10:00 PM on all Cubs home games (day or night) and major events at Wrigley Field.
+    Enforcement starts the moment the clock turns 5 PM. Cars without a valid LV2 permit are towed immediately — there is no warning period.
+    To retrieve a towed vehicle: call 311 or the Cubs tow hotline at 866-4-CPD-TOW. Auto Pound #6.
+  </div>
+
+  <div class="two-col">
+    <div class="info-block">
+      <h3>Zone Boundaries</h3>
+      <div class="boundary-row"><span class="boundary-dir">North</span><span class="boundary-street">Irving Park Rd (4000 N)</span></div>
+      <div class="boundary-row"><span class="boundary-dir">South</span><span class="boundary-street">Belmont Ave (3200 N)</span></div>
+      <div class="boundary-row"><span class="boundary-dir">West</span><span class="boundary-street">Clark St (700 W)</span></div>
+      <div class="boundary-row"><span class="boundary-dir">East</span><span class="boundary-street">Halsted St (800 W)</span></div>
+      <p style="font-size:12px;color:#6B6B80;margin-top:8px;line-height:1.5;">Boundaries are approximate. Always confirm with signs on your block. Sign reads: RESIDENTIAL PERMIT PARKING LV2.</p>
+    </div>
+
+    <div class="info-block">
+      <h3>Highest-Ticket Streets (FOIA Data 2018–2023)</h3>
+      <div class="ticket-row">
+        <span class="ticket-bar" style="width:56px;background:#E84040;"></span>
+        <span class="ticket-street">N Sheffield Ave</span>
+        <span class="ticket-risk risk-high">High</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-bar" style="width:48px;background:#E84040;"></span>
+        <span class="ticket-street">N Kenmore Ave</span>
+        <span class="ticket-risk risk-high">High</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-bar" style="width:44px;background:#E84040;"></span>
+        <span class="ticket-street">N Clifton Ave</span>
+        <span class="ticket-risk risk-high">High</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-bar" style="width:34px;background:#F0A030;"></span>
+        <span class="ticket-street">N Seminary Ave</span>
+        <span class="ticket-risk risk-med">Medium</span>
+      </div>
+      <div class="ticket-row">
+        <span class="ticket-bar" style="width:28px;background:#F0A030;"></span>
+        <span class="ticket-street">N Southport Ave</span>
+        <span class="ticket-risk risk-med">Medium</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="print-footer">
+    <span>lv2park.com &middot; Updated 2026</span>
+    <span>Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago</span>
+  </div>
+
+  <script>
+    var map = L.map('print-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6560], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+    }).addTo(map);
+
+    // Wrigley Field
+    var wrigleyIcon = L.divIcon({
+      html: '<div style="background:#5B9EA0;color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;white-space:nowrap;font-family:Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);">Wrigley Field</div>',
+      className: '', iconAnchor: [40, 20]
+    });
+    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map);
+
+    // LV2 zone polygon
+    L.polygon([
+      [41.9580, -87.6700],
+      [41.9580, -87.6480],
+      [41.9360, -87.6480],
+      [41.9360, -87.6700]
+    ], {
+      color: '#6B64D4', weight: 2.5, opacity: 0.9,
+      fillColor: '#6B64D4', fillOpacity: 0.12
+    }).addTo(map).bindTooltip('LV2 Permit Zone', { permanent: true, direction: 'center',
+      className: 'leaflet-tooltip' });
+
+    // High-ticket street markers
+    [
+      { name: 'Sheffield Ave', lat: 41.950, lon: -87.6490, risk: 'high' },
+      { name: 'Kenmore Ave',   lat: 41.948, lon: -87.6540, risk: 'high' },
+      { name: 'Clifton Ave',   lat: 41.946, lon: -87.6560, risk: 'high' },
+      { name: 'Seminary Ave',  lat: 41.947, lon: -87.6580, risk: 'med'  },
+    ].forEach(function(s) {
+      var color = s.risk === 'high' ? '#E84040' : '#F0A030';
+      var icon = L.divIcon({
+        html: '<div style="background:' + color + ';color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;white-space:nowrap;font-family:Inter,sans-serif;">' + s.name + '</div>',
+        className: '', iconAnchor: [30, 10]
+      });
+      L.marker([s.lat, s.lon], { icon: icon }).addTo(map);
+    });
+  </script>
+</body>
+</html>

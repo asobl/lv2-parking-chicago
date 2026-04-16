@@ -89,10 +89,23 @@
     .address-checker { background: var(--color-bg-surface); border-radius: var(--radius-lg); padding: 28px 24px; margin: 32px 0; border: 1px solid #C8C6D4; }
     .checker-heading { font-size: var(--text-h2); font-weight: 900; margin-bottom: 8px; }
     .checker-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 20px; }
-    .checker-form { display: flex; gap: 10px; flex-wrap: wrap; }
-    .checker-input { flex: 1; min-width: 200px; height: 52px; border: 2px solid #C8C6D4; border-radius: var(--radius-md); padding: 0 16px; font-family: var(--font-main); font-size: var(--text-body); color: var(--color-text); background: #fff; outline: none; }
+    .checker-form { display: flex; gap: 10px; flex-wrap: wrap; position: relative; }
+    .checker-input-wrap { flex: 1; min-width: 200px; position: relative; }
+    .checker-input { width: 100%; height: 52px; border: 2px solid #C8C6D4; border-radius: var(--radius-md); padding: 0 16px; font-family: var(--font-main); font-size: var(--text-body); color: var(--color-text); background: #fff; outline: none; }
     .checker-input:focus { border-color: var(--color-purple); }
-    .checker-btn { height: 52px; padding: 0 24px; background: var(--color-purple); color: #fff; border: none; border-radius: var(--radius-md); font-family: var(--font-main); font-size: var(--text-body); font-weight: 700; cursor: pointer; }
+    .checker-input.open { border-radius: var(--radius-md) var(--radius-md) 0 0; border-bottom-color: transparent; }
+    .checker-btn { height: 52px; padding: 0 24px; background: var(--color-purple); color: #fff; border: none; border-radius: var(--radius-md); font-family: var(--font-main); font-size: var(--text-body); font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .autocomplete-dropdown { display: none; position: absolute; top: 52px; left: 0; right: 0; z-index: 300; background: #fff; border: 2px solid var(--color-purple); border-top: none; border-radius: 0 0 var(--radius-md) var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,0.12); overflow: hidden; }
+    .autocomplete-dropdown.visible { display: block; }
+    .autocomplete-item { padding: 12px 16px; font-size: var(--text-small); cursor: pointer; border-bottom: 1px solid #C8C6D4; color: var(--color-text); line-height: 1.4; display: flex; align-items: flex-start; gap: 10px; }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: #F0F4FF; }
+    .autocomplete-item-main { font-weight: 700; }
+    .autocomplete-item-sub { color: var(--color-text-soft); font-size: 12px; }
+    .autocomplete-loading { padding: 12px 16px; font-size: var(--text-small); color: var(--color-text-soft); font-style: italic; }
+    .checker-result { margin-top: 16px; padding: 16px 20px; border-radius: var(--radius-md); font-weight: 700; display: none; line-height: 1.5; }
+    .checker-result.lv2 { background: #FFF8ED; color: var(--color-orange); border: 1px solid var(--color-orange); }
+    .checker-result.outside { background: #F0F9F9; color: #2e7d32; border: 1px solid #5B9EA0; }
 
     .related-section { border-top: 1px solid #C8C6D4; padding: 40px 0; }
     .related-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
@@ -223,9 +236,14 @@
           <div class="checker-heading">Which zone is my address in?</div>
           <p class="checker-sub">Enter your address to check if it falls inside the LV2 zone. For Zone 383 and Zone 143 boundaries, check the City of Chicago permit parking portal.</p>
           <div class="checker-form">
-            <input class="checker-input" type="text" placeholder="e.g. 3700 N Sheffield Ave, Chicago" id="zone-input">
-            <button class="checker-btn" onclick="window.location='/lv2-parking-map'">Check LV2 Zone</button>
+            <div class="checker-input-wrap">
+              <input class="checker-input" type="text" id="zone-input"
+                placeholder="e.g. 3700 N Sheffield Ave, Chicago" autocomplete="off">
+              <div class="autocomplete-dropdown" id="zone-autocomplete"></div>
+            </div>
+            <button class="checker-btn" onclick="checkZone()">Check Zone</button>
           </div>
+          <div class="checker-result" id="zone-result"></div>
         </div>
 
         <h2>How to Get Each Permit</h2>
@@ -262,11 +280,11 @@
       <div class="email-section">
         <div class="email-heading">Know when LV2 is active.</div>
         <p class="email-sub">Zone 383 and Zone 143 don't change. LV2 does. Get a heads-up the evening before any LV2 enforcement day.</p>
-        <form class="email-form" action="https://lv2park-worker.adam-945.workers.dev/subscribe" method="POST">
-          <input type="hidden" name="list" value="lv2-alerts">
-          <input class="email-input" type="email" name="email" placeholder="your@email.com" required>
+        <form class="email-form" id="pz-email-form">
+          <input class="email-input" type="email" placeholder="your@email.com" required>
           <button class="email-btn" type="submit">Get LV2 Alerts</button>
         </form>
+        <div id="pz-email-success" style="display:none;padding:14px 18px;background:#F0F9F9;border-radius:var(--radius-md);color:#2e7d32;font-weight:700;border:1px solid #5B9EA0;"></div>
         <p class="email-disclaimer">No spam. One email per LV2 day. Unsubscribe any time.</p>
       </div>
 
@@ -335,6 +353,163 @@
     </div>
   </footer>
 
+
+  <script>
+    // ── AUTOCOMPLETE + ZONE CHECK ─────────────────────────────────────────────
+    const zInput    = document.getElementById('zone-input');
+    const zDropdown = document.getElementById('zone-autocomplete');
+    const zResult   = document.getElementById('zone-result');
+    let zTimer = null, zActive = -1, zSuggestions = [];
+    const CHICAGO_VIEW = 'viewbox=-87.9401,41.6446,-87.5239,42.0230&bounded=1';
+
+    async function fetchSuggestions(query) {
+      if (query.length < 4) return [];
+      const url = 'https://nominatim.openstreetmap.org/search?q='
+        + encodeURIComponent(query + ', Chicago, IL')
+        + '&format=json&limit=5&addressdetails=1&' + CHICAGO_VIEW;
+      try {
+        const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+        const data = await res.json();
+        return data.filter(d => d.address && d.address.state === 'Illinois');
+      } catch { return []; }
+    }
+
+    function formatSuggestion(item) {
+      const a = item.address;
+      const main = [a.house_number, a.road].filter(Boolean).join(' ') || item.display_name.split(',')[0];
+      const sub  = [a.suburb || a.neighbourhood, a.city || a.town, a.postcode].filter(Boolean).join(', ');
+      return { main, sub, lat: parseFloat(item.lat), lon: parseFloat(item.lon) };
+    }
+
+    function renderDropdown(items) {
+      if (!items.length) { closeDropdown(); return; }
+      zSuggestions = items.map(formatSuggestion);
+      zActive = -1;
+      zDropdown.innerHTML = zSuggestions.map((s, i) =>
+        `<div class="autocomplete-item" data-index="${i}" onmousedown="selectSuggestion(${i})">
+          <span style="color:var(--color-purple);flex-shrink:0;margin-top:1px;">&#9679;</span>
+          <div>
+            <div class="autocomplete-item-main">${s.main}</div>
+            <div class="autocomplete-item-sub">${s.sub}</div>
+          </div>
+        </div>`
+      ).join('');
+      zDropdown.classList.add('visible');
+      zInput.classList.add('open');
+    }
+
+    function closeDropdown() {
+      zDropdown.classList.remove('visible');
+      zInput.classList.remove('open');
+      zActive = -1;
+    }
+
+    function selectSuggestion(i) {
+      const s = zSuggestions[i];
+      zInput.value = s.main + (s.sub ? ', ' + s.sub : '');
+      closeDropdown();
+      checkZoneFromCoords(s.lat, s.lon);
+    }
+
+    zInput.addEventListener('keydown', function(e) {
+      const items = zDropdown.querySelectorAll('.autocomplete-item');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        zActive = Math.min(zActive + 1, items.length - 1);
+        items.forEach((el, i) => el.style.background = i === zActive ? '#F0F4FF' : '');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        zActive = Math.max(zActive - 1, 0);
+        items.forEach((el, i) => el.style.background = i === zActive ? '#F0F4FF' : '');
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (zActive >= 0 && zSuggestions[zActive]) selectSuggestion(zActive);
+        else checkZone();
+      } else if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    });
+
+    zInput.addEventListener('input', function() {
+      clearTimeout(zTimer);
+      const val = this.value.trim();
+      if (val.length < 4) { closeDropdown(); return; }
+      zDropdown.innerHTML = '<div class="autocomplete-loading">Searching...</div>';
+      zDropdown.classList.add('visible');
+      zInput.classList.add('open');
+      zTimer = setTimeout(async () => {
+        const results = await fetchSuggestions(val);
+        renderDropdown(results);
+      }, 350);
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!zInput.contains(e.target) && !zDropdown.contains(e.target)) closeDropdown();
+    });
+
+    const LV2_BOUNDS = { minLat: 41.936, maxLat: 41.958, minLon: -87.670, maxLon: -87.648 };
+    function isInsideLV2(lat, lon) {
+      return lat >= LV2_BOUNDS.minLat && lat <= LV2_BOUNDS.maxLat &&
+             lon >= LV2_BOUNDS.minLon && lon <= LV2_BOUNDS.maxLon;
+    }
+
+    function showZoneResult(inside) {
+      zResult.style.display = 'block';
+      if (inside) {
+        zResult.className = 'checker-result lv2';
+        zResult.innerHTML = '&#9888; This address is inside the LV2 zone. LV2 restrictions apply 5&ndash;10 PM on game days. You need an LV2 permit to park here. <a href="/resources/lv2-parking-rules/" style="color:inherit;text-decoration:underline;">How to get one &rarr;</a>';
+      } else {
+        zResult.className = 'checker-result outside';
+        zResult.innerHTML = '&#10003; This address appears to be outside the LV2 zone. Your block is likely in Zone 383 (Lakeview) or Zone 143 (Lincoln Park) for year-round permit parking. Check the signs on your block to confirm.';
+      }
+    }
+
+    function checkZoneFromCoords(lat, lon) { showZoneResult(isInsideLV2(lat, lon)); }
+
+    async function checkZone() {
+      const addr = zInput.value.trim();
+      if (!addr) return;
+      closeDropdown();
+      zResult.style.display = 'block';
+      zResult.className = 'checker-result';
+      zResult.innerHTML = 'Checking...';
+      const results = await fetchSuggestions(addr);
+      if (results.length > 0) {
+        const s = formatSuggestion(results[0]);
+        checkZoneFromCoords(s.lat, s.lon);
+      } else {
+        const lower = addr.toLowerCase();
+        const inside = ['sheffield','kenmore','clifton','seminary','southport','waveland',
+          'addison','clark','halsted','cornelia','school','roscoe','newport','grace',
+          'patterson','brompton','racine','lakewood','hermitage'].some(s => lower.includes(s));
+        showZoneResult(inside);
+      }
+    }
+
+    // ── EMAIL SUBSCRIBE ───────────────────────────────────────────────────────
+    const pzForm    = document.getElementById('pz-email-form');
+    const pzSuccess = document.getElementById('pz-email-success');
+    pzForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = pzForm.querySelector('input[type="email"]').value.trim();
+      const btn = pzForm.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Subscribing...';
+      try {
+        const res = await fetch('https://lv2park-worker.adam-945.workers.dev/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        if (res.ok) {
+          pzForm.style.display = 'none';
+          pzSuccess.style.display = 'block';
+          pzSuccess.textContent = "You're in. We'll send a heads-up before the next LV2 day.";
+        } else {
+          btn.disabled = false; btn.textContent = 'Get LV2 Alerts';
+        }
+      } catch { btn.disabled = false; btn.textContent = 'Get LV2 Alerts'; }
+    });
+  </script>
 
   <script>
     // ── LV2 Analytics ─────────────────────────────────────────────────────────

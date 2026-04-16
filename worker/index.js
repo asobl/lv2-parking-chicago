@@ -1,15 +1,18 @@
 /**
  * LV2 Park — Cloudflare Worker
  *
- * Handles two endpoints:
- *   POST /subscribe  — add email to Resend audience + send confirmation
- *   POST /contact    — forward contact form to Adam's inbox via Resend
+ * Endpoints:
+ *   POST /subscribe     — add email to weekly digest audience + send confirmation
+ *   POST /contact       — forward contact form to Adam's inbox via Resend
+ *   POST /unsubscribe   — mark email unsubscribed in Resend audience
+ *   POST /download-pdf  — add email to lead magnet audience + send PDF link
  *
  * Environment variables (set in Cloudflare dashboard, never in code):
- *   RESEND_API_KEY      — from resend.com
- *   RESEND_AUDIENCE_ID  — from resend.com/audiences
- *   NOTIFY_EMAIL        — where contact form submissions get forwarded
- *   TURNSTILE_SECRET    — from dash.cloudflare.com/turnstile (optional, enables captcha)
+ *   RESEND_API_KEY             — from resend.com
+ *   RESEND_AUDIENCE_ID         — weekly digest subscribers (resend.com/audiences)
+ *   RESEND_LEAD_MAGNET_AUD_ID  — resource download contacts (separate audience)
+ *   NOTIFY_EMAIL               — where contact form submissions get forwarded
+ *   TURNSTILE_SECRET           — from dash.cloudflare.com/turnstile (optional)
  */
 
 const ALLOWED_ORIGIN = 'https://lv2park.com';
@@ -35,6 +38,10 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/unsubscribe') {
       return handleUnsubscribe(request, env);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/download-pdf') {
+      return handleDownloadPdf(request, env);
     }
 
     return corsResponse(JSON.stringify({ error: 'not found' }), 404, env);
@@ -247,6 +254,101 @@ async function handleUnsubscribe(request, env) {
   }
 
   return corsResponse(JSON.stringify({ ok: true }), 200, env);
+}
+
+// ─── DOWNLOAD PDF ─────────────────────────────────────
+async function handleDownloadPdf(request, env) {
+  let body;
+  try { body = await request.json(); }
+  catch { return corsResponse(JSON.stringify({ error: 'invalid JSON' }), 400, env); }
+
+  const email = (body.email || '').trim().toLowerCase();
+  if (!email || !email.includes('@')) {
+    return corsResponse(JSON.stringify({ error: 'invalid email' }), 400, env);
+  }
+
+  const cf     = request.cf || {};
+  const city   = cf.city || '';
+  const region = cf.regionCode || cf.region || '';
+  const ua     = request.headers.get('User-Agent') || '';
+  const device = detectDevice(ua);
+
+  // Add to lead magnet audience (separate from weekly digest)
+  if (env.RESEND_LEAD_MAGNET_AUD_ID) {
+    await fetch(`${RESEND_API}/audiences/${env.RESEND_LEAD_MAGNET_AUD_ID}/contacts`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, unsubscribed: false })
+    }).catch(() => {});
+  }
+
+  // Send email with PDF link
+  const emailRes = await fetch(`${RESEND_API}/emails`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to: [email],
+      subject: 'Your LV2 zone map is ready',
+      html: pdfEmailHtml(email)
+    })
+  });
+
+  if (!emailRes.ok) {
+    return corsResponse(JSON.stringify({ error: 'could not send' }), 500, env);
+  }
+
+  // Notify Adam
+  const location = [city, region].filter(Boolean).join(', ') || 'unknown';
+  await fetch(`${RESEND_API}/emails`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to: [env.NOTIFY_EMAIL],
+      subject: `PDF download: ${email}`,
+      html: `<p style="font-family:sans-serif;"><strong>LV2 zone map PDF requested</strong><br><br>
+        <strong>Email:</strong> ${escHtml(email)}<br>
+        <strong>Location:</strong> ${escHtml(location)}<br>
+        <strong>Device:</strong> ${escHtml(device)}</p>`
+    })
+  }).catch(() => {});
+
+  return corsResponse(JSON.stringify({ ok: true }), 200, env);
+}
+
+function pdfEmailHtml(email) {
+  return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:#f5f4f0;margin:0;padding:40px 20px;">
+  <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;">
+    <div style="height:5px;background:#F5E030;"></div>
+    <div style="padding:32px 32px 28px;">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6B6B80;margin-bottom:8px;">LV2 PARK</div>
+      <h1 style="font-size:26px;font-weight:900;color:#1A1A2E;margin:0 0 16px;">Your LV2 zone map.</h1>
+      <p style="font-size:17px;color:#1A1A2E;line-height:1.6;margin:0 0 20px;">
+        Here's the printable LV2 zone map for Wrigleyville. Open it in your browser, then use
+        <strong>File &rarr; Print &rarr; Save as PDF</strong> to save a copy.
+      </p>
+      <a href="https://lv2park.com/downloads/lv2-zone-map.html"
+         style="display:inline-block;background:#6B64D4;color:#fff;font-size:16px;font-weight:700;padding:14px 24px;border-radius:12px;text-decoration:none;margin-bottom:20px;">
+        Open the zone map &rarr;
+      </a>
+      <p style="font-size:15px;color:#6B6B80;line-height:1.6;margin:0 0 16px;">
+        The map shows the LV2 boundary streets, key landmarks, and the highest-ticket streets from our FOIA data.
+      </p>
+    </div>
+    <div style="padding:20px 32px;border-top:1px solid #f0eff0;">
+      <p style="font-size:12px;color:#6B6B80;margin:0;line-height:1.6;">
+        lv2park.com &middot; Not affiliated with the Chicago Cubs or MLB.<br>
+        <a href="https://lv2park.com/unsubscribe?email=${encodeURIComponent(email)}" style="color:#6B6B80;">Unsubscribe</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
 }
 
 // ─── TURNSTILE ─────────────────────────────────────────

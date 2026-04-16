@@ -340,13 +340,13 @@
 
         <div id="download-form" class="email-section">
           <div class="email-heading">Send me the zone map PDF.</div>
-          <p class="email-sub">Enter your email and we'll send you the printable LV2 zone map plus a heads-up before each LV2 day.</p>
-          <form class="email-form" action="https://lv2park-worker.adam-945.workers.dev/subscribe" method="POST">
-            <input type="hidden" name="list" value="lv2-map-download">
-            <input class="email-input" type="email" name="email" placeholder="your@email.com" required>
+          <p class="email-sub">Enter your email and we'll send you the printable LV2 zone map.</p>
+          <form class="email-form" id="pdf-form">
+            <input class="email-input" id="pdf-email" type="email" placeholder="your@email.com" required>
             <button class="email-btn" type="submit">Send the Map</button>
           </form>
-          <p class="email-disclaimer">You'll get the PDF immediately plus the weekly LV2 digest. Unsubscribe any time.</p>
+          <div id="pdf-success" style="display:none;padding:14px 18px;background:#F0F9F9;border-radius:var(--radius-md);color:#2e7d32;font-weight:700;border:1px solid #5B9EA0;">Check your inbox — the map is on its way.</div>
+          <p class="email-disclaimer">You'll get the PDF link by email. Unsubscribe any time.</p>
         </div>
 
         <h2>Neighboring Permit Zones</h2>
@@ -609,6 +609,31 @@
         lon: lon !== null ? lon : '',
         page: 'lv2-parking-map',
         resultFound: resultFound || false
+      });
+    }
+
+    // ── PDF DOWNLOAD FORM ──────────────────────────────
+    const pdfForm    = document.getElementById('pdf-form');
+    const pdfSuccess = document.getElementById('pdf-success');
+    if (pdfForm) {
+      pdfForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('pdf-email').value.trim();
+        const btn = pdfForm.querySelector('button');
+        btn.disabled = true; btn.textContent = 'Sending...';
+        try {
+          const res = await fetch('https://lv2park-worker.adam-945.workers.dev/download-pdf', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          if (res.ok) {
+            pdfForm.style.display = 'none';
+            pdfSuccess.style.display = 'block';
+          } else {
+            btn.disabled = false; btn.textContent = 'Send the Map';
+          }
+        } catch { btn.disabled = false; btn.textContent = 'Send the Map'; }
       });
     }
   </script>
