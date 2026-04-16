@@ -261,19 +261,21 @@ function initMap() {
     scrollWheelZoom: false
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19
   }).addTo(map);
 
-  // Wrigley Field — proper stadium marker with pin
+  // Wrigley Field marker — iconSize/iconAnchor [0,0] so origin = lat/lng point.
+  // CSS positions the label + triangle pointer above and centered on that point.
   const wrigleyIcon = L.divIcon({
-    html: `<div style="display:flex;flex-direction:column;align-items:center;cursor:default;">
-      <div style="background:#1A1A2E;color:#F5E030;font-size:12px;font-weight:900;padding:6px 12px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.5);border:2px solid #F5E030;letter-spacing:.05em;">🏟 WRIGLEY FIELD</div>
-      <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1A1A2E;margin-top:-1px;"></div>
+    html: `<div style="position:relative;width:0;height:0;">
+      <div style="position:absolute;bottom:9px;left:0;transform:translateX(-50%);background:#1A1A2E;color:#F5E030;font-size:12px;font-weight:900;padding:6px 12px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.5);border:2px solid #F5E030;letter-spacing:.05em;cursor:default;">🏟 WRIGLEY FIELD</div>
+      <div style="position:absolute;bottom:0;left:0;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1A1A2E;"></div>
     </div>`,
     className: '',
-    iconAnchor: [74, 42]
+    iconSize: [0, 0],
+    iconAnchor: [0, 0]
   });
   L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
     .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St<br>Home of the Chicago Cubs');
@@ -281,57 +283,32 @@ function initMap() {
   // LV2 Zone boundary — Chicago Municipal Code 9-68-023
   // Main area: Irving Park (N) to Roscoe (S), Ravenswood (W) to Ashland (E)
   L.polygon([
-    [41.9545, -87.6749],  // NW: Irving Park & Ravenswood
-    [41.9545, -87.6690],  // NE: Irving Park & Ashland
+    [41.9536, -87.6749],  // NW: Irving Park & Ravenswood
+    [41.9536, -87.6690],  // NE: Irving Park & Ashland
     [41.9435, -87.6690],  // SE: Roscoe & Ashland
     [41.9435, -87.6749],  // SW: Roscoe & Ravenswood
   ], {
-    color: '#6B64D4', weight: 2.5, opacity: 0.7,
-    fillColor: '#6B64D4', fillOpacity: 0.07,
+    color: '#6B64D4', weight: 3, opacity: 0.85,
+    fillColor: '#6B64D4', fillOpacity: 0.12,
     dashArray: '6 4'
   }).addTo(map)
     .bindPopup('<strong>LV2 Zone</strong><br>Chicago Municipal Code 9-68-023<br>Tow zone active 5–10 PM on game and event days.');
 
-  // High-enforcement streets near Wrigley (from FOIA data, 2018–2023)
-  // These are the streets where tickets concentrate — shown red until full GeoJSON loads
-  const hotStreets = [
-    { name: 'Sheffield Ave', coords: [[41.9555, -87.6531], [41.9435, -87.6531]], tickets: 2100 },
-    { name: 'Clark St',      coords: [[41.9555, -87.6553], [41.9435, -87.6553]], tickets: 1800 },
-    { name: 'Addison St',    coords: [[41.9484, -87.6749], [41.9484, -87.6531]], tickets: 1400 },
-    { name: 'Waveland Ave',  coords: [[41.9473, -87.6531], [41.9473, -87.6690]], tickets: 1200 },
-    { name: 'Seminary Ave',  coords: [[41.9555, -87.6583], [41.9435, -87.6583]], tickets:  900 },
-    { name: 'Kenmore Ave',   coords: [[41.9555, -87.6560], [41.9435, -87.6560]], tickets:  700 },
-    { name: 'Racine Ave',    coords: [[41.9555, -87.6605], [41.9435, -87.6605]], tickets:  600 },
-    { name: 'Roscoe St',     coords: [[41.9435, -87.6749], [41.9435, -87.6531]], tickets:  500 },
-    { name: 'Irving Park Rd',coords: [[41.9545, -87.6749], [41.9545, -87.6531]], tickets:  400 },
-  ];
-
-  const staticStreetLayer = L.layerGroup();
-  for (const s of hotStreets) {
-    L.polyline(s.coords, {
-      color: ticketCountToColor(s.tickets),
-      weight: s.tickets > 1500 ? 5 : s.tickets > 900 ? 4 : 3,
-      opacity: 0.82
-    })
-    .bindPopup(`<strong>${s.name}</strong><br>~${s.tickets.toLocaleString()} LV2 tickets (2018–2023)`)
-    .addTo(staticStreetLayer);
-  }
-  staticStreetLayer.addTo(map);
-
-  // Swap to real FOIA GeoJSON when available — hides static layer
-  fetch('/data/lv2-heatmap.geojson')
+  // Real OSM road geometry — fetched from OpenStreetMap, ticket counts from FOIA 2018–2023
+  fetch('/data/lv2-streets.geojson')
     .then(r => r.ok ? r.json() : null)
     .then(geojson => {
       if (!geojson) return;
-      staticStreetLayer.clearLayers();
       L.geoJSON(geojson, {
         style: f => ({
           color: ticketCountToColor(f.properties.tickets),
-          weight: f.properties.tickets > 1000 ? 5 : f.properties.tickets > 500 ? 4 : 3,
-          opacity: 0.85
+          weight: f.properties.tickets > 1500 ? 6 : f.properties.tickets > 900 ? 5 : 4,
+          opacity: 0.9
         }),
         onEachFeature: (f, layer) => {
-          if (f.properties) layer.bindPopup(`<strong>${f.properties.street}</strong><br>${f.properties.tickets.toLocaleString()} LV2 tickets (2018–2023)`);
+          if (f.properties) layer.bindPopup(
+            `<strong>${f.properties.street}</strong><br>~${f.properties.tickets.toLocaleString()} LV2 tickets (2018–2023)`
+          );
         }
       }).addTo(map);
     })

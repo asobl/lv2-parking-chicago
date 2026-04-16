@@ -121,7 +121,7 @@
       <div class="unsub-sub">Enter your email below and you're off the list. No hard feelings. Genuinely.</div>
 
       <div class="unsub-card">
-        <input class="form-input" type="email" id="unsub-email" placeholder="your@email.com" autocomplete="email" style="margin-bottom:20px;">
+        <input class="form-input" type="email" id="unsub-email" placeholder="your@email.com" autocomplete="email" style="width:100%;box-sizing:border-box;margin-bottom:20px;">
 
         <div class="unsub-question">Before you go — what happened? (optional, but we're genuinely curious)</div>
 
@@ -147,7 +147,7 @@
         </div>
 
         <div class="unsub-detail-label">Anything else? (we actually read these)</div>
-        <textarea class="form-textarea" id="unsub-detail" placeholder="Tell us what's on your mind. We can take it." style="min-height:80px;"></textarea>
+        <textarea class="form-textarea" id="unsub-detail" placeholder="Tell us what's on your mind. We can take it." style="width:100%;box-sizing:border-box;min-height:80px;"></textarea>
 
         <button class="btn-unsub-submit" id="unsub-submit-btn" onclick="submitUnsub()">Unsubscribe</button>
       </div>
@@ -168,6 +168,13 @@
   <script>
     const WORKER_URL = 'https://lv2park-email.adam-945.workers.dev';
     let selectedReason = '';
+
+    // Pre-fill email from query param (e.g. ?email=user@example.com)
+    const _params = new URLSearchParams(window.location.search);
+    const _preEmail = _params.get('email');
+    if (_preEmail) {
+      document.getElementById('unsub-email').value = _preEmail;
+    }
 
     function selectReason(btn, reason) {
       document.querySelectorAll('.reason-btn').forEach(b => b.classList.remove('selected'));

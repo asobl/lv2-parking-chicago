@@ -102,7 +102,7 @@ async function handleSubscribe(request, env) {
       from: FROM_EMAIL,
       to: [email],
       subject: "You're in — LV2 Park will keep you posted",
-      html: confirmationEmailHtml()
+      html: confirmationEmailHtml(email)
     })
   });
 
@@ -173,7 +173,7 @@ async function handleContact(request, env) {
 }
 
 // ─── EMAIL TEMPLATE ───────────────────────────────────
-function confirmationEmailHtml() {
+function confirmationEmailHtml(email) {
   return `
 <!DOCTYPE html>
 <html>
@@ -198,7 +198,7 @@ function confirmationEmailHtml() {
     <div style="padding:20px 32px;border-top:1px solid #f0eff0;">
       <p style="font-size:12px;color:#6B6B80;margin:0;line-height:1.6;">
         lv2park.com · Not affiliated with the Chicago Cubs or MLB.<br>
-        <a href="https://lv2park.com/unsubscribe" style="color:#6B6B80;">Unsubscribe</a>
+        <a href="https://lv2park.com/unsubscribe?email=${encodeURIComponent(email)}" style="color:#6B6B80;">Unsubscribe</a>
       </p>
     </div>
   </div>
