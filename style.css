@@ -88,9 +88,11 @@ body {
 }
 .top-bar-inner {
   height: 52px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
 }
 .site-logo {
   font-size: 18px;
@@ -128,6 +130,7 @@ body {
     flex-wrap: nowrap;
     gap: 0;
     scrollbar-width: none;
+    min-width: 0;
   }
   .top-nav::-webkit-scrollbar { display: none; }
   .top-nav-link {
