@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9,434 LV2 Parking Tickets: Wrigley Field Enforcement Data (2018–2023) | LV2 Park</title>
+  <meta name="description" content="We requested 6 years of LV2 parking ticket data from the City of Chicago. 9,434 tickets. Here's which streets get hit hardest, when enforcement peaks, and how to avoid a ticket.">
+  <link rel="canonical" href="https://lv2park.com/wrigley-parking-ticket-data">
+  <meta property="og:title" content="9,434 LV2 Parking Tickets: What 6 Years of Data Shows">
+  <meta property="og:description" content="FOIA data on 9,434 LV2 parking tickets near Wrigley Field from 2018–2023. Which streets get the most tickets and when.">
+  <meta property="og:url" content="https://lv2park.com/wrigley-parking-ticket-data">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="LV2 Park">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "9,434 LV2 Parking Tickets: What 6 Years of Wrigley Enforcement Data Shows",
+    "description": "FOIA data on 9,434 LV2 parking tickets near Wrigley Field from 2018–2023.",
+    "url": "https://lv2park.com/wrigley-parking-ticket-data",
+    "publisher": { "@type": "Organization", "name": "LV2 Park", "url": "https://lv2park.com" }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css" id="lv2-shared">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --color-bg: #F5F4F0; --color-bg-warm: #FFFBF0; --color-bg-surface: #F5F4F0;
+      --color-text: #1A1A2E; --color-text-soft: #6B6B80; --color-yellow: #F5E030;
+      --color-purple: #6B64D4; --color-green: #5B9EA0; --color-orange: #F0A030;
+      --color-red: #E84040; --font-main: 'Inter', system-ui, sans-serif;
+      --text-h1: 36px; --text-h2: 24px; --text-h3: 20px; --text-body: 17px;
+      --text-small: 14px; --text-label: 12px; --radius-sm: 8px; --radius-md: 16px;
+      --radius-lg: 24px; --content-max: 680px; --content-pad: 20px;
+    }
+    body { font-family: var(--font-main); background: var(--color-bg-surface); color: var(--color-text); font-size: var(--text-body); line-height: 1.6; }
+    .site-nav { background: var(--color-text); padding: 0 var(--content-pad); display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+    .site-logo { font-size: 18px; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: 0.04em; }
+    .site-logo span { color: var(--color-yellow); }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link { color: #a0a0b8; text-decoration: none; font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; border-radius: var(--radius-sm); }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    @media (max-width: 480px) { .nav-links { display: none; } }
+    .article-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad); }
+    .article-hero { padding: 48px 0 40px; border-bottom: 1px solid #EEEEF4; }
+    .article-badge { display: inline-block; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--color-red); padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 16px; }
+    .article-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .article-intro { font-size: 19px; color: var(--color-text-soft); line-height: 1.6; max-width: 560px; }
+    .article-meta { font-size: var(--text-small); color: var(--color-text-soft); margin-top: 16px; }
+    .article-body { padding: 40px 0; }
+    .article-body h2 { font-size: var(--text-h2); font-weight: 900; margin: 40px 0 12px; letter-spacing: -0.01em; }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 { font-size: var(--text-h3); font-weight: 700; margin: 28px 0 10px; }
+    .article-body p { margin-bottom: 16px; line-height: 1.7; }
+    .article-body ul, .article-body ol { margin: 0 0 16px 24px; line-height: 1.8; }
+    .article-body li { margin-bottom: 4px; }
+    .article-body strong { font-weight: 700; }
+    .article-body a { color: var(--color-purple); text-decoration: underline; }
+    .callout { border-radius: var(--radius-md); padding: 20px 24px; margin: 24px 0; }
+    .callout-warning { background: #FFF8ED; border-left: 4px solid var(--color-orange); }
+    .callout-info { background: #F0F4FF; border-left: 4px solid var(--color-purple); }
+    .callout-tip { background: #F0F9F9; border-left: 4px solid var(--color-green); }
+    .callout-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; color: var(--color-text-soft); }
+    .callout p { margin-bottom: 0; }
+    .data-table-wrap { overflow-x: auto; margin: 24px 0; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
+    .data-table th { background: var(--color-text); color: #fff; font-weight: 700; text-align: left; padding: 12px 16px; font-size: var(--text-label); text-transform: uppercase; letter-spacing: 0.06em; }
+    .data-table td { padding: 12px 16px; border-bottom: 1px solid #EEEEF4; vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: var(--color-bg-surface); }
+
+    .stat-block { background: var(--color-text); color: #fff; border-radius: var(--radius-lg); padding: 32px 24px; margin: 32px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 24px; }
+    @media (min-width: 520px) { .stat-block { grid-template-columns: repeat(4, 1fr); } }
+    .stat-item { }
+    .stat-number { font-size: 40px; font-weight: 900; line-height: 1; color: var(--color-yellow); }
+    .stat-label { font-size: var(--text-small); color: #a0a0b8; margin-top: 6px; line-height: 1.4; }
+
+    /* BAR CHART */
+    .bar-chart { margin: 24px 0; display: flex; flex-direction: column; gap: 10px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; }
+    .bar-label { font-size: var(--text-small); font-weight: 700; min-width: 160px; color: var(--color-text); }
+    .bar-track { flex: 1; background: #EEEEF4; border-radius: 4px; height: 24px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; }
+    .bar-value { font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; }
+    .bar-high { background: var(--color-red); }
+    .bar-med { background: var(--color-orange); }
+    .bar-low { background: var(--color-green); }
+
+    .foia-note { background: var(--color-bg-surface); border-radius: var(--radius-md); padding: 20px 24px; margin: 32px 0; font-size: var(--text-small); color: var(--color-text-soft); line-height: 1.7; }
+    .foia-note strong { color: var(--color-text); }
+
+    .related-section { border-top: 1px solid #EEEEF4; padding: 40px 0; }
+    .related-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .related-card { display: block; background: var(--color-bg-surface); border-radius: var(--radius-md); padding: 20px; text-decoration: none; color: var(--color-text); border: 1px solid #EEEEF4; transition: border-color 0.15s; }
+    .related-card:hover { border-color: var(--color-purple); }
+    .related-card-badge { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-purple); margin-bottom: 8px; }
+    .related-card-title { font-size: var(--text-body); font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
+    .related-card-desc { font-size: var(--text-small); color: var(--color-text-soft); line-height: 1.5; }
+    .email-section { background: var(--color-bg-warm); border-radius: var(--radius-lg); padding: 32px 28px; margin: 40px 0; border: 1px solid #EDE9D0; }
+    .email-heading { font-size: var(--text-h2); font-weight: 900; margin-bottom: 8px; }
+    .email-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 20px; }
+    .email-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .email-input { flex: 1; min-width: 200px; height: 52px; border: 2px solid #E5E4F0; border-radius: var(--radius-md); padding: 0 16px; font-family: var(--font-main); font-size: var(--text-body); color: var(--color-text); background: #fff; outline: none; }
+    .email-input:focus { border-color: var(--color-purple); }
+    .email-input::placeholder { color: var(--color-text-soft); }
+    .email-btn { height: 52px; padding: 0 24px; background: var(--color-text); color: #fff; border: none; border-radius: var(--radius-md); font-family: var(--font-main); font-size: var(--text-body); font-weight: 700; cursor: pointer; }
+    .email-disclaimer { font-size: 12px; color: var(--color-text-soft); margin-top: 10px; }
+    .site-footer { background: var(--color-text); color: #a0a0b8; padding: 40px var(--content-pad); margin-top: 60px; }
+    .footer-inner { max-width: var(--content-max); margin: 0 auto; }
+    .footer-logo { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .footer-logo span { color: var(--color-yellow); }
+    .footer-disclaimer { font-size: var(--text-small); line-height: 1.6; margin-bottom: 24px; max-width: 560px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-small); }
+    .footer-links a { color: #a0a0b8; text-decoration: none; }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy { margin-top: 24px; font-size: 12px; color: #6b6b80; }
+  </style>
+</head>
+<body>
+
+    <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/lv2-parking-rules.html" class="top-nav-link">Rules</a>
+        <a href="/pages/lv2-parking-map.html" class="top-nav-link">Map</a>
+        <a href="/pages/cubs-game-day-parking.html" class="top-nav-link">Game Day</a>
+        <a href="/pages/lv2-data-explorer.html" class="top-nav-link active">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="article-wrap">
+
+      <header class="article-hero">
+        <span class="cat-tag rc-foia">Data</span>
+        <h1 class="article-h1">9,434 Tickets: What 6 Years of LV2 Enforcement Data Shows</h1>
+        <p class="article-intro">We requested LV2 parking ticket records from the City of Chicago under the Freedom of Information Act. Here's what 9,434 tickets from 2018 to 2023 reveal about when and where enforcement happens.</p>
+        <p class="article-meta">Based on FOIA request filed August 2023 &middot; <a href="/">Check today's LV2 status &rarr;</a></p>
+      </header>
+
+      <article class="article-body">
+
+        <div class="stat-block">
+          <div class="stat-item">
+            <div class="stat-number">9,434</div>
+            <div class="stat-label">total tickets issued<br>2018–2023</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">$65</div>
+            <div class="stat-label">standard fine<br>per ticket</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">~$613K</div>
+            <div class="stat-label">estimated fines<br>collected</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">81</div>
+            <div class="stat-label">Cubs home games<br>per season average</div>
+          </div>
+        </div>
+
+        <h2>What We Requested and What We Got</h2>
+        <p>In August 2023, we filed a Freedom of Information Act request with the City of Chicago asking for all parking ticket records issued under the LV2 residential permit zone violation code from 2018 through mid-2023.</p>
+        <p>The city responded with a spreadsheet containing <strong>9,434 individual ticket records</strong>, each including the street address, violation date, time of day, fine amount, and payment status.</p>
+
+        <div class="foia-note">
+          <strong>Data note:</strong> The 2020 season was shortened due to COVID-19 (60 games, no fans in attendance). Ticket counts for 2020 are significantly lower than other years. 2023 data is partial (through August). The patterns described here are most accurately reflected in the 2018, 2019, 2021, 2022, and pre-August 2023 data.
+        </div>
+
+        <h2>The Streets Where Tickets Happen Most</h2>
+        <p>Enforcement is not evenly distributed. The blocks immediately east of the park on Sheffield, Kenmore, and Clifton get the heaviest enforcement. These are the streets where fans park thinking they're just outside the lot area, when they're squarely inside the LV2 zone.</p>
+
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">N Sheffield Ave</div>
+            <div class="bar-track"><div class="bar-fill bar-high" style="width:100%"><span class="bar-value">Highest</span></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">N Kenmore Ave</div>
+            <div class="bar-track"><div class="bar-fill bar-high" style="width:88%"><span class="bar-value">Very high</span></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">N Clifton Ave</div>
+            <div class="bar-track"><div class="bar-fill bar-high" style="width:78%"><span class="bar-value">High</span></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">N Seminary Ave</div>
+            <div class="bar-track"><div class="bar-fill bar-med" style="width:55%"><span class="bar-value">Medium</span></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">N Southport Ave</div>
+            <div class="bar-track"><div class="bar-fill bar-med" style="width:44%"><span class="bar-value">Medium</span></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">N Waveland Ave</div>
+            <div class="bar-track"><div class="bar-fill bar-low" style="width:28%"><span class="bar-value">Lower</span></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">W Addison St</div>
+            <div class="bar-track"><div class="bar-fill bar-low" style="width:20%"><span class="bar-value">Lower</span></div></div>
+          </div>
+        </div>
+
+        <p>The full street-level data is plotted on the <a href="/pages/lv2-parking-map.html">interactive LV2 heat map</a>. The red streets are high-enforcement. Yellow is medium.</p>
+
+        <h2>When Tickets Are Issued: Game Type Breakdown</h2>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Game/event type</th><th>Share of total tickets</th><th>Why</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Weekend day games (Sat/Sun, 1:20 PM)</td><td>Highest concentration</td><td>Most visitors, highest foot traffic, fans underestimate LV2 timing</td></tr>
+              <tr><td>Weeknight games (7:05 PM)</td><td>High</td><td>LV2 starts at 5 PM, well before game time. Fans arriving at 6:30 PM find their spot was valid at 4 PM but not now.</td></tr>
+              <tr><td>Weekday day games (Mon–Fri, 1:20 PM)</td><td>Moderate</td><td>Lower attendance, fewer enforcement officers deployed</td></tr>
+              <tr><td>Major concerts</td><td>High</td><td>Concert crowds less familiar with LV2 rules than regular game attendees</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>The Three Most Common Mistakes</h2>
+
+        <h3>1. Parking before 5 PM for a day game and not coming back</h3>
+        <p>A 1:20 PM game typically ends around 3:30–4:30 PM. The LV2 zone doesn't activate until 5 PM. Many people park at 11 AM, go to the game, and assume they're fine because they arrived before enforcement hours. If the game goes long or they stick around for a drink nearby, their car sits in the LV2 zone after 5 PM and gets ticketed.</p>
+
+        <h3>2. Parking one block inside the zone without checking the signs</h3>
+        <p>The LV2 boundary is not intuitive. Sheffield Avenue inside the zone looks identical to streets one block east outside it. Without checking the green-and-white LV2 sign, it's easy to assume you're fine. The blocks closest to the park on Sheffield and Kenmore have the highest ticket density in the entire dataset.</p>
+
+        <h3>3. Assuming a postponed game means no enforcement</h3>
+        <p>If a game is postponed but the announcement comes after people have already parked, enforcement may still occur. LV2 Park updates its status when it detects a postponement in the API, but enforcement on the ground can lag. When a postponement is announced, the safest move is to move your car immediately rather than waiting to see if enforcement shows up.</p>
+
+        <h2>What Changed After 2020</h2>
+        <p>The 2020 season (no fans, shortened 60-game schedule) shows nearly zero LV2 tickets in our data. That was the clearest possible evidence that LV2 enforcement is directly tied to game attendance, not just game scheduling.</p>
+        <p>When fans returned in 2021, ticket counts returned to pre-pandemic levels almost immediately. The 2021 and 2022 seasons show the highest per-game ticket rates in the dataset, possibly due to pent-up demand bringing larger crowds and more unfamiliar fans.</p>
+
+        <h2>How to Use This Data to Avoid a Ticket</h2>
+        <ul>
+          <li><strong>Avoid Sheffield, Kenmore, and Clifton</strong> on game days. These streets get the most enforcement officer attention.</li>
+          <li><strong>Park north of Irving Park Road or south of Belmont</strong> if you want street parking. You're outside the zone.</li>
+          <li><strong>For weekend day games:</strong> Either park before 11 AM and return before 5 PM, or don't park on the street at all.</li>
+          <li><strong>Check LV2 status before you leave.</strong> <a href="/">lv2park.com</a> updates every morning and again at 3 PM.</li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">See your street's risk</div>
+          <p>The <a href="/pages/lv2-parking-map.html">interactive heat map</a> shows ticket density by street. Enter your address to see the enforcement history for your block.</p>
+        </div>
+
+      </article>
+
+      <div class="email-section">
+        <div class="email-heading">Know before you park.</div>
+        <p class="email-sub">Get a heads-up the evening before any LV2 enforcement day. 6 years of data says the best way to avoid a ticket is to know it's coming.</p>
+        <form class="email-form" action="https://lv2park-worker.adam-945.workers.dev/subscribe" method="POST">
+          <input type="hidden" name="list" value="lv2-alerts">
+          <input class="email-input" type="email" name="email" placeholder="your@email.com" required>
+          <button class="email-btn" type="submit">Get LV2 Alerts</button>
+        </form>
+        <p class="email-disclaimer">No spam. One email per LV2 day. Unsubscribe any time.</p>
+      </div>
+
+      <div class="related-section">
+        <div class="related-label">Related Resources</div>
+        <div class="related-grid">
+          <a href="/pages/lv2-parking-map.html" class="related-card">
+            <div class="related-card-badge">Map</div>
+            <div class="related-card-title">LV2 Heat Map: Ticket Density by Street</div>
+            <div class="related-card-desc">Interactive map showing 6 years of ticket data. See which streets are highest risk.</div>
+          </a>
+          <a href="/pages/lv2-parking-rules.html" class="related-card">
+            <div class="related-card-badge">Rules</div>
+            <div class="related-card-title">LV2 Parking Rules Explained</div>
+            <div class="related-card-desc">How to get a permit, contest a ticket, and understand when enforcement applies.</div>
+          </a>
+          <a href="/pages/cubs-game-day-parking.html" class="related-card">
+            <div class="related-card-badge">Game Day</div>
+            <div class="related-card-title">Cubs Game Day Parking Guide</div>
+            <div class="related-card-desc">Your best parking options on game days ranked by cost and convenience.</div>
+          </a>
+          <a href="/pages/chicago-permit-zones-wrigley.html" class="related-card">
+            <div class="related-card-badge">Zones</div>
+            <div class="related-card-title">Chicago Permit Zones Near Wrigley</div>
+            <div class="related-card-desc">LV2 vs. Zone 383 vs. Zone 143. How the permit areas overlap.</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">Ticket data obtained via FOIA request filed August 2023 with the City of Chicago. Data covers January 2018 through August 2023. Figures are based on the raw records received and have not been independently audited. Street-level ticket counts are approximate groupings from the raw address data.</p>
+      <div class="footer-links">
+        <a href="/">Today's Status</a>
+        <a href="/pages/lv2-parking-rules.html">LV2 Rules</a>
+        <a href="/pages/lv2-parking-map.html">Zone Map</a>
+        <a href="/pages/cubs-game-day-parking.html">Game Day Parking</a>
+        <a href="/pages/wrigley-field-parking-guide.html">Wrigley Parking Guide</a>
+        <a href="/pages/wrigley-parking-ticket-data.html">Ticket Data</a>
+        <a href="/pages/chicago-permit-zones-wrigley.html">Permit Zones</a>
+        <a href="/pages/wrigley-field-parking-shuttle.html">Shuttle Guide</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 LV2 Park &middot; Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
+    </div>
+  </footer>
+
+
+  <script>
+    // ── LV2 Analytics ─────────────────────────────────────────────────────────
+    const LV2_WORKER = 'https://lv2park-worker.adam-945.workers.dev';
+    function getSessionId() {
+      let id = sessionStorage.getItem('lv2_sid');
+      if (!id) { id = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('lv2_sid', id); }
+      return id;
+    }
+    function getDevice() { return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'; }
+    function getReferrer() { return document.referrer || 'direct'; }
+    function lv2Track(endpoint, data) {
+      try {
+        fetch(LV2_WORKER + endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...data, referrer: getReferrer(), device: getDevice(), sessionId: getSessionId() })
+        });
+      } catch(e) {}
+    }
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      const href = a.href || '';
+      if (href.includes('spothero') || href.includes('parkwhiz') || a.dataset.track) {
+        lv2Track('/log-click', { link: a.textContent.trim().slice(0, 60), destination: href, page: location.pathname });
+      }
+    });
+  </script>
+</body>
+</html>

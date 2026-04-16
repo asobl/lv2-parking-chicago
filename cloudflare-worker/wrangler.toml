@@ -1,0 +1,13 @@
+name = "lv2park-worker"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+
+# Workers.dev URL is active now: https://lv2park-worker.adam-lobosinnovation.workers.dev
+# Custom domain (email.lv2park.com) — uncomment once lv2park.com is in Cloudflare DNS
+# [[routes]]
+# pattern = "email.lv2park.com/*"
+# zone_name = "lv2park.com"
+
+# GOOGLE_SA_JSON is a secret — never put it here.
+# To set it, run: wrangler secret put GOOGLE_SA_JSON
+# Then paste the full contents of the service account JSON file when prompted.

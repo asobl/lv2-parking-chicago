@@ -69,16 +69,25 @@
   </style>
 </head>
 <body>
-  <div class="top-bar">
+    <div class="top-bar">
     <div class="top-bar-inner">
       <a class="site-logo" href="/">LV2 <span>PARK</span></a>
-      <a href="/blog/" style="font-size:13px;font-weight:700;color:#8080a0;text-decoration:none;">← Data &amp; Blog</a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/lv2-parking-rules.html" class="top-nav-link">Rules</a>
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/lv2-parking-map.html" class="top-nav-link">Map</a>
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/cubs-game-day-parking.html" class="top-nav-link">Game Day</a>
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/lv2-data-explorer.html" class="top-nav-link active">Data</a>
+      </nav>
     </div>
   </div>
 
   <div class="post-body">
     <div style="padding-top:40px;margin-bottom:32px;">
-      <div style="font-size:var(--text-label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-soft);margin-bottom:12px;">FOIA Data · April 2026</div>
+      <span class="cat-tag rc-foia" style="margin-bottom:12px;">Data</span>
       <h1 style="font-size:42px;font-weight:900;line-height:1.1;margin-bottom:16px;">We analyzed 9,400+ LV2 parking tickets near Wrigley. Here's what we found.</h1>
       <p style="color:var(--color-text-soft);">The data reveals a system that runs like a machine. Officers staged, timers set, zero margin for error.</p>
     </div>
@@ -184,18 +193,24 @@
     </div>
   </div>
 
-  <footer>
+    <footer>
     <div class="footer-inner">
-      <p class="footer-disclaimer">
-        LV2 Park pulls from the MLB schedule and Ticketmaster. Private events may not appear.
-        Verify at mlb.com/cubs/schedule or the 44th Ward site.
-      </p>
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">LV2 Park pulls from the MLB schedule and Ticketmaster. Schedule data is updated daily. Always verify LV2 enforcement with the 44th Ward site or the signs on your block. Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
       <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/blog/">Data &amp; Blog</a>
-        <a href="https://www.44thward.org" target="_blank" rel="noopener">44th Ward</a>
+        <a href="/">Today's Status</a>
+        <a href="/pages/lv2-parking-rules.html">LV2 Rules</a>
+        <a href="/pages/lv2-parking-map.html">Zone Map</a>
+        <a href="/pages/cubs-game-day-parking.html">Game Day Parking</a>
+        <a href="/pages/wrigley-field-parking-guide.html">Wrigley Parking Guide</a>
+        <a href="/pages/wrigley-parking-ticket-data.html">Ticket Data</a>
+        <a href="/pages/lv2-data-explorer.html">Data Explorer</a>
+        <a href="/pages/wrigley-divvy-scooters.html">Divvy + Scooters</a>
+        <a href="/pages/chicago-permit-zones-wrigley.html">Permit Zones</a>
+        <a href="/pages/wrigley-field-parking-shuttle.html">Shuttle Guide</a>
+        <a href="/about.html">About</a>
       </div>
-      <div class="footer-copy">lv2park.com · Not affiliated with the Chicago Cubs or MLB.</div>
+      <div class="footer-copy">&copy; 2026 LV2 Park &middot; <span id="footer-updated"></span></div>
     </div>
   </footer>
 </body>

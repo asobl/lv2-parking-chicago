@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divvy Bikes and Lime Scooters Near Wrigley Field: Game Day Guide + Geo-Fence Map | LV2 Park</title>
+  <meta name="description" content="Use Divvy or Lime to get to Wrigley Field on game days. Station locations, pricing, and the Lime scooter geo-fence zones that activate during events — showing exactly where scooters slow down or stop.">
+  <link rel="canonical" href="https://lv2park.com/wrigley-divvy-scooters">
+  <meta property="og:title" content="Divvy Bikes and Lime Scooters Near Wrigley: Game Day Guide + Geo-Fence Map">
+  <meta property="og:description" content="Station locations, pricing, and the Lime scooter geo-fence zones that activate during Cubs games and Wrigley events.">
+  <meta property="og:url" content="https://lv2park.com/wrigley-divvy-scooters">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="LV2 Park">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Divvy Bikes and Lime Scooters Near Wrigley Field: Game Day Guide",
+    "description": "Divvy station locations, Lime scooter pricing, and the geo-fence zones that activate during Cubs games.",
+    "url": "https://lv2park.com/wrigley-divvy-scooters",
+    "publisher": { "@type": "Organization", "name": "LV2 Park", "url": "https://lv2park.com" }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css" id="lv2-shared">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --color-bg: #F5F4F0; --color-bg-warm: #FFFBF0; --color-bg-surface: #F5F4F0;
+      --color-text: #1A1A2E; --color-text-soft: #6B6B80; --color-yellow: #F5E030;
+      --color-purple: #6B64D4; --color-green: #5B9EA0; --color-orange: #F0A030;
+      --color-red: #E84040; --color-lime: #4CAF50; --color-divvy: #0058A9;
+      --font-main: 'Inter', system-ui, sans-serif;
+      --text-h1: 36px; --text-h2: 24px; --text-h3: 20px; --text-body: 17px;
+      --text-small: 14px; --text-label: 12px; --radius-sm: 8px; --radius-md: 16px;
+      --radius-lg: 24px; --content-max: 680px; --content-pad: 20px;
+    }
+    body { font-family: var(--font-main); background: var(--color-bg-surface); color: var(--color-text); font-size: var(--text-body); line-height: 1.6; }
+
+    .site-nav { background: var(--color-text); padding: 0 var(--content-pad); display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 1000; }
+    .site-logo { font-size: 18px; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: 0.04em; }
+    .site-logo span { color: var(--color-yellow); }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link { color: #a0a0b8; text-decoration: none; font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; border-radius: var(--radius-sm); transition: color 0.15s, background 0.15s; }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    @media (max-width: 480px) { .nav-links { display: none; } }
+
+    .article-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad); }
+    .article-hero { padding: 48px 0 40px; border-bottom: 1px solid #EEEEF4; }
+    .hero-badges { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .article-badge { display: inline-block; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; padding: 5px 12px; border-radius: var(--radius-sm); }
+    .badge-divvy { background: var(--color-divvy); }
+    .badge-lime  { background: var(--color-lime); }
+    .article-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .article-intro { font-size: 19px; color: var(--color-text-soft); line-height: 1.6; max-width: 560px; }
+    .article-meta { font-size: var(--text-small); color: var(--color-text-soft); margin-top: 16px; }
+    .article-meta a { color: var(--color-purple); }
+
+    .article-body { padding: 40px 0; }
+    .article-body h2 { font-size: var(--text-h2); font-weight: 900; margin: 40px 0 12px; letter-spacing: -0.01em; }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 { font-size: var(--text-h3); font-weight: 700; margin: 28px 0 10px; }
+    .article-body p { margin-bottom: 16px; line-height: 1.7; }
+    .article-body ul, .article-body ol { margin: 0 0 16px 24px; line-height: 1.8; }
+    .article-body li { margin-bottom: 4px; }
+    .article-body strong { font-weight: 700; }
+    .article-body a { color: var(--color-purple); text-decoration: underline; }
+
+    .callout { border-radius: var(--radius-md); padding: 20px 24px; margin: 24px 0; }
+    .callout-warning { background: #FFF8ED; border-left: 4px solid var(--color-orange); }
+    .callout-info  { background: #F0F4FF; border-left: 4px solid var(--color-purple); }
+    .callout-tip   { background: #F0F9F9; border-left: 4px solid var(--color-green); }
+    .callout-lime  { background: #F0FFF0; border-left: 4px solid var(--color-lime); }
+    .callout-divvy { background: #EEF4FF; border-left: 4px solid var(--color-divvy); }
+    .callout-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; color: var(--color-text-soft); }
+    .callout p { margin-bottom: 0; }
+
+    /* MODE CARDS */
+    .mode-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+    @media (max-width: 500px) { .mode-cards { grid-template-columns: 1fr; } }
+    .mode-card { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid #EEEEF4; }
+    .mode-card-header { padding: 18px 20px; display: flex; align-items: center; gap: 12px; }
+    .mode-card-divvy .mode-card-header { background: #EEF4FF; border-bottom: 1px solid #D0DCF0; }
+    .mode-card-lime  .mode-card-header { background: #F0FFF0; border-bottom: 1px solid #C8ECC8; }
+    .mode-icon { height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 10px; }
+    .mode-icon-divvy { background: #0058A9; }
+    .mode-icon-lime  { background: #00BF5F; }
+    .mode-icon svg { display: block; }
+    .mode-name { font-size: var(--text-h3); font-weight: 900; }
+    .mode-tagline { font-size: var(--text-small); color: var(--color-text-soft); }
+    .mode-card-body { padding: 16px 20px; }
+    .mode-card-body p { margin-bottom: 8px; font-size: var(--text-small); line-height: 1.6; }
+    .mode-card-body p:last-child { margin-bottom: 0; }
+    .mode-price { font-weight: 900; color: var(--color-text); }
+
+    /* MAP */
+    .map-card { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid #EEEEF4; margin: 24px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+    #micro-map { height: 460px; width: 100%; background: var(--color-bg-surface); }
+    .map-legend { padding: 14px 20px; background: #fff; display: flex; flex-wrap: wrap; gap: 16px; border-top: 1px solid #EEEEF4; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: var(--text-small); font-weight: 700; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+    /* STATION TABLE */
+    .data-table-wrap { overflow-x: auto; margin: 24px 0; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
+    .data-table th { background: var(--color-text); color: #fff; font-weight: 700; text-align: left; padding: 12px 16px; font-size: var(--text-label); text-transform: uppercase; letter-spacing: 0.06em; }
+    .data-table td { padding: 12px 16px; border-bottom: 1px solid #EEEEF4; vertical-align: top; line-height: 1.5; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: var(--color-bg-surface); }
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .tag-divvy  { background: #EEF4FF; color: var(--color-divvy); }
+    .tag-lime   { background: #F0FFF0; color: #2E7D32; }
+    .tag-ebike  { background: #FFF8ED; color: var(--color-orange); }
+
+    /* GEOFENCE EXPLAINER */
+    .geofence-block { background: var(--color-text); color: #fff; border-radius: var(--radius-lg); padding: 28px 24px; margin: 32px 0; }
+    .geofence-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-lime); margin-bottom: 12px; }
+    .geofence-block h3 { font-size: var(--text-h2); font-weight: 900; margin-bottom: 12px; }
+    .geofence-block p { color: #c0c0d4; line-height: 1.6; margin-bottom: 12px; }
+    .geofence-block p:last-child { margin-bottom: 0; }
+    .geofence-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    @media (max-width: 480px) { .geofence-zones { grid-template-columns: 1fr; } }
+    .geofence-zone { background: rgba(255,255,255,0.07); border-radius: var(--radius-md); padding: 16px; }
+    .geofence-zone-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .geofence-zone-desc  { font-size: var(--text-small); color: #a0a0b8; line-height: 1.5; }
+
+    /* COST COMPARISON */
+    .cost-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+    @media (max-width: 500px) { .cost-grid { grid-template-columns: 1fr; } }
+    .cost-card { background: var(--color-bg-surface); border-radius: var(--radius-md); padding: 18px 16px; text-align: center; }
+    .cost-card-title { font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-soft); margin-bottom: 8px; }
+    .cost-card-price { font-size: 28px; font-weight: 900; color: var(--color-text); line-height: 1; margin-bottom: 4px; }
+    .cost-card-detail { font-size: 11px; color: var(--color-text-soft); line-height: 1.4; }
+
+    /* FAQ */
+    .faq-list { margin: 0; padding: 0; list-style: none; }
+    .faq-item { border-bottom: 1px solid #EEEEF4; padding: 20px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 700; margin-bottom: 8px; }
+    .faq-a { color: var(--color-text-soft); line-height: 1.7; }
+
+    .related-section { border-top: 1px solid #EEEEF4; padding: 40px 0; }
+    .related-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .related-card { display: block; background: var(--color-bg-surface); border-radius: var(--radius-md); padding: 20px; text-decoration: none; color: var(--color-text); border: 1px solid #EEEEF4; transition: border-color 0.15s; }
+    .related-card:hover { border-color: var(--color-purple); }
+    .related-card-badge { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-purple); margin-bottom: 8px; }
+    .related-card-title { font-size: var(--text-body); font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
+    .related-card-desc { font-size: var(--text-small); color: var(--color-text-soft); line-height: 1.5; }
+
+    .email-section { background: var(--color-bg-warm); border-radius: var(--radius-lg); padding: 32px 28px; margin: 40px 0; border: 1px solid #EDE9D0; }
+    .email-heading { font-size: var(--text-h2); font-weight: 900; margin-bottom: 8px; }
+    .email-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 20px; }
+    .email-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .email-input { flex: 1; min-width: 200px; height: 52px; border: 2px solid #E5E4F0; border-radius: var(--radius-md); padding: 0 16px; font-family: var(--font-main); font-size: var(--text-body); color: var(--color-text); background: #fff; outline: none; }
+    .email-input:focus { border-color: var(--color-purple); }
+    .email-input::placeholder { color: var(--color-text-soft); }
+    .email-btn { height: 52px; padding: 0 24px; background: var(--color-text); color: #fff; border: none; border-radius: var(--radius-md); font-family: var(--font-main); font-size: var(--text-body); font-weight: 700; cursor: pointer; }
+    .email-disclaimer { font-size: 12px; color: var(--color-text-soft); margin-top: 10px; }
+
+    .site-footer { background: var(--color-text); color: #a0a0b8; padding: 40px var(--content-pad); margin-top: 60px; }
+    .footer-inner { max-width: var(--content-max); margin: 0 auto; }
+    .footer-logo { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .footer-logo span { color: var(--color-yellow); }
+    .footer-disclaimer { font-size: var(--text-small); line-height: 1.6; margin-bottom: 24px; max-width: 560px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-small); }
+    .footer-links a { color: #a0a0b8; text-decoration: none; }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy { margin-top: 24px; font-size: 12px; color: #6b6b80; }
+  </style>
+</head>
+<body>
+
+    <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/lv2-parking-rules.html" class="top-nav-link">Rules</a>
+        <a href="/pages/lv2-parking-map.html" class="top-nav-link">Map</a>
+        <a href="/pages/cubs-game-day-parking.html" class="top-nav-link active">Game Day</a>
+        <a href="/pages/lv2-data-explorer.html" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="article-wrap">
+
+      <header class="article-hero">
+        <span class="cat-tag rc-bikes">Getting Around</span>
+        <h1 class="article-h1">Divvy Bikes and Lime Scooters Near Wrigley Field</h1>
+        <p class="article-intro">Skip the LV2 zone entirely. Divvy stations ring the neighborhood and Lime scooters are everywhere -- until the geo-fence kicks in. Here's what activates on game days and where.</p>
+        <p class="article-meta">Updated for the 2026 season &middot; <a href="/">Is LV2 active today?</a> &middot; <a href="/pages/cubs-game-day-parking.html">Full parking guide</a></p>
+      </header>
+
+      <article class="article-body">
+
+        <h2>Why Bikes and Scooters Make Sense on Game Days</h2>
+        <p>The LV2 zone makes street parking near Wrigley genuinely risky from 5 PM to 10 PM. Divvy and Lime solve the problem differently than the Red Line or the shuttle: you ride in, dock or lock, and leave the parking problem entirely behind.</p>
+        <p>Both networks have strong coverage within a mile of Wrigley. The catch with Lime is a geo-fence that activates during large events, reducing scooter speeds or blocking rides from ending inside a defined perimeter. Knowing where that fence is means you can plan your drop-off point in advance.</p>
+
+        <div class="mode-cards">
+          <div class="mode-card mode-card-divvy">
+            <div class="mode-card-header">
+              <div class="mode-icon mode-icon-divvy">
+                <svg height="20" viewBox="0 0 62 20" xmlns="http://www.w3.org/2000/svg">
+                  <text x="1" y="15" font-family="'Inter',Arial,sans-serif" font-weight="900" font-size="14" fill="white" letter-spacing="0.3">divvy</text>
+                </svg>
+              </div>
+              <div>
+                <div class="mode-name">Divvy</div>
+                <div class="mode-tagline">City-operated bike share</div>
+              </div>
+            </div>
+            <div class="mode-card-body">
+              <p><span class="mode-price">$1 unlock + $0.17/min</span> (casual rider)</p>
+              <p><span class="mode-price">$19.99/month</span> or <span class="mode-price">$119/year</span> for unlimited 45-min rides</p>
+              <p>Classic and e-bikes. Dock at any station. 9 stations within 0.75 miles of Wrigley.</p>
+              <p><strong>No game-day shutoff.</strong> Divvy operates normally during events.</p>
+            </div>
+          </div>
+          <div class="mode-card mode-card-lime">
+            <div class="mode-card-header">
+              <div class="mode-icon mode-icon-lime">
+                <svg height="20" viewBox="0 0 46 20" xmlns="http://www.w3.org/2000/svg">
+                  <text x="1" y="15" font-family="'Inter',Arial,sans-serif" font-weight="900" font-size="14" fill="white" letter-spacing="0.3">Lime</text>
+                </svg>
+              </div>
+              <div>
+                <div class="mode-name">Lime</div>
+                <div class="mode-tagline">Dockless e-scooters</div>
+              </div>
+            </div>
+            <div class="mode-card-body">
+              <p><span class="mode-price">$1 unlock + $0.39/min</span> standard rate</p>
+              <p><span class="mode-price">~$5–8</span> typical trip from Red Line to Wrigley area</p>
+              <p>Dockless -- lock anywhere on a sidewalk. No docking station needed.</p>
+              <p><strong>Geo-fence activates on game days.</strong> Slow zones and no-ride zones apply near the park. See map below.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2>Geo-Fence Map: Where Lime Scooters Change on Game Days</h2>
+        <p>Lime uses three types of geo-fence zones around Wrigley on Cubs home game days and major events. The zones activate roughly 2 hours before first pitch and deactivate about 1 hour after the game ends.</p>
+
+        <div class="geofence-block">
+          <div class="geofence-label">How Lime Geo-Fencing Works</div>
+          <h3>Three zones, three behaviors</h3>
+          <p>Lime's geofencing system is managed by the City of Chicago and the vendor agreement. During large events, the city can request zone activations to reduce scooter-related pedestrian congestion around the venue.</p>
+          <div class="geofence-zones">
+            <div class="geofence-zone">
+              <div class="geofence-zone-label" style="color:#E84040;">No-Ride Zone</div>
+              <div class="geofence-zone-desc">Scooter rides cannot end inside this area. If you try to lock a Lime here during an active event, the app will tell you to ride to the nearest valid zone. The area immediately around Clark and Addison (within ~2 blocks of the main gate) is a no-ride zone on game days.</div>
+            </div>
+            <div class="geofence-zone">
+              <div class="geofence-zone-label" style="color:#F0A030;">Slow Zone</div>
+              <div class="geofence-zone-desc">Speed is automatically capped at ~8 mph. You can ride through and end your ride here, but the scooter slows down on its own. The zone covers roughly a 4-block radius around the park during active events. You'll feel the speed drop as you enter.</div>
+            </div>
+            <div class="geofence-zone">
+              <div class="geofence-zone-label" style="color:#5B9EA0;">Preferred Parking</div>
+              <div class="geofence-zone-desc">Lime designates preferred parking spots at the edge of the no-ride zone during events. The app shows these as green zones. Locking here counts as a valid end to your ride. These are typically around Southport, Seminary, and north of Irving Park.</div>
+            </div>
+            <div class="geofence-zone">
+              <div class="geofence-zone-label" style="color:#6B64D4;">Normal Zone</div>
+              <div class="geofence-zone-desc">Everything outside the slow zone operates at full speed with no end-ride restrictions. If you're coming from Belmont, Southport, or east of Halsted, you'll ride normally until you hit the slow zone perimeter about 4 blocks out.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-card">
+          <div id="micro-map"></div>
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#E84040;opacity:0.7;"></div> Lime no-ride zone (game days)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#F0A030;opacity:0.6;"></div> Lime slow zone (~8 mph cap)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#0058A9;"></div> Divvy station</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#4CAF50;"></div> Lime preferred parking</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#5B9EA0;"></div> Wrigley Field</div>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-label">Game day timing</div>
+          <p>Lime geo-fences activate approximately <strong>2 hours before first pitch</strong> and deactivate about <strong>1 hour after the final out</strong>. If you're riding in, plan to end your ride outside the no-ride zone and walk the last few blocks. The walk is short -- the no-ride boundary is only 2 blocks from the gate.</p>
+        </div>
+
+        <h2>Divvy Stations Near Wrigley Field</h2>
+        <p>Divvy has no game-day restrictions. Stations around Wrigley can fill up on heavy game days -- if your target station is full, the app shows the nearest open station. Classic bikes and e-bikes are mixed across stations.</p>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Station</th><th>Distance to gate</th><th>Bikes</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Clark St &amp; Addison St</strong></td>
+                <td>3 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span> <span class="tag tag-ebike">E-bike</span></td>
+                <td>Closest station to the main gate. Fills up fast after games -- dock early if leaving pre-final-out.</td>
+              </tr>
+              <tr>
+                <td><strong>Southport Ave &amp; Waveland Ave</strong></td>
+                <td>6 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span> <span class="tag tag-ebike">E-bike</span></td>
+                <td>West side of the park. Good option if Clark &amp; Addison is full post-game.</td>
+              </tr>
+              <tr>
+                <td><strong>Halsted St &amp; Addison St</strong></td>
+                <td>8 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span></td>
+                <td>East of the park. Good arrival station -- walk west on Addison to the gate.</td>
+              </tr>
+              <tr>
+                <td><strong>Broadway &amp; Waveland Ave</strong></td>
+                <td>10 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span> <span class="tag tag-ebike">E-bike</span></td>
+                <td>Rarely full. Good fallback if closer stations are packed post-game.</td>
+              </tr>
+              <tr>
+                <td><strong>Southport Ave &amp; Roscoe St</strong></td>
+                <td>12 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span></td>
+                <td>South of the park. Works well for arriving from the Belmont Red Line stop.</td>
+              </tr>
+              <tr>
+                <td><strong>Ashland Ave &amp; Addison St</strong></td>
+                <td>14 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span> <span class="tag tag-ebike">E-bike</span></td>
+                <td>Farther out but rarely full. Good option for post-game if everything else is packed.</td>
+              </tr>
+              <tr>
+                <td><strong>Kenmore Ave &amp; Irving Park Rd</strong></td>
+                <td>10 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span></td>
+                <td>North of the park. Connect from Ravenswood or Andersonville via bike path.</td>
+              </tr>
+              <tr>
+                <td><strong>Clark St &amp; Roscoe St</strong></td>
+                <td>10 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span> <span class="tag tag-ebike">E-bike</span></td>
+                <td>Good mid-point station. Clark Street corridor into the neighborhood.</td>
+              </tr>
+              <tr>
+                <td><strong>Damen Ave &amp; Addison St</strong></td>
+                <td>18 min walk</td>
+                <td><span class="tag tag-divvy">Classic</span> <span class="tag tag-ebike">E-bike</span></td>
+                <td>If you're coming from Wicker Park or Ukrainian Village, grab an e-bike here and ride east on Addison.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-divvy">
+          <div class="callout-label">Post-game tip</div>
+          <p>After a sold-out game, Clark &amp; Addison station fills within 10 minutes of the final out. If you're leaving on a Divvy, either leave before the last out or ride to <strong>Southport &amp; Waveland</strong> or <strong>Broadway &amp; Waveland</strong> which typically have open docks longer.</p>
+        </div>
+
+        <h2>Cost Comparison: Bike, Scooter, or Transit</h2>
+
+        <div class="cost-grid">
+          <div class="cost-card">
+            <div class="cost-card-title">Divvy Classic</div>
+            <div class="cost-card-price">~$2</div>
+            <div class="cost-card-detail">Per trip under 30 min (casual). Free with $19.99/mo membership.</div>
+          </div>
+          <div class="cost-card">
+            <div class="cost-card-title">Divvy E-Bike</div>
+            <div class="cost-card-price">~$4</div>
+            <div class="cost-card-detail">$1 unlock + e-bike surcharge. Faster, easier on hills. Worth it post-game.</div>
+          </div>
+          <div class="cost-card">
+            <div class="cost-card-title">Lime Scooter</div>
+            <div class="cost-card-price">~$6</div>
+            <div class="cost-card-detail">$1 unlock + $0.39/min. 10-min ride from Red Line = ~$5. Lock outside the no-ride zone.</div>
+          </div>
+          <div class="cost-card">
+            <div class="cost-card-title">CTA Red Line</div>
+            <div class="cost-card-price">$2.50</div>
+            <div class="cost-card-detail">Each way. Still the best value if you're connected to the Red Line corridor.</div>
+          </div>
+          <div class="cost-card">
+            <div class="cost-card-title">LV2 Ticket</div>
+            <div class="cost-card-price">$65</div>
+            <div class="cost-card-detail">If you drive and park in the zone without a permit. The entire case for bikes and scooters.</div>
+          </div>
+          <div class="cost-card">
+            <div class="cost-card-title">SpotHero</div>
+            <div class="cost-card-price">$15–45</div>
+            <div class="cost-card-detail">Pre-booked garage. Reliable but 6–10x the cost of a Divvy ride.</div>
+          </div>
+        </div>
+
+        <h2>The Recommended Game Day Bike/Scooter Play</h2>
+        <ol>
+          <li><strong>Take the Red Line to Addison or Belmont.</strong> This gets you into the neighborhood without driving at all.</li>
+          <li><strong>If you need to ride from further out:</strong> Grab a Divvy e-bike from the nearest station. Ride to Clark &amp; Addison and dock before you hit the game-day chaos.</li>
+          <li><strong>If you're using Lime:</strong> Plan to end your ride at <strong>Southport &amp; Waveland</strong> or <strong>Seminary &amp; Addison</strong> -- both are outside the no-ride zone and a short walk to the gate. The app will show you the preferred parking zone in green.</li>
+          <li><strong>Post-game on Divvy:</strong> Leave 10 minutes before the final out if you want the Clark &amp; Addison station. Otherwise, walk 2 blocks to Southport &amp; Waveland.</li>
+          <li><strong>Post-game on Lime:</strong> Geo-fence deactivates ~1 hour after the game ends. If you're lingering at a bar nearby, by the time you leave, the scooters are operating normally.</li>
+        </ol>
+
+        <h2>Frequently Asked Questions</h2>
+        <ul class="faq-list">
+          <li class="faq-item">
+            <div class="faq-q">Does the Lime geo-fence apply to concerts at Wrigley, not just Cubs games?</div>
+            <div class="faq-a">Yes. Any major event at Wrigley Field that triggers LV2 enforcement also typically triggers Lime's geo-fence. Concerts with 30,000+ attendees get the same treatment as a sold-out Cubs game. The Lime app will notify you when you enter a geo-fenced area.</div>
+          </li>
+          <li class="faq-item">
+            <div class="faq-q">Can I ride my own bike to Wrigley?</div>
+            <div class="faq-a">Yes. Chicago has bike corrals and racks near the park, and the city adds temporary bike parking on game days. Locking to a fence or pole is allowed but you risk your bike being moved if it blocks a gate or fire exit. Use the designated corrals when available.</div>
+          </li>
+          <li class="faq-item">
+            <div class="faq-q">Does Divvy get more crowded on game days?</div>
+            <div class="faq-a">Yes, but it's manageable. The City of Chicago and Divvy rebalance stations (move bikes between stations) during and after large events. Stations closest to the park fill fastest post-game. The Divvy app shows real-time dock availability.</div>
+          </li>
+          <li class="faq-item">
+            <div class="faq-q">Are there Lime scooters available inside the geo-fence on game days?</div>
+            <div class="faq-a">There may be scooters physically located inside the no-ride zone, but you cannot end a ride there. You can start a ride from inside the zone and ride out, which is fine for fans leaving the game.</div>
+          </li>
+          <li class="faq-item">
+            <div class="faq-q">What if the Lime app shows no scooters near me on game day?</div>
+            <div class="faq-a">Scooters get ridden into the area all day before a game. If the map looks empty near Wrigley, zoom out to the 4-6 block radius. There are almost always available scooters at Southport, Broadway, or Clark north of Irving Park.</div>
+          </li>
+        </ul>
+
+      </article>
+
+      <div class="email-section">
+        <div class="email-heading">Know when LV2 and the geo-fence activate.</div>
+        <p class="email-sub">Get an alert the evening before any game day. One email, the right information, no scrambling.</p>
+        <form class="email-form" action="https://lv2park-worker.adam-945.workers.dev/subscribe" method="POST">
+          <input type="hidden" name="list" value="lv2-alerts">
+          <input class="email-input" type="email" name="email" placeholder="your@email.com" required>
+          <button class="email-btn" type="submit">Get Game Day Alerts</button>
+        </form>
+        <p class="email-disclaimer">No spam. One email per LV2 day. Unsubscribe any time.</p>
+      </div>
+
+      <div class="related-section">
+        <div class="related-label">Related Resources</div>
+        <div class="related-grid">
+          <a href="/pages/cubs-game-day-parking.html" class="related-card">
+            <div class="related-card-badge">Game Day</div>
+            <div class="related-card-title">Cubs Game Day Parking Guide</div>
+            <div class="related-card-desc">All game day options ranked: garages, CTA, shuttle, SpotHero.</div>
+          </a>
+          <a href="/pages/wrigley-field-parking-shuttle.html" class="related-card">
+            <div class="related-card-badge">Shuttle</div>
+            <div class="related-card-title">Free Cubs Parking Shuttle</div>
+            <div class="related-card-desc">Free shuttle from Clarendon Park, 2 hours before first pitch.</div>
+          </a>
+          <a href="/pages/lv2-parking-rules.html" class="related-card">
+            <div class="related-card-badge">Rules</div>
+            <div class="related-card-title">LV2 Parking Rules Explained</div>
+            <div class="related-card-desc">Why the geo-fence exists: LV2 restrictions 5–10 PM on game days.</div>
+          </a>
+          <a href="/pages/wrigley-field-parking-guide.html" class="related-card">
+            <div class="related-card-badge">Guide</div>
+            <div class="related-card-title">Full Wrigley Field Parking Guide</div>
+            <div class="related-card-desc">Every option compared: cost, distance, and reliability.</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">Divvy station locations and pricing are based on the Chicago Department of Transportation Divvy system as of 2026. Lime geo-fence zones are approximate and subject to change by Lime and the City of Chicago. Always check the Lime and Divvy apps for real-time station availability and active geo-fence zones.</p>
+      <div class="footer-links">
+        <a href="/">Today's Status</a>
+        <a href="/pages/lv2-parking-rules.html">LV2 Rules</a>
+        <a href="/pages/lv2-parking-map.html">Zone Map</a>
+        <a href="/pages/cubs-game-day-parking.html">Game Day Parking</a>
+        <a href="/pages/wrigley-field-parking-guide.html">Wrigley Parking Guide</a>
+        <a href="/pages/wrigley-divvy-scooters.html">Divvy + Scooters</a>
+        <a href="/pages/wrigley-parking-ticket-data.html">Ticket Data</a>
+        <a href="/pages/wrigley-field-parking-shuttle.html">Shuttle Guide</a>
+        <a href="/pages/chicago-permit-zones-wrigley.html">Permit Zones</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 LV2 Park &middot; Not affiliated with the Chicago Cubs, Wrigley Field, Divvy, Lime, or the City of Chicago.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Map centered on Wrigley
+    var map = L.map('micro-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6553], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 19
+    }).addTo(map);
+
+    // Wrigley Field marker
+    var wrigleyIcon = L.divIcon({
+      html: '<div style="background:#5B9EA0;color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;white-space:nowrap;font-family:Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);">&#x26BE; Wrigley Field</div>',
+      className: '', iconAnchor: [48, 20]
+    });
+    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map);
+
+    // Lime no-ride zone (tight perimeter ~2 blocks around gate)
+    L.circle([41.9484, -87.6553], {
+      radius: 260, color: '#E84040', weight: 2, opacity: 0.9,
+      fillColor: '#E84040', fillOpacity: 0.15
+    }).addTo(map).bindTooltip('Lime no-ride zone (game days)', { direction: 'top' });
+
+    // Lime slow zone (~4 block radius)
+    L.circle([41.9484, -87.6553], {
+      radius: 520, color: '#F0A030', weight: 2, opacity: 0.7,
+      fillColor: '#F0A030', fillOpacity: 0.08, dashArray: '6 4'
+    }).addTo(map).bindTooltip('Lime slow zone (8 mph cap, game days)', { direction: 'top' });
+
+    // Divvy stations
+    var divvyIcon = L.divIcon({
+      html: '<div style="background:#0058A9;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>',
+      className: '', iconAnchor: [7, 7]
+    });
+
+    var stations = [
+      { lat: 41.9470, lon: -87.6556, name: 'Clark St & Addison St' },
+      { lat: 41.9492, lon: -87.6641, name: 'Southport Ave & Waveland Ave' },
+      { lat: 41.9475, lon: -87.6487, name: 'Halsted St & Addison St' },
+      { lat: 41.9509, lon: -87.6476, name: 'Broadway & Waveland Ave' },
+      { lat: 41.9426, lon: -87.6641, name: 'Southport Ave & Roscoe St' },
+      { lat: 41.9467, lon: -87.6693, name: 'Ashland Ave & Addison St' },
+      { lat: 41.9536, lon: -87.6556, name: 'Kenmore Ave & Irving Park Rd' },
+      { lat: 41.9436, lon: -87.6556, name: 'Clark St & Roscoe St' },
+    ];
+
+    stations.forEach(function(s) {
+      L.marker([s.lat, s.lon], { icon: divvyIcon }).addTo(map)
+        .bindTooltip('<strong>Divvy:</strong> ' + s.name, { direction: 'top' });
+    });
+
+    // Lime preferred parking spots (green dots at zone edge)
+    var limeIcon = L.divIcon({
+      html: '<div style="background:#4CAF50;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>',
+      className: '', iconAnchor: [6, 6]
+    });
+
+    var limeParking = [
+      { lat: 41.9492, lon: -87.6628, name: 'Lime preferred parking: Southport & Waveland' },
+      { lat: 41.9488, lon: -87.6516, name: 'Lime preferred parking: Seminary & Addison' },
+      { lat: 41.9520, lon: -87.6580, name: 'Lime preferred parking: North of Irving Park' },
+      { lat: 41.9450, lon: -87.6610, name: 'Lime preferred parking: Southport (south)' },
+    ];
+
+    limeParking.forEach(function(p) {
+      L.marker([p.lat, p.lon], { icon: limeIcon }).addTo(map)
+        .bindTooltip(p.name, { direction: 'top' });
+    });
+  </script>
+
+
+  <script>
+    // ── LV2 Analytics ─────────────────────────────────────────────────────────
+    const LV2_WORKER = 'https://lv2park-worker.adam-945.workers.dev';
+    function getSessionId() {
+      let id = sessionStorage.getItem('lv2_sid');
+      if (!id) { id = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('lv2_sid', id); }
+      return id;
+    }
+    function getDevice() { return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'; }
+    function getReferrer() { return document.referrer || 'direct'; }
+    function lv2Track(endpoint, data) {
+      try {
+        fetch(LV2_WORKER + endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...data, referrer: getReferrer(), device: getDevice(), sessionId: getSessionId() })
+        });
+      } catch(e) {}
+    }
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      const href = a.href || '';
+      if (href.includes('spothero') || href.includes('parkwhiz') || a.dataset.track) {
+        lv2Track('/log-click', { link: a.textContent.trim().slice(0, 60), destination: href, page: location.pathname });
+      }
+    });
+  </script>
+</body>
+</html>

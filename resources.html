@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources — LV2 Park</title>
+  <meta name="description" content="Everything you need to know about LV2 parking near Wrigley Field. Zone maps, FOIA ticket data, game day parking, rules, permits, and more.">
+  <link rel="canonical" href="https://lv2park.com/resources.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .resources-wrap { max-width: 960px; margin: 0 auto; padding: 48px var(--content-pad) var(--space-xl); }
+    .resources-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .resources-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 40px; }
+    .resources-group { margin-bottom: 40px; }
+    .resources-group-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 12px; }
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-sm);
+    }
+    .resources-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 20px 20px 40px;
+      background: #fff;
+      border-radius: var(--radius-md);
+      border: 1px solid #EEEDF0;
+      border-left: 3px solid var(--color-purple);
+      text-decoration: none;
+      color: var(--color-text);
+      position: relative;
+      transition: box-shadow 0.15s;
+    }
+    .resources-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+    .resources-item-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-purple);
+    }
+    .resources-item-title {
+      font-size: var(--text-body);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .resources-item-desc { font-size: var(--text-small); color: var(--color-text-soft); line-height: 1.5; margin-top: 2px; }
+    .resources-item-read {
+      position: absolute;
+      bottom: 14px;
+      left: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-purple);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.15s;
+    }
+    .resources-item:hover .resources-item-read { gap: 8px; }
+
+    /* Category colors — white bg, colored left border + label only */
+    .resources-item.rc-map      { border-left-color: #5B9EA0; }
+    .resources-item.rc-map      .resources-item-label,
+    .resources-item.rc-map      .resources-item-read { color: #3d7d7f; }
+    .resources-item.rc-gameday  { border-left-color: #c9ab00; }
+    .resources-item.rc-gameday  .resources-item-label,
+    .resources-item.rc-gameday  .resources-item-read { color: #9a7f00; }
+    .resources-item.rc-foia     { border-left-color: var(--color-purple); }
+    .resources-item.rc-foia     .resources-item-label,
+    .resources-item.rc-foia     .resources-item-read { color: var(--color-purple); }
+    .resources-item.rc-explorer { border-left-color: #5558cc; }
+    .resources-item.rc-explorer .resources-item-label,
+    .resources-item.rc-explorer .resources-item-read { color: #5558cc; }
+    .resources-item.rc-bikes    { border-left-color: #2e9e5a; }
+    .resources-item.rc-bikes    .resources-item-label,
+    .resources-item.rc-bikes    .resources-item-read { color: #2e9e5a; }
+    .resources-item.rc-rules    { border-left-color: var(--color-orange); }
+    .resources-item.rc-rules    .resources-item-label,
+    .resources-item.rc-rules    .resources-item-read { color: #b85a00; }
+    .resources-item.rc-transit  { border-left-color: #4a7fd4; }
+    .resources-item.rc-transit  .resources-item-label,
+    .resources-item.rc-transit  .resources-item-read { color: #4a7fd4; }
+    .resources-item-desc {
+      font-size: var(--text-small);
+      color: var(--color-text-soft);
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/pages/lv2-parking-rules.html" class="top-nav-link">Rules</a>
+        <a href="/pages/lv2-parking-map.html" class="top-nav-link">Map</a>
+        <a href="/pages/cubs-game-day-parking.html" class="top-nav-link">Game Day</a>
+        <a href="/pages/lv2-data-explorer.html" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="resources-wrap">
+      <div class="about-label" style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-text-soft);margin-bottom:16px;">All Resources</div>
+      <h1 class="resources-h1">Everything about LV2 parking near Wrigley.</h1>
+      <p class="resources-sub">Maps, data, rules, game day guides, and more. All free, no app required.</p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px;">
+        <span class="cat-tag rc-map">Zone Map</span>
+        <span class="cat-tag rc-gameday">Game Day</span>
+        <span class="cat-tag rc-foia">Data</span>
+        <span class="cat-tag rc-explorer">Tool</span>
+        <span class="cat-tag rc-bikes">Getting Around</span>
+        <span class="cat-tag rc-rules">Rules</span>
+      </div>
+
+      <div class="resources-group">
+        <div class="resources-group-label">Parking Status</div>
+        <div class="resources-grid">
+          <a class="resources-item rc-map" href="/">
+            <div class="resources-item-label">Today</div>
+            <div class="resources-item-title">Is there a game or event at Wrigley today?</div>
+            <div class="resources-item-desc">Live status: is LV2 active, what time does it start, and what's on the schedule this week.</div>
+            <div class="resources-item-read">Check now →</div>
+          </a>
+          <a class="resources-item rc-rules" href="/pages/lv2-parking-rules.html">
+            <div class="resources-item-label">Rules</div>
+            <div class="resources-item-title">LV2 rules, permits, and how to contest a ticket</div>
+            <div class="resources-item-desc">When LV2 applies, what it costs to get towed, how to get a resident permit, and how to fight a ticket.</div>
+            <div class="resources-item-read">Read more →</div>
+          </a>
+          <a class="resources-item rc-map" href="/pages/lv2-parking-map.html">
+            <div class="resources-item-label">Zone Map</div>
+            <div class="resources-item-title">Is my address in the LV2 zone?</div>
+            <div class="resources-item-desc">Interactive map of every street in the LV2 permit zone near Wrigley Field.</div>
+            <div class="resources-item-read">View map →</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="resources-group">
+        <div class="resources-group-label">Game Day</div>
+        <div class="resources-grid">
+          <a class="resources-item rc-gameday" href="/pages/cubs-game-day-parking.html">
+            <div class="resources-item-label">Game Day</div>
+            <div class="resources-item-title">Best parking options for Cubs games</div>
+            <div class="resources-item-desc">SpotHero lots, the Cubs remote lot, street parking strategy, and the Red Line.</div>
+            <div class="resources-item-read">Read more →</div>
+          </a>
+          <a class="resources-item rc-gameday" href="/pages/wrigley-field-parking-guide.html">
+            <div class="resources-item-label">Parking Guide</div>
+            <div class="resources-item-title">Complete Wrigley Field parking guide</div>
+            <div class="resources-item-desc">Every option from garages to shuttles. Updated for the 2025 season.</div>
+            <div class="resources-item-read">Read more →</div>
+          </a>
+          <a class="resources-item rc-transit" href="/pages/wrigley-field-parking-shuttle.html">
+            <div class="resources-item-label">Shuttle Guide</div>
+            <div class="resources-item-title">Cubs remote parking shuttle: how it works</div>
+            <div class="resources-item-desc">Free shuttle from 4650 N. Clarendon Ave. Starts 2 hours before first pitch.</div>
+            <div class="resources-item-read">Read more →</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="resources-group">
+        <div class="resources-group-label">Data + Analysis</div>
+        <div class="resources-grid">
+          <a class="resources-item rc-foia" href="/blog/lv2-data-analysis.html">
+            <div class="resources-item-label">FOIA Data</div>
+            <div class="resources-item-title">9,434 tickets: which streets get hit most</div>
+            <div class="resources-item-desc">We analyzed every LV2 ticket issued near Wrigley from 2018 to 2023. Sheffield and Kenmore by 5:05 PM, every game.</div>
+            <div class="resources-item-read">Read the analysis →</div>
+          </a>
+          <a class="resources-item rc-explorer" href="/pages/lv2-data-explorer.html">
+            <div class="resources-item-label">Explorer</div>
+            <div class="resources-item-title">Interactive ticket data by street and year</div>
+            <div class="resources-item-desc">Look up any street in the zone. See how many tickets were issued and when enforcement peaks.</div>
+            <div class="resources-item-read">Explore data →</div>
+          </a>
+          <a class="resources-item rc-foia" href="/pages/wrigley-parking-ticket-data.html">
+            <div class="resources-item-label">Ticket Data</div>
+            <div class="resources-item-title">Wrigley parking ticket statistics</div>
+            <div class="resources-item-desc">Breakdown of LV2 enforcement by street, time, and season from the FOIA dataset.</div>
+            <div class="resources-item-read">Read more →</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="resources-group">
+        <div class="resources-group-label">Getting Around</div>
+        <div class="resources-grid">
+          <a class="resources-item rc-bikes" href="/pages/wrigley-divvy-scooters.html">
+            <div class="resources-item-label">Bikes + Scooters</div>
+            <div class="resources-item-title">Divvy and Lime geo-fence map near Wrigley</div>
+            <div class="resources-item-desc">Where Divvy bikes dock and where Lime scooters can and can't be parked on game days.</div>
+            <div class="resources-item-read">View map →</div>
+          </a>
+          <a class="resources-item rc-rules" href="/pages/chicago-permit-zones-wrigley.html">
+            <div class="resources-item-label">Permit Zones</div>
+            <div class="resources-item-title">Chicago permit zones near Wrigley Field</div>
+            <div class="resources-item-desc">Full breakdown of LV2, LV1, and other residential permit zones in Lakeview and Wrigleyville.</div>
+            <div class="resources-item-read">Read more →</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="resources-group">
+        <div class="resources-group-label">Explainers</div>
+        <div class="resources-grid">
+          <a class="resources-item rc-foia" href="/blog/what-is-lv2.html">
+            <div class="resources-item-label">Explainer</div>
+            <div class="resources-item-title">What is LV2? The Chicago parking zone that tows your car in minutes.</div>
+            <div class="resources-item-desc">LV2 changed in 2023. It now applies to all Cubs games, day and night.</div>
+            <div class="resources-item-read">Read the explainer →</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">LV2 Park pulls from the MLB schedule and Ticketmaster. Schedule data is updated daily. Always verify LV2 enforcement with the 44th Ward site or the signs on your block. Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
+      <div class="footer-links">
+        <a href="/">Today's Status</a>
+        <a href="/pages/lv2-parking-rules.html">LV2 Rules</a>
+        <a href="/pages/lv2-parking-map.html">Zone Map</a>
+        <a href="/pages/cubs-game-day-parking.html">Game Day Parking</a>
+        <a href="/pages/wrigley-field-parking-guide.html">Wrigley Parking Guide</a>
+        <a href="/pages/wrigley-parking-ticket-data.html">Ticket Data</a>
+        <a href="/pages/lv2-data-explorer.html">Data Explorer</a>
+        <a href="/pages/wrigley-divvy-scooters.html">Divvy + Scooters</a>
+        <a href="/pages/chicago-permit-zones-wrigley.html">Permit Zones</a>
+        <a href="/pages/wrigley-field-parking-shuttle.html">Shuttle Guide</a>
+        <a href="/resources.html">All Resources</a>
+        <a href="/about.html">About</a>
+      </div>
+      <div class="footer-copy">&copy; 2026 LV2 Park</div>
+    </div>
+  </footer>
+
+</body>
+</html>

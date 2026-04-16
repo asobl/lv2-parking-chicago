@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — LV2 Park</title>
+  <meta name="description" content="LV2 Park was built by a Roscoe Village entrepreneur who got tired of moving his car on Cubs game days.">
+  <link rel="canonical" href="https://lv2park.com/about.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-wrap { max-width: 640px; margin: 0 auto; padding: 56px var(--content-pad) var(--space-xl); }
+    .about-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
+    .about-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 32px; }
+    .about-body p { font-size: var(--text-body); line-height: 1.8; color: var(--color-text); margin-bottom: 20px; }
+    .about-body a { color: var(--color-purple); text-decoration: none; font-weight: 700; }
+    .about-body a:hover { text-decoration: underline; }
+    .about-divider { border: none; border-top: 1px solid #EEEEF4; margin: 40px 0; }
+    .about-links { display: flex; flex-direction: column; gap: 12px; }
+    .about-link { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--color-bg-surface, #F5F4F0); border-radius: 12px; text-decoration: none; color: var(--color-text); border: 1px solid #EEEEF4; transition: border-color 0.15s; }
+    .about-link:hover { border-color: var(--color-purple); }
+    .about-link-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-purple); margin-bottom: 4px; }
+    .about-link-title { font-size: var(--text-body); font-weight: 700; }
+    .about-link-arrow { font-size: 20px; color: var(--color-text-soft); }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link active">Today</a>
+        <a href="/pages/lv2-parking-rules.html" class="top-nav-link">Rules</a>
+        <a href="/pages/lv2-parking-map.html" class="top-nav-link">Map</a>
+        <a href="/pages/cubs-game-day-parking.html" class="top-nav-link">Game Day</a>
+        <a href="/pages/lv2-data-explorer.html" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="about-wrap">
+      <div class="about-label">About</div>
+      <h1 class="about-h1">Built by someone who got tired of moving his car.</h1>
+
+      <div class="about-body">
+        <p>I'm Adam Sobol, an entrepreneur based in Roscoe Village. I've lived in this neighborhood long enough to know the specific dread of a Tuesday afternoon in June when you realize there's a 7:05 PM game and you have no idea if your car is still on Sheffield.</p>
+
+        <p>A friend of mine in Lakeview felt the same way, except she had a bigger problem: she'd invite people over on game days and spend the whole night managing texts from guests who'd parked in the wrong spot. Nobody had a good answer for "is LV2 active tonight?" You had to piece it together from the Cubs schedule, the 44th Ward site, and whatever your neighbor said.</p>
+
+        <p>So I built LV2 Park. One page. One answer. Updated every day from the same sources the city uses. It's free, it has no app to download, and it answers the question in about two seconds.</p>
+
+        <p>The <a href="/pages/lv2-data-explorer.html">FOIA data</a> came from a public records request I filed with the City of Chicago. 9,434 tickets issued near Wrigley between 2018 and 2023. I wanted to know which streets get hit hardest and when enforcement starts. The data confirmed what the neighborhood already knew: Sheffield and Kenmore by 5:05 PM, every game.</p>
+
+        <p>If you have questions, find a bug, or want to suggest something, reach out through the contact form on the home page.</p>
+      </div>
+
+      <hr class="about-divider">
+
+      <div class="about-links">
+        <a href="/pages/lv2-data-explorer.html" class="about-link">
+          <div>
+            <div class="about-link-label">FOIA Data</div>
+            <div class="about-link-title">Explore 9,434 LV2 tickets from 2018–2023</div>
+          </div>
+          <div class="about-link-arrow">›</div>
+        </a>
+        <a href="/pages/lv2-parking-map.html" class="about-link">
+          <div>
+            <div class="about-link-label">Zone Map</div>
+            <div class="about-link-title">Check if your address is in the LV2 zone</div>
+          </div>
+          <div class="about-link-arrow">›</div>
+        </a>
+        <a href="/" class="about-link">
+          <div>
+            <div class="about-link-label">Today</div>
+            <div class="about-link-title">Is there a game today? Is LV2 active?</div>
+          </div>
+          <div class="about-link-arrow">›</div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">LV2 Park pulls from the MLB schedule and Ticketmaster. Schedule data is updated daily. Always verify LV2 enforcement with the 44th Ward site or the signs on your block. Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
+      <div class="footer-links">
+        <a href="/">Today's Status</a>
+        <a href="/pages/lv2-parking-rules.html">LV2 Rules</a>
+        <a href="/pages/lv2-parking-map.html">Zone Map</a>
+        <a href="/pages/cubs-game-day-parking.html">Game Day Parking</a>
+        <a href="/pages/wrigley-field-parking-guide.html">Wrigley Parking Guide</a>
+        <a href="/pages/wrigley-parking-ticket-data.html">Ticket Data</a>
+        <a href="/pages/lv2-data-explorer.html">Data Explorer</a>
+        <a href="/pages/wrigley-divvy-scooters.html">Divvy + Scooters</a>
+        <a href="/pages/chicago-permit-zones-wrigley.html">Permit Zones</a>
+        <a href="/pages/wrigley-field-parking-shuttle.html">Shuttle Guide</a>
+        <a href="/resources.html">All Resources</a>
+        <a href="/about.html">About</a>
+      </div>
+      <div class="footer-copy">&copy; 2026 LV2 Park</div>
+    </div>
+  </footer>
+
+</body>
+</html>
