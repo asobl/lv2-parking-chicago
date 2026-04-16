@@ -133,11 +133,12 @@ body {
     flex-wrap: nowrap;
     gap: 0;
     scrollbar-width: none;
+    justify-content: space-between;
   }
   .top-nav::-webkit-scrollbar { display: none; }
   .top-nav-link {
-    font-size: 11px;
-    padding: 6px 5px;
+    font-size: 12px;
+    padding: 8px 7px;
     white-space: nowrap;
     letter-spacing: 0;
   }
