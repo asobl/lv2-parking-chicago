@@ -373,20 +373,21 @@ function initMap() {
   L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
     .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St<br>Home of the Chicago Cubs');
 
-  // LV2 Zone boundary — approximate, based on Chicago Municipal Code 9-68-023
-  // Irving Park (N) to Belmont (S), Southport area (W) to Halsted (E)
-  // Coordinates estimated from FOIA street data — not a precise GIS boundary
+  // LV2 Zone boundary — confirmed from 44th Ward official site
+  // "Zone 383 from Belmont to Irving and Broadway to Ashland is a Tow Zone 5–10 PM for night games"
+  // Source: 44thward.org/resources/wrigley-field-neighborhood-information/chicago-cubs-parking-restriction-reminders/
+  // Broadway is diagonal; longitude estimated from FOIA street coordinates
   L.polygon([
-    [41.9545, -87.6650],  // NW: Irving Park & Southport approx
-    [41.9545, -87.6490],  // NE: Irving Park & Halsted approx
-    [41.9399, -87.6490],  // SE: Belmont & Halsted approx
-    [41.9399, -87.6650],  // SW: Belmont & Southport approx
+    [41.9536, -87.6700],  // NW: Irving Park & Ashland
+    [41.9536, -87.6510],  // NE: Irving Park & Broadway
+    [41.9399, -87.6530],  // SE: Belmont & Broadway (diagonal, slightly west at south end)
+    [41.9399, -87.6700],  // SW: Belmont & Ashland
   ], {
     color: '#6B64D4', weight: 3, opacity: 0.85,
     fillColor: '#6B64D4', fillOpacity: 0.12,
     dashArray: '6 4'
   }).addTo(map)
-    .bindPopup('<strong>LV2 Zone</strong><br>Chicago Municipal Code 9-68-023<br>Tow zone active 5–10 PM on game and event days.');
+    .bindPopup('<strong>LV2 Tow Zone</strong><br>Belmont to Irving Park, Broadway to Ashland<br>Tow zone active 5–10 PM on game and event days.<br><small>Source: 44th Ward</small>');
 
   // Real OSM road geometry — fetched from OpenStreetMap, ticket counts from FOIA 2018–2023
   fetch('/data/lv2-streets.geojson')

@@ -165,9 +165,9 @@
       <h3>Zone Boundaries</h3>
       <div class="boundary-row"><span class="boundary-dir">North</span><span class="boundary-street">Irving Park Rd (4000 N)</span></div>
       <div class="boundary-row"><span class="boundary-dir">South</span><span class="boundary-street">Belmont Ave (3200 N)</span></div>
-      <div class="boundary-row"><span class="boundary-dir">West</span><span class="boundary-street">Southport Ave area</span></div>
-      <div class="boundary-row"><span class="boundary-dir">East</span><span class="boundary-street">Halsted St area</span></div>
-      <p style="font-size:12px;color:#6B6B80;margin-top:8px;line-height:1.5;">Map boundary is approximate. Block-level coverage varies. Always confirm with signs on your specific block. Sign reads: RESIDENTIAL PERMIT PARKING LV2.</p>
+      <div class="boundary-row"><span class="boundary-dir">West</span><span class="boundary-street">Ashland Ave (1600 W)</span></div>
+      <div class="boundary-row"><span class="boundary-dir">East</span><span class="boundary-street">Broadway (diagonal)</span></div>
+      <p style="font-size:12px;color:#6B6B80;margin-top:8px;line-height:1.5;">Source: 44th Ward. Map boundary approximate — Broadway is diagonal so the east edge varies by block. Always confirm with signs on your specific block. Sign reads: RESIDENTIAL PERMIT PARKING LV2.</p>
     </div>
 
     <div class="info-block">
@@ -230,13 +230,14 @@
     L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
       .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
 
-    // LV2 zone polygon — approximate boundary (Chicago Municipal Code 9-68-023)
-    // Coords estimated from FOIA street data — not a precise GIS boundary
+    // LV2 zone polygon — confirmed from 44th Ward official site
+    // "Zone 383 from Belmont to Irving and Broadway to Ashland is a Tow Zone 5–10 PM for night games"
+    // Broadway is diagonal; longitude estimated from FOIA street coordinates
     L.polygon([
-      [41.9545, -87.6650],  // NW: Irving Park & Southport approx
-      [41.9545, -87.6490],  // NE: Irving Park & Halsted approx
-      [41.9399, -87.6490],  // SE: Belmont & Halsted approx
-      [41.9399, -87.6650],  // SW: Belmont & Southport approx
+      [41.9536, -87.6700],  // NW: Irving Park & Ashland
+      [41.9536, -87.6510],  // NE: Irving Park & Broadway
+      [41.9399, -87.6530],  // SE: Belmont & Broadway (diagonal)
+      [41.9399, -87.6700],  // SW: Belmont & Ashland
     ], {
       color: '#6B64D4', weight: 3, opacity: 0.85,
       fillColor: '#6B64D4', fillOpacity: 0.12,
