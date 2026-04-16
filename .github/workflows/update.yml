@@ -49,3 +49,16 @@ jobs:
           else
             echo "Not Monday (day $(date +%u)) — skipping digest"
           fi
+
+      - name: Check traffic + FlexOffers alert
+        env:
+          RESEND_API_KEY:  ${{ secrets.RESEND_API_KEY }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GOOGLE_SA_JSON:  ${{ secrets.GOOGLE_SA_JSON }}
+        run: |
+          if [ "$(date +%u)" = "1" ]; then
+            echo "Monday — checking traffic"
+            python scripts/check_traffic.py
+          else
+            echo "Not Monday — skipping traffic check"
+          fi
