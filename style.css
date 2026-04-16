@@ -16,6 +16,7 @@
   --text-hero:    72px;
   --text-h1:      36px;
   --text-h2:      24px;
+  --text-h3:      20px;
   --text-body:    17px;
   --text-small:   14px;
   --text-label:   12px;
@@ -945,7 +946,7 @@ body {
 }
 
 /* ─── ARTICLE SHELL (resource pages) ────────────── */
-.article-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad); }
+.article-wrap { max-width: 680px; margin: 0 auto; padding: 0 var(--content-pad); }
 .article-hero { padding: 48px 0 40px; border-bottom: 1px solid #C8C6D4; }
 .article-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.02em; }
 .article-intro { font-size: 19px; color: var(--color-text-soft); line-height: 1.6; max-width: 560px; }
