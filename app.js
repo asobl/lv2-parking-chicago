@@ -38,15 +38,33 @@ document.addEventListener('DOMContentLoaded', () => {
   initTurnstile();
 });
 
+let tsWidgetId = null;
+let tsResolve   = null;
+
 function initTurnstile() {
-  if (!TURNSTILE_SITE_KEY) return; // not configured yet
+  if (!TURNSTILE_SITE_KEY) return;
   const el = document.getElementById('turnstile-widget');
-  if (!el || typeof turnstile === 'undefined') return;
-  turnstile.render(el, {
-    sitekey: TURNSTILE_SITE_KEY,
-    theme:   'light',
-    size:    'normal',
-    callback: () => {} // token stored in widget, retrieved on submit
+  if (!el) return;
+  // Poll until Turnstile script is ready
+  if (typeof turnstile === 'undefined') {
+    setTimeout(initTurnstile, 300);
+    return;
+  }
+  tsWidgetId = turnstile.render(el, {
+    sitekey:   TURNSTILE_SITE_KEY,
+    size:      'invisible',
+    execution: 'execute',
+    callback: token => { if (tsResolve) { tsResolve(token); tsResolve = null; } },
+    'error-callback': () => { if (tsResolve) { tsResolve(''); tsResolve = null; } },
+    'expired-callback': () => { if (tsResolve) { tsResolve(''); tsResolve = null; } }
+  });
+}
+
+function getTurnstileToken() {
+  if (!TURNSTILE_SITE_KEY || tsWidgetId === null) return Promise.resolve('');
+  return new Promise(resolve => {
+    tsResolve = resolve;
+    turnstile.execute(tsWidgetId);
   });
 }
 
@@ -713,10 +731,8 @@ async function handleEmailSubmit(e) {
   const btn = e.target.querySelector('button');
   btn.textContent = 'Subscribing...';
   btn.disabled = true;
-  // Include Turnstile token if widget is active
-  const tsToken = TURNSTILE_SITE_KEY && typeof turnstile !== 'undefined'
-    ? turnstile.getResponse(document.getElementById('turnstile-widget'))
-    : '';
+  const tsToken = await getTurnstileToken();
+  if (tsWidgetId !== null) turnstile.reset(tsWidgetId); // reset for next use
 
   try {
     const res = await fetch(`${WORKER_URL}/subscribe`, {
@@ -726,7 +742,9 @@ async function handleEmailSubmit(e) {
     });
     if (res.ok) {
       document.getElementById('email-form').style.display = 'none';
-      document.getElementById('email-success').style.display = 'block';
+      const success = document.getElementById('email-success');
+      success.textContent = "You're in. Move your car before 5 PM. We'll handle the rest.";
+      success.style.display = 'block';
     } else throw new Error();
   } catch {
     btn.textContent = 'Subscribe';
