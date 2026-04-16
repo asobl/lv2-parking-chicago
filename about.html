@@ -18,11 +18,17 @@
     .about-body a:hover { text-decoration: underline; }
     .about-divider { border: none; border-top: 1px solid #C8C6D4; margin: 40px 0; }
     .about-links { display: flex; flex-direction: column; gap: 12px; }
-    .about-link { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--color-bg-surface, #F5F4F0); border-radius: 12px; text-decoration: none; color: var(--color-text); border: 1px solid #C8C6D4; transition: border-color 0.15s; }
-    .about-link:hover { border-color: var(--color-purple); }
-    .about-link-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-purple); margin-bottom: 4px; }
+    .about-link { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #fff; border-radius: 12px; text-decoration: none; color: var(--color-text); border: 1px solid #C8C6D4; border-left: 3px solid var(--color-purple); transition: box-shadow 0.15s; }
+    .about-link:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .about-link-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-purple); margin-bottom: 4px; }
     .about-link-title { font-size: var(--text-body); font-weight: 700; }
     .about-link-arrow { font-size: 20px; color: var(--color-text-soft); }
+    .about-link.rc-foia     { border-left-color: var(--color-purple); }
+    .about-link.rc-foia     .about-link-label { color: var(--color-purple); }
+    .about-link.rc-map      { border-left-color: #5B9EA0; }
+    .about-link.rc-map      .about-link-label { color: #3d7d7f; }
+    .about-link.rc-gameday  { border-left-color: #c9ab00; }
+    .about-link.rc-gameday  .about-link-label { color: #9a7f00; }
   </style>
 </head>
 <body>
@@ -62,21 +68,21 @@
       <hr class="about-divider">
 
       <div class="about-links">
-        <a href="/resources/lv2-data-explorer/" class="about-link">
+        <a href="/resources/lv2-data-explorer/" class="about-link rc-foia">
           <div>
             <div class="about-link-label">FOIA Data</div>
             <div class="about-link-title">Explore 9,434 LV2 tickets from 2018–2023</div>
           </div>
           <div class="about-link-arrow">›</div>
         </a>
-        <a href="/resources/lv2-parking-map/" class="about-link">
+        <a href="/resources/lv2-parking-map/" class="about-link rc-map">
           <div>
             <div class="about-link-label">Zone Map</div>
             <div class="about-link-title">Check if your address is in the LV2 zone</div>
           </div>
           <div class="about-link-arrow">›</div>
         </a>
-        <a href="/" class="about-link">
+        <a href="/" class="about-link rc-gameday">
           <div>
             <div class="about-link-label">Today</div>
             <div class="about-link-title">Is there a game today? Is LV2 active?</div>
@@ -116,7 +122,7 @@
         <div class="footer-col">
           <div class="footer-col-label">Site</div>
           <a href="/resources/">Resources</a>
-          <a href="/about.html">About</a>
+          <a href="/about/">About</a>
         </div>
       </div>
       <div class="footer-copy">&copy; 2026 LV2 Park</div>

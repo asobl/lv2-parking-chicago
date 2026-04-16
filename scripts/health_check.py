@@ -56,9 +56,19 @@ DATA_DIR = os.path.join(ROOT, 'data')
 LOGS_DIR = os.path.join(ROOT, 'logs')
 
 
-# ── HTTP helpers (stdlib only, no requests) ──────────
+# ── HTTP helpers ──────────────────────────────────────
+# Uses `requests` when available (handles macOS SSL certs correctly).
+# Falls back to urllib for GitHub Actions (Linux has certs installed).
+
 def http_get(url, params=None, headers=None, timeout=12):
-    """Simple GET returning (status_code, body_str). Never raises."""
+    """GET returning (status_code, body_str). Never raises."""
+    if _USE_REQUESTS:
+        try:
+            r = _requests.get(url, params=params, headers=headers, timeout=timeout, allow_redirects=True)
+            return r.status_code, r.text
+        except Exception as e:
+            return 0, str(e)
+    # urllib fallback
     if params:
         from urllib.parse import urlencode
         url = url + '?' + urlencode(params)
@@ -74,6 +84,12 @@ def http_get(url, params=None, headers=None, timeout=12):
 
 def http_head(url, timeout=10):
     """HEAD request, follows redirects. Returns final status code."""
+    if _USE_REQUESTS:
+        try:
+            r = _requests.head(url, timeout=timeout, allow_redirects=True)
+            return r.status_code
+        except Exception:
+            return 0
     req = urllib.request.Request(url, method='HEAD')
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -330,15 +346,16 @@ def check_resend_subscribers():
     """Check subscriber count. Warn at SUBSCRIBER_WARN_AT (80)."""
     if not RESEND_API_KEY or not RESEND_AUDIENCE_ID:
         return {'status': 'warn', 'detail': 'RESEND_API_KEY or RESEND_AUDIENCE_ID not set', 'value': None}
-    req = urllib.request.Request(
+    status, body = http_get(
         f'https://api.resend.com/audiences/{RESEND_AUDIENCE_ID}/contacts',
         headers={'Authorization': f'Bearer {RESEND_API_KEY}'}
     )
+    if status != 200:
+        return {'status': 'fail', 'detail': f'Resend API error HTTP {status}: {body[:120]}', 'value': None}
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        return {'status': 'fail', 'detail': f'Resend API error HTTP {e.code}', 'value': None}
+        data = json.loads(body)
+    except Exception as e:
+        return {'status': 'fail', 'detail': f'Resend response parse error: {e}', 'value': None}
     contacts = data.get('data', [])
     count = len(contacts)
     if count >= SUBSCRIBER_WARN_AT:
