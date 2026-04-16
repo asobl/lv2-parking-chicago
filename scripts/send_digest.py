@@ -23,7 +23,12 @@ ADAM_EMAIL         = 'adam@lobosinnovation.com'
 
 def load_week():
     with open('data/week.json') as f:
-        return json.load(f)
+        data = json.load(f)
+    # Filter to the next 7 days only
+    today = datetime.now().strftime('%Y-%m-%d')
+    all_days = data.get('days', [])
+    data['days'] = [d for d in all_days if d.get('date', '') >= today][:7]
+    return data
 
 
 def event_icon(ev):
@@ -140,10 +145,21 @@ def build_html(data):
 
     <div style="margin:0 28px 28px;padding:20px;background:#F5F4F0;border-radius:10px;text-align:center;">
       <div style="font-size:15px;font-weight:700;color:#1A1A2E;margin-bottom:6px;">Know someone in Lakeview?</div>
-      <div style="font-size:13px;color:#6B6B80;margin-bottom:14px;">Forward this email. Their car will thank you after game day.</div>
-      <a href="{SITE_URL}" style="display:inline-block;background:#1A1A2E;color:#F5E030;font-size:14px;font-weight:700;padding:10px 20px;border-radius:8px;text-decoration:none;">
-        Share lv2park.com
-      </a>
+      <div style="font-size:13px;color:#6B6B80;margin-bottom:16px;">Forward this email or send them the link before they find out the hard way.</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <a href="mailto:?subject=Heads%20up%20%E2%80%94%20LV2%20parking%20near%20Wrigley&body=Hey%2C%20found%20this%20%E2%80%94%20lv2park.com%20tells%20you%20when%20LV2%20tow%20zones%20are%20active%20near%20Wrigley%20Field%20so%20you%20don%27t%20get%20towed.%20Worth%20bookmarking%20if%20you%20ever%20park%20in%20Lakeview%20or%20Wrigleyville."
+           style="display:inline-block;background:#1A1A2E;color:#F5E030;font-size:13px;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none;">
+          <span style="font-size:18px;vertical-align:middle;margin-right:6px;">✉</span>Email a friend
+        </a>
+        <a href="https://twitter.com/intent/tweet?text=If%20you%20park%20near%20Wrigley%2C%20bookmark%20this%3A%20lv2park.com%20%E2%80%94%20tells%20you%20exactly%20when%20LV2%20tow%20zones%20are%20active%20so%20you%20don%27t%20get%20towed."
+           style="display:inline-block;background:#000;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none;">
+          <span style="font-size:18px;vertical-align:middle;margin-right:6px;">𝕏</span>Post
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flv2park.com"
+           style="display:inline-block;background:#1877F2;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none;">
+          <span style="font-size:18px;vertical-align:middle;margin-right:6px;">f</span>Facebook
+        </a>
+      </div>
     </div>
 
     <div style="padding:16px 28px 20px;border-top:1px solid #EEEDF0;">

@@ -13,7 +13,11 @@
  *   RESEND_LEAD_MAGNET_AUD_ID  — resource download contacts (separate audience)
  *   NOTIFY_EMAIL               — where contact form submissions get forwarded
  *   TURNSTILE_SECRET           — from dash.cloudflare.com/turnstile (optional)
+ *   GOOGLE_SA_JSON             — full Google service account JSON (for Sheets logging)
  */
+
+const SPREADSHEET_ID    = '1-P5kFhUvi9JieiHoU9odhRa_HiekjkinnaAqPK27Fik';
+const SHEET_SUBSCRIBERS = 'Subscribers';
 
 const ALLOWED_ORIGIN = 'https://lv2park.com';
 const FROM_EMAIL     = 'LV2 Park <hello@lv2park.com>';
@@ -98,7 +102,12 @@ async function handleSubscribe(request, env) {
     return corsResponse(JSON.stringify({ error: 'could not subscribe' }), 500, env);
   }
 
-  // 2. Send welcome email to subscriber
+  // 2. Log to Google Sheets (non-blocking)
+  if (env.GOOGLE_SA_JSON) {
+    logSubscriberToSheets(env, { email, device }).catch(() => {});
+  }
+
+  // 3. Send welcome email to subscriber
   await fetch(`${RESEND_API}/emails`, {
     method: 'POST',
     headers: {
@@ -113,7 +122,7 @@ async function handleSubscribe(request, env) {
     })
   });
 
-  // 3. Internal subscriber notification to Adam
+  // 4. Internal subscriber notification to Adam
   const location = [city, region, zip].filter(Boolean).join(', ') || 'unknown';
   await fetch(`${RESEND_API}/emails`, {
     method: 'POST',
@@ -370,6 +379,80 @@ function detectDevice(ua) {
   if (/iPhone|Android.*Mobile|Mobile/i.test(ua)) return 'mobile';
   if (/Android/i.test(ua)) return 'tablet';
   return 'desktop';
+}
+
+// ─── GOOGLE SHEETS LOGGING ────────────────────────────
+async function logSubscriberToSheets(env, { email, device }) {
+  const { date, time } = getCSTDateTime();
+  const token = await getGoogleAccessToken(env);
+  await sheetsAppendRow(token, SHEET_SUBSCRIBERS, [
+    date, time, email, 'lv2park.com', 'direct', device, ''
+  ]);
+}
+
+function getCSTDateTime() {
+  const now = new Date();
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  });
+  const p = Object.fromEntries(fmt.formatToParts(now).map(({ type, value }) => [type, value]));
+  return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}:${p.second}` };
+}
+
+async function getGoogleAccessToken(env) {
+  const sa = JSON.parse(env.GOOGLE_SA_JSON);
+  const now = Math.floor(Date.now() / 1000);
+  const claims = {
+    iss: sa.client_email,
+    scope: 'https://www.googleapis.com/auth/spreadsheets',
+    aud: 'https://oauth2.googleapis.com/token',
+    exp: now + 3600,
+    iat: now
+  };
+  const jwt = await signJWT(claims, sa.private_key);
+  const resp = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+  });
+  const data = await resp.json();
+  if (!data.access_token) throw new Error('Google auth failed');
+  return data.access_token;
+}
+
+async function signJWT(claims, privateKeyPem) {
+  const b64url = obj =>
+    btoa(JSON.stringify(obj)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const signingInput = `${b64url(header)}.${b64url(claims)}`;
+  const pemContents = privateKeyPem
+    .replace(/-----BEGIN PRIVATE KEY-----/, '')
+    .replace(/-----END PRIVATE KEY-----/, '')
+    .replace(/\s/g, '');
+  const keyData = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
+  const key = await crypto.subtle.importKey(
+    'pkcs8', keyData, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign']
+  );
+  const signature = await crypto.subtle.sign(
+    'RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(signingInput)
+  );
+  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
+    .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  return `${signingInput}.${sigB64}`;
+}
+
+async function sheetsAppendRow(token, sheetName, values) {
+  const range = encodeURIComponent(`${sheetName}!A1`);
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ values: [values] })
+  });
+  if (!resp.ok) throw new Error(`Sheets API ${resp.status}: ${await resp.text()}`);
 }
 
 // ─── HELPERS ──────────────────────────────────────────
