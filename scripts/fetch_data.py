@@ -88,7 +88,7 @@ def day_label(date_str):
 
 # ─── MLB STATS API ────────────────────────────────────
 def fetch_mlb():
-    start, end = date_range_str(8)
+    start, end = date_range_str(180)
     params = {
         'sportId': 1,
         'teamId': CUBS_TEAM_ID,
@@ -149,7 +149,7 @@ def fetch_espn():
 def parse_espn(data):
     games = []
     today = today_ct()
-    cutoff = today + timedelta(days=8)
+    cutoff = today + timedelta(days=180)
 
     for event in data.get('events', []):
         # Check venue
@@ -193,7 +193,7 @@ def fetch_ticketmaster():
         print('[TM API] no key, skipping', file=sys.stderr)
         return []
 
-    start, end = date_range_str(8)
+    start, end = date_range_str(180)
     all_events = []
 
     # Query both Wrigley venue IDs
@@ -435,12 +435,55 @@ def main():
     }
     write_json(os.path.join(DATA_DIR, 'today.json'), today_json)
 
-    # ── Step 6: Build week.json (7 days starting today)
+    # ── Step 6: Load old week.json for change detection
+    old_ev_map = {}  # { date_str: { event_name: event_dict } }
+    old_week_path = os.path.join(DATA_DIR, 'week.json')
+    if os.path.exists(old_week_path):
+        try:
+            with open(old_week_path) as f:
+                old_week = json.load(f)
+            for old_day in old_week.get('days', []):
+                d_str = old_day['date']
+                old_ev_map[d_str] = {ev['name']: ev for ev in old_day.get('events', [])}
+        except Exception as e:
+            print(f'[warn] could not load old week.json for diff: {e}')
+
+    # ── Step 7: Build week.json (180 days, with change flags)
+    today_iso = today_ct().isoformat()
     week_days = []
-    for i in range(7):
+    for i in range(180):
         date_str = (today_ct() + timedelta(days=i)).isoformat()
         day_events = by_date.get(date_str, [])
-        week_days.append(build_day(date_str, day_events))
+        day = build_day(date_str, day_events)
+
+        old_day_evs = old_ev_map.get(date_str, {})
+        new_names = {ev['name'] for ev in day['events']}
+
+        # Tag new events and time changes
+        for ev in day['events']:
+            old_ev = old_day_evs.get(ev['name'])
+            if old_ev is None:
+                if old_day_evs:  # Only flag new if we had prior data for this date
+                    ev['changed'] = 'new'
+            elif old_ev.get('time') and old_ev.get('time') != ev.get('time'):
+                ev['changed'] = 'time'
+                ev['prevTime'] = old_ev['time']
+
+        # Re-surface recently cancelled events (were in old data, gone from new)
+        for old_name, old_ev in old_day_evs.items():
+            if old_name in new_names:
+                continue
+            changed_at = old_ev.get('changedAt', date_str)
+            cutoff_date = (today_ct() - timedelta(days=3)).isoformat()
+            if changed_at < cutoff_date:
+                continue  # Cancelled more than 3 days ago — drop it
+            cancelled = dict(old_ev)
+            cancelled['changed'] = 'cancelled'
+            cancelled['changedAt'] = old_ev.get('changedAt', today_iso)
+            day['events'].append(cancelled)
+            day['hasEvent'] = True
+
+        week_days.append(day)
 
     week_json = {
         'updated': now_utc,

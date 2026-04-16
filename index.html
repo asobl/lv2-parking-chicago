@@ -15,11 +15,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://lv2park.com/og-image.png">
   <link rel="canonical" href="https://lv2park.com">
+
+  <!-- FlexOffers site verification -->
+  <meta name="fo-verify" content="df57e9cf-adfa-460f-aa96-0ed23bae5d9b" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="style.css">
+  <style>body { background: #fff; }</style>
   <!-- Cloudflare Turnstile captcha -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -45,10 +49,13 @@
   <div class="top-bar">
     <div class="top-bar-inner">
       <a class="site-logo" href="/">LV2 <span>PARK</span></a>
-      <div style="display:flex;align-items:center;gap:20px;">
-        <a href="/blog/" style="font-size:13px;font-weight:700;color:#8080a0;text-decoration:none;letter-spacing:.04em;">Data &amp; Blog</a>
-        <span class="top-bar-tagline">Wrigley Field</span>
-      </div>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link active">Today</a>
+        <a href="/pages/lv2-parking-rules.html" class="top-nav-link">Rules</a>
+        <a href="/pages/lv2-parking-map.html" class="top-nav-link">Map</a>
+        <a href="/pages/cubs-game-day-parking.html" class="top-nav-link">Game Day</a>
+        <a href="/pages/lv2-data-explorer.html" class="top-nav-link">Data</a>
+      </nav>
     </div>
   </div>
 
@@ -78,7 +85,7 @@
         </div>
 
         <div class="week-toolbar">
-          <div class="section-label" style="margin-bottom:0;">This Week</div>
+          <div class="section-label" style="margin-bottom:0;">This Week &amp; Ahead</div>
           <div class="week-actions">
             <button class="btn-week-action" onclick="openIcsModal()" title="Add to calendar">
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="2" width="14" height="13" rx="2"/><path d="M1 6h14M5 1v2M11 1v2"/></svg>
@@ -97,11 +104,10 @@
 
         <!-- Legend -->
         <div class="week-legend">
-          <div class="legend-item">⚾ Game</div>
-          <div class="legend-item">🎵 Concert</div>
-          <div class="legend-item">🎭 Comedy / Special</div>
-          <div class="legend-item" style="background:var(--color-orange);color:#fff;padding:2px 8px;border-radius:4px;">LV2</div>
-          <div class="legend-item">= tow zone active 5–10 PM</div>
+          <div class="legend-item filter-btn" data-filter="game" onclick="setWeekFilter('game')">⚾ Game</div>
+          <div class="legend-item filter-btn" data-filter="concert" onclick="setWeekFilter('concert')">🎵 Concert</div>
+          <div class="legend-item filter-btn" data-filter="comedy" onclick="setWeekFilter('comedy')">🎭 Comedy / Special</div>
+          <div class="legend-item filter-btn lv2-filter" data-filter="lv2" onclick="setWeekFilter('lv2')">LV2 only</div>
         </div>
 
         <div class="print-note" style="display:none;">
@@ -152,28 +158,37 @@
     </div>
   </div>
 
-  <!-- SECTION: BLOG -->
+  <!-- SECTION: RESOURCES -->
   <div class="section">
-    <div class="section-label">Data &amp; Analysis</div>
-    <div class="blog-grid">
-      <a class="blog-card" href="/blog/lv2-data-analysis.html">
-        <div class="blog-card-accent"></div>
-        <div class="blog-card-body">
-          <div class="blog-card-label">FOIA Data</div>
-          <div class="blog-card-title">We analyzed 9,400+ LV2 parking tickets near Wrigley. Here's what we found.</div>
-          <div class="blog-card-excerpt">By 5:05 PM on a game day, 60–70 tickets per minute are being written. We got the data through a public records request.</div>
-          <div class="blog-card-read">Read the analysis →</div>
-        </div>
+    <div class="section-label">Resources</div>
+    <div class="resource-card-grid">
+      <a class="resource-card rc-map" href="/pages/lv2-parking-map.html">
+        <div class="resource-card-label">Zone Map</div>
+        <div class="resource-card-title">Is my address in the LV2 zone?</div>
       </a>
-      <a class="blog-card" href="/blog/what-is-lv2.html">
-        <div class="blog-card-accent" style="background:var(--color-orange);"></div>
-        <div class="blog-card-body">
-          <div class="blog-card-label">Explainer</div>
-          <div class="blog-card-title">What is LV2? The Chicago parking zone that tows your car in minutes.</div>
-          <div class="blog-card-excerpt">LV2 changed in 2023. It now applies to all Cubs games, day and night. Here's what zone you're in, what it costs, and how to get a permit.</div>
-          <div class="blog-card-read">Read the explainer →</div>
-        </div>
+      <a class="resource-card rc-gameday" href="/pages/cubs-game-day-parking.html">
+        <div class="resource-card-label">Game Day</div>
+        <div class="resource-card-title">Best parking options for Cubs games</div>
       </a>
+      <a class="resource-card rc-foia" href="/blog/lv2-data-analysis.html">
+        <div class="resource-card-label">FOIA Data</div>
+        <div class="resource-card-title">9,434 tickets: which streets get hit most</div>
+      </a>
+      <a class="resource-card rc-explorer" href="/pages/lv2-data-explorer.html">
+        <div class="resource-card-label">Explorer</div>
+        <div class="resource-card-title">Interactive ticket data by street and year</div>
+      </a>
+      <a class="resource-card rc-bikes" href="/pages/wrigley-divvy-scooters.html">
+        <div class="resource-card-label">Bikes + Scooters</div>
+        <div class="resource-card-title">Divvy and Lime geo-fence map</div>
+      </a>
+      <a class="resource-card rc-rules" href="/pages/lv2-parking-rules.html">
+        <div class="resource-card-label">Rules</div>
+        <div class="resource-card-title">LV2 rules, permits, and how to contest a ticket</div>
+      </a>
+    </div>
+    <div style="margin-top:20px;">
+      <a href="/resources.html" style="font-size:var(--text-small);font-weight:700;color:var(--color-purple);text-decoration:none;">View all resources →</a>
     </div>
   </div>
 
@@ -237,26 +252,24 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-      <p class="footer-disclaimer">
-        LV2 Park pulls from the MLB schedule and Ticketmaster -- the same sources the 44th Ward uses
-        to post LV2 enforcement dates. We cover games, concerts, and most major events. Private and
-        corporate events at Wrigley may not appear. When in doubt, verify at mlb.com/cubs/schedule
-        or the 44th Ward site.
-      </p>
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">LV2 Park pulls from the MLB schedule and Ticketmaster. Schedule data is updated daily. Always verify LV2 enforcement with the 44th Ward site or the signs on your block. Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
       <div class="footer-links">
-        <a href="/blog/">Data &amp; Blog</a>
-        <a href="https://www.44thward.org" target="_blank" rel="noopener">44th Ward</a>
-        <a href="https://mlb.com/cubs/schedule" target="_blank" rel="noopener">Cubs Schedule</a>
+        <a href="/">Today's Status</a>
+        <a href="/pages/lv2-parking-rules.html">LV2 Rules</a>
+        <a href="/pages/lv2-parking-map.html">Zone Map</a>
+        <a href="/pages/cubs-game-day-parking.html">Game Day Parking</a>
+        <a href="/pages/wrigley-field-parking-guide.html">Wrigley Parking Guide</a>
+        <a href="/pages/wrigley-parking-ticket-data.html">Ticket Data</a>
+        <a href="/pages/lv2-data-explorer.html">Data Explorer</a>
+        <a href="/pages/wrigley-divvy-scooters.html">Divvy + Scooters</a>
+        <a href="/pages/chicago-permit-zones-wrigley.html">Permit Zones</a>
+        <a href="/pages/wrigley-field-parking-shuttle.html">Shuttle Guide</a>
+        <a href="/about.html">About</a>
       </div>
-      <div class="footer-copy">
-        lv2park.com · Not affiliated with the Chicago Cubs or MLB. · <span id="footer-updated"></span>
-      </div>
-      <div style="margin-top:16px;font-size:12px;color:#404058;line-height:1.6;">
-        Built by an entrepreneur living in Roscoe Village who got tired of moving his car. Inspired by a Lakeview friend who didn't want her car, or her friends' cars, towed.
-      </div>
+      <div class="footer-copy">&copy; 2026 LV2 Park &middot; <span id="footer-updated"></span></div>
     </div>
   </footer>
 

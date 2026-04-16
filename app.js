@@ -166,37 +166,64 @@ async function loadWeek() {
 function renderWeek(data) {
   const list = document.getElementById('week-list');
   const todayStr = new Date().toISOString().split('T')[0];
-  let html = '';
+  list.innerHTML = buildDayRows(data.days, todayStr);
 
-  for (const day of data.days) {
+  // Scroll so today is at the top — defer until after browser layout
+  setTimeout(() => {
+    const todayRow = list.querySelector(`[data-date="${todayStr}"]`);
+    if (todayRow) list.scrollTop = todayRow.offsetTop;
+  }, 0);
+}
+
+function buildDayRows(days, todayStr) {
+  let html = '';
+  let lastMonth = '';
+
+  for (const day of days) {
+    // Month header when month changes
+    const monthLabel = new Date(day.date + 'T12:00:00').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    if (monthLabel !== lastMonth) {
+      html += `<div class="week-month-header">${monthLabel}</div>`;
+      lastMonth = monthLabel;
+    }
+
     const isToday   = day.date === todayStr;
     const hasEvent  = day.hasEvent;
 
     let rowClass = 'week-row';
-    if (isToday)      rowClass += ' today';
+    if (isToday)       rowClass += ' today';
     else if (hasEvent) rowClass += ' active';
-    if (hasEvent)     rowClass += ' has-event';
+    if (hasEvent)      rowClass += ' has-event';
 
     const dateClass = isToday ? 'week-date today-label' : 'week-date';
 
-    // Icons + event names
     let eventsHtml = '';
     if (hasEvent && day.events.length > 0) {
       eventsHtml = day.events.map(ev => {
-        const icon = eventIcon(ev);
-        return `<div class="week-event-name">${icon} ${escHtml(ev.name)}</div>
-                <div class="week-event-time">${escHtml(ev.time)}</div>`;
+        const icon        = eventIcon(ev);
+        const isCancelled = ev.changed === 'cancelled';
+        const isNew       = ev.changed === 'new';
+        const isTimeChg   = ev.changed === 'time';
+        const nameClass   = isCancelled ? 'week-event-name ev-cancelled-name' : 'week-event-name';
+        const dot         = isCancelled ? '<span class="ev-dot ev-dot-cancelled"></span>'
+                          : isNew       ? '<span class="ev-dot ev-dot-new"></span>'
+                          : isTimeChg   ? '<span class="ev-dot ev-dot-time"></span>'
+                          : '';
+        const timeExtra   = isTimeChg ? ` <span class="ev-was">was ${escHtml(ev.prevTime||'')}</span>` : '';
+        const timeHtml    = `<div class="week-event-time">${escHtml(ev.time)}${timeExtra}</div>`;
+        return `<div class="${nameClass}">${dot}${icon} ${escHtml(ev.name)}</div>${timeHtml}`;
       }).join('');
     } else {
       eventsHtml = '<div class="week-event-name empty">Nothing</div>';
     }
 
-    const badgeHtml  = day.lv2Active ? '<span class="week-badge">LV2</span>' : '';
-    const chevron    = hasEvent ? '<span class="week-chevron">›</span>' : '';
-    const clickAttr  = hasEvent ? `onclick="toggleWeekRow(this, '${day.date}')"` : '';
+    const badgeHtml = day.lv2Active ? '<span class="week-badge">LV2</span>' : '';
+    const chevron   = hasEvent ? '<span class="week-chevron">›</span>' : '';
+    const clickAttr = hasEvent ? `onclick="toggleWeekRow(this, '${day.date}')"` : '';
 
+    const types = day.events.map(e => e.type).join(',');
     html += `
-      <div class="${rowClass}" ${clickAttr} data-date="${day.date}">
+      <div class="${rowClass}" ${clickAttr} data-date="${day.date}" data-types="${types}" data-lv2="${day.lv2Active}">
         <div class="${dateClass}">${escHtml(day.dayLabel)}</div>
         <div class="week-events">${eventsHtml}</div>
         ${badgeHtml}
@@ -206,9 +233,9 @@ function renderWeek(data) {
         ${buildDetailPanel(day)}
       </div>`;
   }
-
-  list.innerHTML = html;
+  return html;
 }
+
 
 function buildDetailPanel(day) {
   if (!day.hasEvent || !day.events.length) return '';
@@ -250,6 +277,45 @@ function toggleWeekRow(rowEl, date) {
     detail.classList.add('open');
     rowEl.classList.add('expanded');
   }
+}
+
+/* ─── WEEK FILTER ───────────────────────────────── */
+let activeWeekFilter = null;
+
+function setWeekFilter(type) {
+  const list = document.getElementById('week-list');
+  activeWeekFilter = activeWeekFilter === type ? null : type;
+
+  // Update button states
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('filter-active', btn.dataset.filter === activeWeekFilter);
+  });
+
+  // Show/hide rows
+  list.querySelectorAll('.week-row').forEach(row => {
+    const detail = document.getElementById('detail-' + row.dataset.date);
+    let show = true;
+    if (activeWeekFilter === 'game')    show = row.dataset.types?.includes('game');
+    else if (activeWeekFilter === 'concert') show = row.dataset.types?.includes('concert');
+    else if (activeWeekFilter === 'comedy')  show = row.dataset.types?.includes('comedy');
+    else if (activeWeekFilter === 'lv2')     show = row.dataset.lv2 === 'true';
+    row.style.display = show ? '' : 'none';
+    if (detail) detail.style.display = 'none'; // collapse details on filter change
+  });
+
+  // Hide month headers that have no visible rows beneath them
+  list.querySelectorAll('.week-month-header').forEach(header => {
+    let next = header.nextElementSibling;
+    let hasVisible = false;
+    while (next && !next.classList.contains('week-month-header')) {
+      if (next.classList.contains('week-row') && next.style.display !== 'none') {
+        hasVisible = true;
+        break;
+      }
+      next = next.nextElementSibling;
+    }
+    header.style.display = hasVisible ? '' : 'none';
+  });
 }
 
 /* ─── MAP ────────────────────────────────────────── */
@@ -324,21 +390,35 @@ function ticketCountToColor(t) {
 
 /* ─── PRINT CALENDAR ─────────────────────────────── */
 function printSchedule() {
+  // Show inline choice UI next to the Print button
+  const existing = document.getElementById('print-choice');
+  if (existing) { existing.remove(); return; }
+
+  const toolbar = document.querySelector('.week-toolbar');
+  const choice = document.createElement('div');
+  choice.id = 'print-choice';
+  choice.style.cssText = 'display:flex;gap:8px;align-items:center;padding:8px 16px;background:#f5f4f0;border-top:1px solid #E0DFF0;flex-wrap:wrap;';
+  choice.innerHTML = `
+    <span style="font-size:12px;font-weight:700;color:var(--color-text-soft);">Print:</span>
+    <button class="btn-week-action" onclick="doPrint('month')">This month</button>
+    <button class="btn-week-action" onclick="doPrint('all')">Full season (1 page)</button>
+    <button class="btn-week-action" onclick="document.getElementById('print-choice').remove()" style="color:#aaa;">Cancel</button>`;
+  toolbar.insertAdjacentElement('afterend', choice);
+}
+
+function doPrint(mode) {
+  document.getElementById('print-choice')?.remove();
   const win = window.open('', '_blank', 'width=1200,height=900');
   if (!win) { alert('Allow pop-ups to print the calendar.'); return; }
-  win.document.write(buildPrintCalendar());
+  win.document.write(mode === 'all' ? buildAllMonthsCalendar() : buildPrintCalendar(null));
   win.document.close();
 }
 
-function buildPrintCalendar() {
+function buildPrintCalendar(monthKey) {
   const today    = new Date();
-  const year     = today.getFullYear();
-  const month    = today.getMonth();
-  const monthName = today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-  const todayStr  = today.toISOString().split('T')[0];
-
-  const firstDow    = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const todayStr = today.toISOString().split('T')[0];
+  if (!monthKey) monthKey = todayStr.slice(0, 7);
+  const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
   // Event lookup from already-loaded weekData
   const evMap = {};
@@ -346,213 +426,213 @@ function buildPrintCalendar() {
     for (const d of weekData.days) evMap[d.date] = d;
   }
 
-  // Build flat cell array: nulls for padding + day numbers
-  const cells = [];
-  for (let i = 0; i < firstDow; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-  while (cells.length % 7 !== 0) cells.push(null);
+  // Build one calendar block per month
+  function buildMonth(monthKey, isLast) {
+    const [yr, mo] = monthKey.split('-').map(Number);
+    const monthName  = new Date(yr, mo - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const firstDow   = new Date(yr, mo - 1, 1).getDay();
+    const daysInMonth = new Date(yr, mo, 0).getDate();
 
-  const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+    while (cells.length % 7 !== 0) cells.push(null);
+    const cellH = cells.length / 7 === 6 ? '88px' : '100px';
 
-  // Build calendar rows
-  let tableRows = '';
-  for (let i = 0; i < cells.length; i += 7) {
-    tableRows += '<tr>';
-    for (let j = i; j < i + 7; j++) {
-      const dayNum = cells[j];
-      if (!dayNum) { tableRows += '<td class="empty"></td>'; continue; }
-
-      const dateStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
-      const d       = evMap[dateStr];
-      const isToday = dateStr === todayStr;
-
-      let cls = 'day';
-      if (isToday)             cls += ' today';
-      if (d && d.hasEvent)     cls += ' has-event';
-
-      let inner = `<div class="day-num">${dayNum}</div>`;
-
-      if (d && d.hasEvent) {
-        for (const ev of d.events) {
-          const icon = ev.type === 'game' ? '⚾'
-                     : (ev.name || '').toLowerCase().includes('comedy') ? '🎭' : '🎵';
-          // Truncate long names for the cell
-          const name = ev.name.length > 22 ? ev.name.slice(0, 20) + '…' : ev.name;
-          inner += `<div class="ev-name">${icon} ${escHtml(name)}</div>`;
-          if (ev.time && ev.time !== 'TBD') {
-            inner += `<div class="ev-time">${escHtml(ev.time)}</div>`;
+    let tableRows = '';
+    for (let i = 0; i < cells.length; i += 7) {
+      tableRows += '<tr>';
+      for (let j = i; j < i + 7; j++) {
+        const dayNum = cells[j];
+        if (!dayNum) { tableRows += '<td class="empty"></td>'; continue; }
+        const dateStr = `${yr}-${String(mo).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+        const d = evMap[dateStr];
+        const isToday = dateStr === todayStr;
+        let cls = 'day';
+        if (isToday)         cls += ' today';
+        if (d && d.hasEvent) cls += ' has-event';
+        let inner = `<div class="day-num">${dayNum}</div>`;
+        if (d && d.hasEvent) {
+          for (const ev of d.events) {
+            const icon = ev.type === 'game' ? '⚾' : (ev.name||'').toLowerCase().includes('comedy') ? '🎭' : '🎵';
+            const name = ev.name.length > 22 ? ev.name.slice(0,20) + '…' : ev.name;
+            inner += `<div class="ev-name">${icon} ${escHtml(name)}</div>`;
+            if (ev.time && ev.time !== 'TBD') inner += `<div class="ev-time">${escHtml(ev.time)}</div>`;
           }
+          if (d.lv2Active) inner += '<div class="lv2-tag">LV2 5–10 PM</div>';
         }
-        if (d.lv2Active) inner += '<div class="lv2-tag">LV2 5–10 PM</div>';
-      } else if (!d) {
-        // Day is outside our data window — leave a subtle marker
-        inner += '<div class="no-data"></div>';
+        tableRows += `<td class="${cls}" style="height:${cellH}">${inner}</td>`;
       }
-
-      tableRows += `<td class="${cls}">${inner}</td>`;
+      tableRows += '</tr>';
     }
-    tableRows += '</tr>';
+
+    const pageBreak = isLast ? '' : 'style="page-break-after:always"';
+    return `
+    <div class="month-page" ${pageBreak}>
+      <div class="cal-header">
+        <div class="cal-logo">LV2 <span>PARK</span></div>
+        <div class="cal-month">${monthName}</div>
+        <div class="cal-url">lv2park.com</div>
+      </div>
+      <table>
+        <thead class="cal-dow"><tr>${DOW.map(d=>`<th>${d}</th>`).join('')}</tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+      <div class="cal-footer">
+        <div class="cal-legend">
+          <div class="leg"><span class="leg-swatch ev"></span> Game or event day</div>
+          <div class="leg"><span class="leg-swatch lv2"></span> LV2 tow zone active 5–10 PM</div>
+        </div>
+        <div>Schedule may change. Verify at <strong>lv2park.com</strong>. Not affiliated with the Chicago Cubs or MLB.</div>
+      </div>
+    </div>`;
   }
 
-  const numWeeks = cells.length / 7;
+  const allMonths = buildMonth(monthKey, true);
 
   return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Wrigley Field Schedule — ${monthName}</title>
+<html><head><meta charset="UTF-8">
+<title>Wrigley Field Schedule</title>
 <style>
   @page { size: 11in 8.5in landscape; margin: 0.35in 0.4in; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, 'Inter', system-ui, sans-serif;
-    background: #fff;
-    color: #1A1A2E;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  /* ── Header ── */
-  .cal-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding-bottom: 8px;
-    border-bottom: 3px solid #1A1A2E;
-    margin-bottom: 8px;
-  }
-  .cal-logo { font-size: 22pt; font-weight: 900; letter-spacing: .03em; color: #1A1A2E; }
-  .cal-logo span { color: #C8AA00; }
-  .cal-month { font-size: 18pt; font-weight: 900; }
-  .cal-url { font-size: 9pt; color: #6B6B80; }
-
-  /* ── Day-of-week headers ── */
-  .cal-dow th {
-    font-size: 8.5pt;
-    font-weight: 700;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: #6B6B80;
-    padding: 4px 6px 4px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-
-  /* ── Calendar grid ── */
-  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  td.day, td.empty {
-    border: 1px solid #e0dff0;
-    vertical-align: top;
-    padding: 5px 6px 6px;
-    height: ${numWeeks === 6 ? '88px' : '100px'};
-  }
-  td.empty { background: #fafaf8; }
-
-  .day-num {
-    font-size: 11pt;
-    font-weight: 700;
-    color: #9090a8;
-    margin-bottom: 3px;
-  }
-  td.today .day-num {
-    display: inline-block;
-    background: #1A1A2E;
-    color: #F5E030;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    line-height: 22px;
-    text-align: center;
-    font-size: 9.5pt;
-  }
-  td.has-event { background: #FFFBF0; }
-
-  .ev-name {
-    font-size: 8pt;
-    font-weight: 700;
-    line-height: 1.35;
-    color: #1A1A2E;
-    margin-bottom: 1px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ev-time {
-    font-size: 7.5pt;
-    color: #6B6B80;
-    margin-bottom: 3px;
-  }
-  .lv2-tag {
-    display: inline-block;
-    margin-top: 3px;
-    font-size: 7pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    background: #F0A030;
-    color: #fff;
-    padding: 2px 6px;
-    border-radius: 3px;
-  }
-  .no-data { height: 8px; }
-
-  /* ── Footer ── */
-  .cal-footer {
-    margin-top: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 7.5pt;
-    color: #9090a8;
-    border-top: 1px solid #e0dff0;
-    padding-top: 6px;
-  }
-  .cal-footer strong { color: #1A1A2E; }
-
-  /* ── Legend ── */
-  .cal-legend {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-  }
-  .leg { display: flex; align-items: center; gap: 4px; }
-  .leg-swatch {
-    width: 10px; height: 10px; border-radius: 2px;
-    display: inline-block;
-  }
-  .leg-swatch.ev   { background: #FFFBF0; border: 1px solid #e0c860; }
-  .leg-swatch.lv2  { background: #F0A030; }
-</style>
-</head>
+  body { font-family: -apple-system,'Inter',system-ui,sans-serif; background:#fff; color:#1A1A2E; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .cal-header { display:flex; align-items:flex-end; justify-content:space-between; padding-bottom:8px; border-bottom:3px solid #1A1A2E; margin-bottom:8px; }
+  .cal-logo { font-size:22pt; font-weight:900; letter-spacing:.03em; color:#1A1A2E; }
+  .cal-logo span { color:#C8AA00; }
+  .cal-month { font-size:18pt; font-weight:900; }
+  .cal-url { font-size:9pt; color:#6B6B80; }
+  .cal-dow th { font-size:8.5pt; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#6B6B80; padding:4px 6px; text-align:left; border-bottom:1px solid #ddd; }
+  table { width:100%; border-collapse:collapse; table-layout:fixed; }
+  td.day, td.empty { border:1px solid #e0dff0; vertical-align:top; padding:5px 6px 6px; }
+  td.empty { background:#fafaf8; }
+  .day-num { font-size:11pt; font-weight:700; color:#9090a8; margin-bottom:3px; }
+  td.today .day-num { display:inline-block; background:#1A1A2E; color:#F5E030; border-radius:50%; width:22px; height:22px; line-height:22px; text-align:center; font-size:9.5pt; }
+  td.has-event { background:#FFFBF0; }
+  .ev-name { font-size:8pt; font-weight:700; line-height:1.35; color:#1A1A2E; margin-bottom:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ev-time { font-size:7.5pt; color:#6B6B80; margin-bottom:3px; }
+  .lv2-tag { display:inline-block; margin-top:3px; font-size:7pt; font-weight:700; text-transform:uppercase; letter-spacing:.04em; background:#F0A030; color:#fff; padding:2px 6px; border-radius:3px; }
+  .cal-footer { margin-top:8px; display:flex; justify-content:space-between; align-items:center; font-size:7.5pt; color:#9090a8; border-top:1px solid #e0dff0; padding-top:6px; }
+  .cal-footer strong { color:#1A1A2E; }
+  .cal-legend { display:flex; gap:16px; align-items:center; }
+  .leg { display:flex; align-items:center; gap:4px; }
+  .leg-swatch { width:10px; height:10px; border-radius:2px; display:inline-block; }
+  .leg-swatch.ev  { background:#FFFBF0; border:1px solid #e0c860; }
+  .leg-swatch.lv2 { background:#F0A030; }
+</style></head>
 <body>
-  <div class="cal-header">
-    <div class="cal-logo">LV2 <span>PARK</span></div>
-    <div class="cal-month">${monthName}</div>
-    <div class="cal-url">lv2park.com</div>
+${allMonths}
+<script>window.addEventListener('load',function(){setTimeout(function(){window.print();},400);});<\/script>
+</body></html>`;
+}
+
+/* ─── ALL-MONTHS COMPACT PRINT ───────────────────── */
+function buildAllMonthsCalendar() {
+  const today    = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  const DOW = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+  const evMap = {};
+  if (weekData && weekData.days) {
+    for (const d of weekData.days) evMap[d.date] = d;
+  }
+
+  const monthKeys = new Set([todayStr.slice(0, 7)]);
+  if (weekData && weekData.days) {
+    for (const d of weekData.days) monthKeys.add(d.date.slice(0, 7));
+  }
+  const sortedMonths = [...monthKeys].sort();
+
+  function miniMonth(monthKey) {
+    const [yr, mo] = monthKey.split('-').map(Number);
+    const monthName  = new Date(yr, mo - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const firstDow   = new Date(yr, mo - 1, 1).getDay();
+    const daysInMonth = new Date(yr, mo, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+    while (cells.length % 7 !== 0) cells.push(null);
+
+    let rows = '';
+    for (let i = 0; i < cells.length; i += 7) {
+      rows += '<tr>';
+      for (let j = i; j < i + 7; j++) {
+        const dayNum = cells[j];
+        if (!dayNum) { rows += '<td class="empty"></td>'; continue; }
+        const dateStr = `${yr}-${String(mo).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+        const d = evMap[dateStr];
+        const isToday = dateStr === todayStr;
+        let cls = 'day';
+        if (isToday)         cls += ' today';
+        if (d && d.hasEvent) cls += ' has-event';
+        let inner = `<div class="dn">${dayNum}</div>`;
+        if (d && d.hasEvent) {
+          for (const ev of d.events) {
+            const icon = ev.type === 'game' ? '⚾' : '🎵';
+            let shortName;
+            if (ev.type === 'game') {
+              // "New York Mets vs. Cubs" → "Mets"
+              const opp = ev.name.replace(/ vs\. Cubs.*$/i, '').trim();
+              const parts = opp.split(' ');
+              shortName = parts[parts.length - 1];
+            } else {
+              shortName = ev.name.length > 13 ? ev.name.slice(0, 12) + '…' : ev.name;
+            }
+            inner += `<div class="en">${icon} ${escHtml(shortName)}</div>`;
+          }
+          if (d.lv2Active) inner += '<div class="lt">LV2</div>';
+        }
+        rows += `<td class="${cls}">${inner}</td>`;
+      }
+      rows += '</tr>';
+    }
+    return `
+      <div class="mini-cal">
+        <div class="mini-hdr">${monthName}</div>
+        <table>
+          <thead><tr>${DOW.map(d=>`<th>${d}</th>`).join('')}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  const monthsHtml = sortedMonths.map(k => miniMonth(k)).join('');
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>Wrigley Field Schedule</title>
+<style>
+  @page { size: 11in 8.5in landscape; margin: 0.3in; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,'Inter',system-ui,sans-serif; background:#fff; color:#1A1A2E; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page-header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:3px solid #1A1A2E; margin-bottom:10px; padding-bottom:6px; }
+  .logo { font-size:16pt; font-weight:900; } .logo span { color:#C8AA00; }
+  .page-url { font-size:8pt; color:#6B6B80; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+  .mini-cal { border:1px solid #e0dff0; border-radius:6px; overflow:hidden; }
+  .mini-hdr { background:#1A1A2E; color:#F5E030; font-size:8pt; font-weight:900; padding:4px 8px; letter-spacing:.04em; text-transform:uppercase; }
+  table { width:100%; border-collapse:collapse; table-layout:fixed; }
+  thead th { font-size:6pt; font-weight:700; text-transform:uppercase; color:#9090a8; padding:2px 3px; text-align:center; border-bottom:1px solid #e0dff0; }
+  td.day, td.empty { border:1px solid #f0eff8; vertical-align:top; padding:2px 3px; height:52px; }
+  td.empty { background:#fafaf8; }
+  td.has-event { background:#FFFBF0; }
+  td.today { outline:2px solid #1A1A2E; outline-offset:-2px; }
+  .dn { font-size:7pt; font-weight:700; color:#9090a8; margin-bottom:1px; }
+  td.today .dn { color:#1A1A2E; }
+  .en { font-size:5.5pt; font-weight:700; color:#1A1A2E; line-height:1.3; white-space:normal; word-break:break-word; }
+  .lt { display:inline-block; margin-top:1px; font-size:5pt; font-weight:900; background:#F0A030; color:#fff; padding:1px 3px; border-radius:2px; text-transform:uppercase; }
+  .page-footer { margin-top:8px; font-size:6.5pt; color:#9090a8; display:flex; justify-content:space-between; }
+</style></head><body>
+  <div class="page-header">
+    <div class="logo">LV2 <span>PARK</span></div>
+    <div class="page-url">lv2park.com · Wrigley Field Schedule</div>
   </div>
-
-  <table>
-    <thead class="cal-dow">
-      <tr>${DOW.map(d => `<th>${d}</th>`).join('')}</tr>
-    </thead>
-    <tbody>${tableRows}</tbody>
-  </table>
-
-  <div class="cal-footer">
-    <div class="cal-legend">
-      <div class="leg"><span class="leg-swatch ev"></span> Game or event day</div>
-      <div class="leg"><span class="leg-swatch lv2"></span> LV2 tow zone active 5–10 PM</div>
-    </div>
-    <div>Schedule may change. Verify at <strong>lv2park.com</strong>. Not affiliated with the Chicago Cubs or MLB.</div>
+  <div class="grid">${monthsHtml}</div>
+  <div class="page-footer">
+    <span>⚾ Game &nbsp; 🎵 Concert &nbsp; <span style="background:#F0A030;color:#fff;padding:1px 4px;border-radius:2px;font-weight:900;">LV2</span> = tow zone active 5–10 PM</span>
+    <span>Schedule may change. Verify at lv2park.com. Not affiliated with the Chicago Cubs or MLB.</span>
   </div>
-
-  <script>
-    window.addEventListener('load', function() {
-      setTimeout(function() { window.print(); }, 400);
-    });
-  </script>
-</body>
-</html>`;
+<script>window.addEventListener('load',function(){setTimeout(function(){window.print();},400);});<\/script>
+</body></html>`;
 }
 
 /* ─── ICS MODAL ──────────────────────────────────── */
@@ -753,14 +833,24 @@ async function handleEmailSubmit(e) {
           Every Monday morning you'll know which days to move the car and which days to sleep in.
         </div>
         <div class="subscribe-share-block">
-          <div class="subscribe-share-label">Tell a neighbor</div>
-          <div class="subscribe-share-tagline">Your neighbor doesn't know about this yet.<br>Fix that before the next game day.</div>
+          <div class="subscribe-share-label">Be that neighbor</div>
+          <div class="subscribe-share-tagline">The one people text before a game day. Send them the link before they find out the hard way.</div>
           <div class="subscribe-share-buttons">
+            <a class="btn-share sms"
+               href="sms:?body=Hey%20%E2%80%94%20check%20out%20lv2park.com.%20It%20tells%20you%20when%20LV2%20parking%20is%20active%20near%20Wrigley%20so%20you%20don%27t%20get%20towed.%20Worth%20knowing%20if%20you%20park%20in%20Lakeview.">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Text a friend
+            </a>
+            <a class="btn-share email"
+               href="mailto:?subject=Heads%20up%20%E2%80%94%20LV2%20parking%20near%20Wrigley&body=Hey%2C%20found%20this%20%E2%80%94%20lv2park.com%20tells%20you%20when%20LV2%20tow%20zones%20are%20active%20near%20Wrigley%20Field%20so%20you%20don%27t%20get%20towed.%20Worth%20bookmarking%20if%20you%20ever%20park%20in%20Lakeview%20or%20Wrigleyville.">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email a friend
+            </a>
             <a class="btn-share facebook"
                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flv2park.com"
                target="_blank" rel="noopener">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              Share on Facebook
+              Facebook
             </a>
             <button class="btn-share copy" onclick="copyLv2Link(this)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
