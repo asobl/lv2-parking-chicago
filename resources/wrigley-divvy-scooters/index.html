@@ -432,11 +432,11 @@
       <div class="email-section">
         <div class="email-heading">Know when LV2 and the geo-fence activate.</div>
         <p class="email-sub">Get an alert the evening before any game day. One email, the right information, no scrambling.</p>
-        <form class="email-form" action="https://lv2park-worker.adam-945.workers.dev/subscribe" method="POST">
-          <input type="hidden" name="list" value="lv2-alerts">
+        <form class="email-form" id="lv2-subscribe-form">
           <input class="email-input" type="email" name="email" placeholder="your@email.com" required>
           <button class="email-btn" type="submit">Get Game Day Alerts</button>
         </form>
+        <div id="lv2-subscribe-success" style="display:none;margin-top:12px;padding:14px 18px;background:#F0F9F9;border-radius:12px;color:#2e7d32;font-weight:700;border:1px solid #5B9EA0;">You're in. We'll send a heads-up before the next LV2 day.</div>
         <p class="email-disclaimer">No spam. One email per LV2 day. Unsubscribe any time.</p>
       </div>
 
@@ -599,6 +599,28 @@
         lv2Track('/log-click', { link: a.textContent.trim().slice(0, 60), destination: href, page: location.pathname });
       }
     });
+  </script>
+  <script>
+  (function(){
+    var form = document.getElementById('lv2-subscribe-form');
+    var success = document.getElementById('lv2-subscribe-success');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var email = form.querySelector('input[type="email"]').value.trim();
+      var btn = form.querySelector('button');
+      var orig = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Subscribing…';
+      fetch('https://lv2park-email.adam-945.workers.dev/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      }).then(function(r) {
+        if (r.ok) { form.style.display = 'none'; success.style.display = 'block'; }
+        else { btn.disabled = false; btn.textContent = orig; }
+      }).catch(function() { btn.disabled = false; btn.textContent = orig; });
+    });
+  })();
   </script>
 </body>
 </html>
