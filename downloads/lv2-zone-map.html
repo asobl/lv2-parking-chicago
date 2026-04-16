@@ -165,9 +165,9 @@
       <h3>Zone Boundaries</h3>
       <div class="boundary-row"><span class="boundary-dir">North</span><span class="boundary-street">Irving Park Rd (4000 N)</span></div>
       <div class="boundary-row"><span class="boundary-dir">South</span><span class="boundary-street">Belmont Ave (3200 N)</span></div>
-      <div class="boundary-row"><span class="boundary-dir">West</span><span class="boundary-street">Clark St (700 W)</span></div>
-      <div class="boundary-row"><span class="boundary-dir">East</span><span class="boundary-street">Halsted St (800 W)</span></div>
-      <p style="font-size:12px;color:#6B6B80;margin-top:8px;line-height:1.5;">Boundaries are approximate. Always confirm with signs on your block. Sign reads: RESIDENTIAL PERMIT PARKING LV2.</p>
+      <div class="boundary-row"><span class="boundary-dir">West</span><span class="boundary-street">Southport Ave area</span></div>
+      <div class="boundary-row"><span class="boundary-dir">East</span><span class="boundary-street">Halsted St area</span></div>
+      <p style="font-size:12px;color:#6B6B80;margin-top:8px;line-height:1.5;">Map boundary is approximate. Block-level coverage varies. Always confirm with signs on your specific block. Sign reads: RESIDENTIAL PERMIT PARKING LV2.</p>
     </div>
 
     <div class="info-block">
@@ -230,12 +230,13 @@
     L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
       .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
 
-    // LV2 zone polygon — correct coordinates (Chicago Municipal Code 9-68-023)
+    // LV2 zone polygon — approximate boundary (Chicago Municipal Code 9-68-023)
+    // Coords estimated from FOIA street data — not a precise GIS boundary
     L.polygon([
-      [41.9536, -87.6749],  // NW: Irving Park & Ravenswood
-      [41.9536, -87.6690],  // NE: Irving Park & Ashland
-      [41.9435, -87.6690],  // SE: Roscoe & Ashland
-      [41.9435, -87.6749],  // SW: Roscoe & Ravenswood
+      [41.9545, -87.6650],  // NW: Irving Park & Southport approx
+      [41.9545, -87.6490],  // NE: Irving Park & Halsted approx
+      [41.9399, -87.6490],  // SE: Belmont & Halsted approx
+      [41.9399, -87.6650],  // SW: Belmont & Southport approx
     ], {
       color: '#6B64D4', weight: 3, opacity: 0.85,
       fillColor: '#6B64D4', fillOpacity: 0.12,
@@ -247,7 +248,7 @@
     function ticketColor(t) {
       if (t > 1500) return '#E84040';
       if (t > 800)  return '#F0A030';
-      if (t > 300)  return '#F5E030';
+      if (t > 300)  return '#C9A030';
       return '#5B9EA0';
     }
 

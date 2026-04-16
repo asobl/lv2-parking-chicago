@@ -373,13 +373,14 @@ function initMap() {
   L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
     .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St<br>Home of the Chicago Cubs');
 
-  // LV2 Zone boundary — Chicago Municipal Code 9-68-023
-  // Main area: Irving Park (N) to Roscoe (S), Ravenswood (W) to Ashland (E)
+  // LV2 Zone boundary — approximate, based on Chicago Municipal Code 9-68-023
+  // Irving Park (N) to Belmont (S), Southport area (W) to Halsted (E)
+  // Coordinates estimated from FOIA street data — not a precise GIS boundary
   L.polygon([
-    [41.9536, -87.6749],  // NW: Irving Park & Ravenswood
-    [41.9536, -87.6690],  // NE: Irving Park & Ashland
-    [41.9435, -87.6690],  // SE: Roscoe & Ashland
-    [41.9435, -87.6749],  // SW: Roscoe & Ravenswood
+    [41.9545, -87.6650],  // NW: Irving Park & Southport approx
+    [41.9545, -87.6490],  // NE: Irving Park & Halsted approx
+    [41.9399, -87.6490],  // SE: Belmont & Halsted approx
+    [41.9399, -87.6650],  // SW: Belmont & Southport approx
   ], {
     color: '#6B64D4', weight: 3, opacity: 0.85,
     fillColor: '#6B64D4', fillOpacity: 0.12,
@@ -411,7 +412,7 @@ function initMap() {
 function ticketCountToColor(t) {
   if (t > 1500) return '#E84040';
   if (t > 800)  return '#F0A030';
-  if (t > 300)  return '#F5E030';
+  if (t > 300)  return '#C9A030';
   return '#5B9EA0';
 }
 
