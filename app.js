@@ -104,10 +104,8 @@ async function loadTicker() {
     const el = document.getElementById('enforcement-ticker');
     if (!el) return;
     const n = d.lv2_tickets_today;
-    el.innerHTML = `<div style="background:#1A1A2E;color:#F5E030;border-radius:8px;padding:12px 16px;margin:10px 0 2px;font-size:13px;font-weight:700;letter-spacing:.02em;display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
-      <span style="background:#F5E030;color:#1A1A2E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;">LV2 CONFIRMED</span>
-      <span>${n} ticket${n !== 1 ? 's' : ''} issued in the zone today</span>
-      <span style="font-size:11px;font-weight:400;color:#9090a8;margin-left:auto;white-space:nowrap;">Last checked ${checkedCT} CT</span>
+    el.innerHTML = `<div style="font-size:13px;color:var(--color-text-soft);border:1px solid #C8C6D4;border-radius:6px;padding:8px 12px;margin:8px 0 4px;line-height:1.5;">
+      <strong style="color:var(--color-text);">${n} ticket${n !== 1 ? 's' : ''} confirmed</strong> in the zone today · Last checked ${checkedCT} CT
     </div>`;
   } catch {}
 }
@@ -151,8 +149,6 @@ function renderHero(data) {
     ? `<div style="font-size:14px;color:var(--color-orange);margin-bottom:16px;font-weight:700;">${escHtml(data.note)}</div>`
     : '';
 
-  const btnHtml = `<a class="btn-spothero" href="${SPOTHERO_URL}" target="_blank" rel="noopener">Book parking — from $15 <span class="arrow">→</span></a>`;
-
   if (data.lv2Active) {
     // LV2 is active -- answer is NO, you cannot safely park here
     card.className   = 'hero-card game-day';
@@ -161,7 +157,10 @@ function renderHero(data) {
     answer.className   = 'hero-answer no';
 
     const lv2Html = '<div class="lv2-pill active"><div class="lv2-dot"></div> LV2 Active 5–10 PM — Move your car before 5</div>';
-    body.innerHTML = lv2Html + eventsListHtml(data.events) + noteHtml + '<div id="enforcement-ticker"></div>' + btnHtml;
+    const dayGameNote = isDayGamePast5(data.events)
+      ? '<div style="font-size:13px;color:var(--color-orange);font-weight:700;margin-bottom:12px;">⚠ Day game — LV2 is still active until 10 PM even though the game is over.</div>'
+      : '';
+    body.innerHTML = lv2Html + eventsListHtml(data.events) + dayGameNote + noteHtml + '<div id="enforcement-ticker"></div>';
     loadTicker();
 
   } else if (data.hasEvent) {
@@ -172,7 +171,7 @@ function renderHero(data) {
     answer.className   = 'hero-answer yes';
 
     const lv2Html = '<div class="lv2-pill quiet"><div class="lv2-dot"></div> LV2 Not Active Today</div>';
-    body.innerHTML = eventsListHtml(data.events) + noteHtml + lv2Html + btnHtml;
+    body.innerHTML = eventsListHtml(data.events) + noteHtml + lv2Html;
 
   } else {
     // No event, no LV2 -- safe to park
@@ -324,11 +323,7 @@ function buildDetailPanel(day) {
     })
     .filter((v, i, a) => a.indexOf(v) === i); // dedupe identical links
 
-  const parkingLink = day.lv2Active
-    ? `<a class="week-detail-link" href="${SPOTHERO_URL}" target="_blank" rel="noopener">🅿 Book parking</a>`
-    : '';
-
-  html += `<div class="week-detail-actions">${ticketLinks.join('')}${parkingLink}</div>`;
+  html += `<div class="week-detail-actions">${ticketLinks.join('')}</div>`;
   return html;
 }
 
@@ -984,6 +979,24 @@ function copyLv2Link(btn) {
 }
 
 /* ─── HELPERS ────────────────────────────────────── */
+
+function isDayGamePast5(events) {
+  // Returns true if all events today started before 5 PM and it's now past 5 PM CT
+  if (!events || !events.length) return false;
+  const nowCT = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+  const hourCT = nowCT.getHours();
+  if (hourCT < 17) return false; // not yet 5 PM, no note needed
+  return events.every(ev => {
+    const t = ev.time || '';
+    const m = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!m) return false;
+    let h = parseInt(m[1]);
+    const period = m[3].toUpperCase();
+    if (period === 'PM' && h < 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return h < 17; // game started before 5 PM
+  });
+}
 function escHtml(str) {
   return String(str || '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
