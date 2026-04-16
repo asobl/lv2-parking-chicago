@@ -24,8 +24,8 @@ OUT_PATH  = "data/ticket-map-data.json"
 #   Madison St = 0 N/S (latitude baseline)
 LAT_MADISON  = 41.881890   # Madison St latitude
 LNG_STATE    = -87.627960  # State St longitude
-LAT_PER_100  = 0.001449    # degrees latitude per 100 address units N
-LNG_PER_100  = -0.001940   # degrees longitude per 100 address units W (at 41.9°N)
+LAT_PER_100  = 0.001810    # degrees latitude per 100 address units N (calibrated to LV2 zone)
+LNG_PER_100  = -0.002550   # degrees longitude per 100 address units W (calibrated to LV2 zone)
 
 def addr_to_lat(north_num):
     return LAT_MADISON + (north_num / 100) * LAT_PER_100
