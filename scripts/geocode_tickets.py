@@ -61,8 +61,7 @@ NS_STREET_W = {
     'KENMORE AVE':    1040, 'KENMORE':    1040,
     'SHEFFIELD AVE':  1000, 'SHEFFIELD':  1000,
     'CLIFTON AVE':     840, 'CLIFTON':     840,
-    'CLARK ST':        400, 'CLARK':       400,
-    'LINCOLN AVE':    1400, 'LINCOLN':    1400,  # diagonal approx
+    # CLARK ST and LINCOLN AVE omitted -- both diagonal, grid formula places dots ~0.75mi off
     # Additional streets that may appear in data
     'HAMILTON AVE':   2100, 'HAMILTON':   2100,
     'DAMEN AVE':      2000, 'DAMEN':      2000,
