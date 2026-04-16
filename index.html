@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LV2 Park — Is there a game or event at Wrigley today?</title>
+  <meta name="description" content="Is there a game or event at Wrigley Field today? Check LV2 parking status, see the week ahead, and find parking near Wrigley.">
+  <meta property="og:title" content="LV2 Park — Is there a game at Wrigley today?">
+  <meta property="og:description" content="Instant answer: game or event at Wrigley Field today, LV2 parking status, and the full week ahead.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lv2park.com">
+  <link rel="canonical" href="https://lv2park.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Analytics -- replace G-XXXXXXXXXX with your Measurement ID -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- OpenReplay session recording -- replace YOUR_PROJECT_KEY -->
+  <!-- <script src="https://static.openreplay.com/latest/openreplay.js"></script>
+  <script>
+    const tracker = new OpenReplay({ projectKey: 'YOUR_PROJECT_KEY' });
+    tracker.start();
+  </script> -->
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <a href="/blog/" style="font-size:13px;font-weight:700;color:#8080a0;text-decoration:none;letter-spacing:.04em;">Data &amp; Blog</a>
+        <span class="top-bar-tagline">Wrigley Field</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ABOVE THE FOLD: two columns on desktop ── -->
+  <div id="above-fold-wrapper">
+    <div class="above-fold">
+
+      <!-- LEFT: Today -->
+      <div id="hero">
+        <div class="hero-card quiet" id="hero-card">
+          <div class="hero-accent quiet" id="hero-accent"></div>
+          <div class="hero-card-inner" style="padding:28px 28px 24px;">
+            <div class="hero-eyebrow" id="hero-eyebrow">Loading...</div>
+            <div class="hero-answer" id="hero-answer"></div>
+            <div id="hero-body"></div>
+            <div class="hero-updated" id="hero-updated"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: This Week -->
+      <div class="week-col" id="week-col">
+        <!-- Print-only header -->
+        <div class="print-header">
+          <div class="print-logo">LV2 <span>PARK</span></div>
+          <div class="print-url">lv2park.com</div>
+        </div>
+
+        <div class="week-toolbar">
+          <div class="section-label" style="margin-bottom:0;">This Week</div>
+          <div class="week-actions">
+            <button class="btn-week-action" onclick="openIcsModal()" title="Add to calendar">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="2" width="14" height="13" rx="2"/><path d="M1 6h14M5 1v2M11 1v2"/></svg>
+              Add to Calendar
+            </button>
+            <button class="btn-week-action" onclick="printSchedule()" title="Print schedule">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4V1h8v3"/><rect x="1" y="4" width="14" height="8" rx="1"/><path d="M4 8h8M4 11h8"/></svg>
+              Print
+            </button>
+          </div>
+        </div>
+
+        <div class="week-list" id="week-list">
+          <div style="padding:20px;font-size:14px;color:var(--color-text-soft);">Loading schedule...</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="week-legend">
+          <div class="legend-item">⚾ Game</div>
+          <div class="legend-item">🎵 Concert</div>
+          <div class="legend-item">🎭 Comedy / Special</div>
+          <div class="legend-item" style="background:var(--color-orange);color:#fff;padding:2px 8px;border-radius:4px;">LV2</div>
+          <div class="legend-item">= tow zone active 5–10 PM</div>
+        </div>
+
+        <div class="print-note" style="display:none;">
+          Schedule may change. Check lv2park.com for the latest. Not affiliated with the Chicago Cubs or MLB.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── BELOW THE FOLD ── -->
+
+  <!-- SECTION: THE LV2 MAP -->
+  <div class="section">
+    <div class="section-label">The LV2 Zone</div>
+    <div id="map-container"></div>
+    <p class="map-stat">
+      Since 2018, over 9,400 cars were ticketed in the LV2 zone near Wrigley.
+      The red streets above are where enforcement hits hardest. It starts at exactly 5:00 PM.
+    </p>
+  </div>
+
+  <!-- SECTION: PARKING + GETTING THERE -->
+  <div class="section">
+    <div class="section-label">Parking + Getting There</div>
+    <div class="parking-list">
+      <a class="parking-card" href="https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park" target="_blank" rel="noopener">
+        <div class="parking-card-text">
+          <div class="parking-card-name">Book Parking Near Wrigley</div>
+          <div class="parking-card-desc">SpotHero — from $15/game</div>
+        </div>
+        <div class="parking-card-arrow">›</div>
+      </a>
+      <a class="parking-card" href="https://www.transitchicago.com/red/" target="_blank" rel="noopener">
+        <div class="parking-card-text">
+          <div class="parking-card-name">Take the Red Line</div>
+          <div class="parking-card-desc">Addison stop — 2-minute walk to gate</div>
+        </div>
+        <div class="parking-card-arrow">›</div>
+      </a>
+      <div class="parking-card">
+        <div class="parking-card-text">
+          <div class="parking-card-name">Free Cubs Remote Parking</div>
+          <div class="parking-card-desc">4650 N. Clarendon Ave — free shuttle, starts 2 hrs before first pitch</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: BLOG -->
+  <div class="section">
+    <div class="section-label">Data &amp; Analysis</div>
+    <div class="blog-grid">
+      <a class="blog-card" href="/blog/lv2-data-analysis.html">
+        <div class="blog-card-accent"></div>
+        <div class="blog-card-body">
+          <div class="blog-card-label">FOIA Data</div>
+          <div class="blog-card-title">We analyzed 9,400+ LV2 parking tickets near Wrigley. Here's what we found.</div>
+          <div class="blog-card-excerpt">By 5:05 PM on a game day, 60–70 tickets per minute are being written. We got the data through a public records request.</div>
+          <div class="blog-card-read">Read the analysis →</div>
+        </div>
+      </a>
+      <a class="blog-card" href="/blog/what-is-lv2.html">
+        <div class="blog-card-accent" style="background:var(--color-orange);"></div>
+        <div class="blog-card-body">
+          <div class="blog-card-label">Explainer</div>
+          <div class="blog-card-title">What is LV2? The Chicago parking zone that tows your car in minutes.</div>
+          <div class="blog-card-excerpt">LV2 changed in 2023. It now applies to all Cubs games, day and night. Here's what zone you're in, what it costs, and how to get a permit.</div>
+          <div class="blog-card-read">Read the explainer →</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SECTION: NEIGHBORHOOD RESOURCES + EMAIL -->
+  <div class="section">
+    <div class="section-label">Neighborhood Resources</div>
+    <div class="resource-list">
+      <a class="resource-row" href="https://www.44thward.org" target="_blank" rel="noopener">
+        <div>
+          <div class="resource-name">44th Ward — Alderman Bennett Lawson</div>
+          <div class="resource-desc">LV2 permits, Wrigleyville issues</div>
+        </div>
+        <div class="resource-arrow">›</div>
+      </a>
+      <a class="resource-row" href="https://www.46thward.org" target="_blank" rel="noopener">
+        <div>
+          <div class="resource-name">46th Ward — Alderman Angela Clay</div>
+          <div class="resource-desc">LV2 west area questions</div>
+        </div>
+        <div class="resource-arrow">›</div>
+      </a>
+      <a class="resource-row" href="tel:8664273869">
+        <div>
+          <div class="resource-name">Cubs Game Day Tow Hotline</div>
+          <div class="resource-desc">866-4-CPD-TOW</div>
+        </div>
+        <div class="resource-arrow">›</div>
+      </a>
+      <a class="resource-row" href="tel:311">
+        <div>
+          <div class="resource-name">Find a Towed Vehicle — 311</div>
+          <div class="resource-desc">City of Chicago Auto Pound #6 · 773-265-7605</div>
+        </div>
+        <div class="resource-arrow">›</div>
+      </a>
+    </div>
+
+    <!-- EMAIL SIGNUP -->
+    <div class="email-block" style="margin-top:32px;">
+      <div class="email-heading">Get the week at Wrigley every Monday.</div>
+      <div class="email-sub">Which days have games. Which days LV2 is in effect. One short email, free.</div>
+      <form class="email-form" id="email-form" onsubmit="handleEmailSubmit(event)">
+        <input class="form-input" type="email" id="email-input" placeholder="your@email.com" required autocomplete="email">
+        <button class="btn-subscribe" type="submit">Subscribe</button>
+        <div class="email-note">No spam. Unsubscribe anytime.</div>
+      </form>
+      <div class="email-success" id="email-success">You're in. See you Monday morning.</div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-block">
+      <div class="contact-heading">Chicago neighborhood problem?</div>
+      <div class="contact-sub">Parking, zoning, towing, local issues. We know the resources.</div>
+      <form class="contact-form" id="contact-form" onsubmit="handleContactSubmit(event)">
+        <input class="form-input" type="text" name="name" placeholder="Your name" required>
+        <input class="form-input" type="email" name="email" placeholder="your@email.com" required>
+        <textarea class="form-textarea" name="message" placeholder="What's going on?" required></textarea>
+        <button class="btn-send" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-disclaimer">
+        LV2 Park pulls from the MLB schedule and Ticketmaster -- the same sources the 44th Ward uses
+        to post LV2 enforcement dates. We cover games, concerts, and most major events. Private and
+        corporate events at Wrigley may not appear. When in doubt, verify at mlb.com/cubs/schedule
+        or the 44th Ward site.
+      </p>
+      <div class="footer-links">
+        <a href="/blog/">Data &amp; Blog</a>
+        <a href="https://www.44thward.org" target="_blank" rel="noopener">44th Ward</a>
+        <a href="https://mlb.com/cubs/schedule" target="_blank" rel="noopener">Cubs Schedule</a>
+      </div>
+      <div class="footer-copy">
+        lv2park.com · Not affiliated with the Chicago Cubs or MLB. · <span id="footer-updated"></span>
+      </div>
+      <div style="margin-top:16px;font-size:12px;color:#404058;line-height:1.6;">
+        Built by an entrepreneur living in Roscoe Village who got tired of moving his car. Inspired by a Lakeview friend who didn't want her car, or her friends' cars, towed.
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "_comment": "Manual event overrides. Add private/corporate events here that won't appear in MLB or Ticketmaster APIs.",
+  "_format": {
+    "date": "YYYY-MM-DD",
+    "name": "Event name (string)",
+    "time": "H:MM AM/PM (string)",
+    "type": "private | concert | game | other",
+    "source": "manual",
+    "lv2": true,
+    "_note": "Set lv2 to false for Gallagher Way events and small events that don't trigger LV2 enforcement"
+  },
+  "overrides": []
+}

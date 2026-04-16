@@ -1,0 +1,10 @@
+name = "lv2park-email"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# After deploying, set these secrets via:
+#   wrangler secret put RESEND_API_KEY
+#   wrangler secret put RESEND_AUDIENCE_ID
+#   wrangler secret put NOTIFY_EMAIL
+#
+# Then update app.js WORKER_URL with the deployed worker URL.

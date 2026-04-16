@@ -1,0 +1,92 @@
+{
+  "updated": "2026-04-15T22:40:14.955105+00:00",
+  "source": "mlb",
+  "days": [
+    {
+      "date": "2026-04-15",
+      "dayLabel": "Wed Apr 15",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-16",
+      "dayLabel": "Thu Apr 16",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-17",
+      "dayLabel": "Fri Apr 17",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Mets vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-18",
+      "dayLabel": "Sat Apr 18",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Mets vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-19",
+      "dayLabel": "Sun Apr 19",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Mets vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-20",
+      "dayLabel": "Mon Apr 20",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Philadelphia Phillies vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-21",
+      "dayLabel": "Tue Apr 21",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Philadelphia Phillies vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    }
+  ]
+}

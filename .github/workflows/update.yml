@@ -1,0 +1,36 @@
+name: Daily Data Update
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 6 AM CT (UTC-5) -- morning run
+    - cron: '0 20 * * *'   # 3 PM CT (UTC-5) -- afternoon run catches postponements
+  workflow_dispatch:         # Manual trigger from GitHub Actions UI
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pytz
+
+      - name: Fetch data
+        env:
+          TM_API_KEY: ${{ secrets.TM_API_KEY }}
+        run: python scripts/fetch_data.py
+
+      - name: Commit and push updated data
+        run: |
+          git config user.name  "lv2park-bot"
+          git config user.email "bot@lv2park.com"
+          git add data/today.json data/week.json data/health.json
+          git diff --staged --quiet || git commit -m "Daily update $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+          git push
