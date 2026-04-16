@@ -1,0 +1,77 @@
+name: LV2 Live Ticker
+
+on:
+  schedule:
+    # Every 30 min, 5–10 PM CT (10 PM–3 AM UTC, covers CDT offset)
+    - cron: '0,30 22,23,0,1,2 * * *'
+  workflow_dispatch:
+
+# Only one scan at a time — let in-progress finish before next run starts
+concurrency:
+  group: ticker
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check if LV2 active today
+        id: check
+        run: |
+          LV2=$(python3 -c "
+          import json
+          try:
+              d = json.load(open('data/today.json'))
+              print(str(d.get('lv2Active', False)).lower())
+          except:
+              print('false')
+          ")
+          echo "lv2_active=$LV2" >> $GITHUB_OUTPUT
+          echo "LV2 active today: $LV2"
+
+      - name: Restore ticker state
+        if: steps.check.outputs.lv2_active == 'true'
+        env:
+          TICKER_STATE: ${{ secrets.TICKER_STATE }}
+        run: |
+          mkdir -p data
+          if [ -n "$TICKER_STATE" ]; then
+            echo "$TICKER_STATE" > data/ticker_state.json
+            echo "Restored ticker_state.json from secret"
+          else
+            echo "No TICKER_STATE secret — using existing state or will fail bootstrap check"
+          fi
+
+      - name: Scan tickets
+        if: steps.check.outputs.lv2_active == 'true'
+        run: python3 -u scripts/scan_tickets.py --production
+
+      - name: Save ticker state to output
+        if: steps.check.outputs.lv2_active == 'true'
+        id: save_state
+        run: |
+          if [ -f data/ticker_state.json ]; then
+            STATE=$(cat data/ticker_state.json)
+            echo "state=$STATE" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit enforcement data
+        if: steps.check.outputs.lv2_active == 'true'
+        run: |
+          git config user.name  "lv2-ticker"
+          git config user.email "bot@lv2park.com"
+          git add data/enforcement-today.json
+          git diff --staged --quiet || git commit -m "ticker: $(date -u +'%H:%M UTC') enforcement update"
+          git push

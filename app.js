@@ -2,6 +2,7 @@
 
 const DATA_TODAY        = '/data/today.json';
 const DATA_WEEK         = '/data/week.json';
+const DATA_ENFORCEMENT  = '/data/enforcement-today.json';
 const SPOTHERO_URL      = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park';
 
 // ── Affiliate config ──────────────────────────────────────────────────────────
@@ -86,6 +87,31 @@ function getTurnstileToken() {
   });
 }
 
+/* ─── ENFORCEMENT TICKER ─────────────────────────── */
+async function loadTicker() {
+  try {
+    const res = await fetch(DATA_ENFORCEMENT + '?v=' + Date.now());
+    if (!res.ok) return;
+    const d = await res.json();
+    // Compare date in CT (game-day concept is always CT)
+    const todayCT = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+    if (d.date !== todayCT || !d.scan_ok || d.lv2_tickets_today === 0) return;
+    // Don't show stale data (> 2 hours old)
+    if (Date.now() - new Date(d.last_checked).getTime() > 7200000) return;
+    const checkedCT = new Date(d.last_checked).toLocaleTimeString('en-US', {
+      timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit'
+    });
+    const el = document.getElementById('enforcement-ticker');
+    if (!el) return;
+    const n = d.lv2_tickets_today;
+    el.innerHTML = `<div style="background:#1A1A2E;color:#F5E030;border-radius:8px;padding:12px 16px;margin:10px 0 2px;font-size:13px;font-weight:700;letter-spacing:.02em;display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+      <span style="background:#F5E030;color:#1A1A2E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;">LV2 CONFIRMED</span>
+      <span>${n} ticket${n !== 1 ? 's' : ''} issued in the zone today</span>
+      <span style="font-size:11px;font-weight:400;color:#9090a8;margin-left:auto;white-space:nowrap;">Last checked ${checkedCT} CT</span>
+    </div>`;
+  } catch {}
+}
+
 /* ─── TODAY ──────────────────────────────────────── */
 async function loadToday() {
   try {
@@ -134,7 +160,8 @@ function renderHero(data) {
       : '<div class="lv2-pill quiet"><div class="lv2-dot"></div> LV2 Not Active Today</div>';
 
     const btnHtml = `<a class="btn-spothero" href="${SPOTHERO_URL}" target="_blank" rel="noopener">Book parking — from $15 <span class="arrow">→</span></a>`;
-    body.innerHTML = eventsHtml + noteHtml + lv2Html + btnHtml;
+    body.innerHTML = eventsHtml + noteHtml + lv2Html + '<div id="enforcement-ticker"></div>' + btnHtml;
+    if (data.lv2Active) loadTicker();
 
   } else {
     card.className   = 'hero-card quiet';
