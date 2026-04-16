@@ -81,7 +81,7 @@ body {
     padding: 20px 16px;
   }
   .week-actions {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -180,8 +180,11 @@ body {
   padding: 0;
 }
 .hero-card {
-  padding: 28px var(--content-pad) 24px;
+  padding: 0;
   position: relative;
+}
+.hero-card-inner {
+  padding: 24px var(--content-pad) 28px;
 }
 .hero-card.game-day {
   background: var(--color-bg-warm);
@@ -1169,4 +1172,9 @@ footer {
 @media (max-width: 540px) {
   .email-btn, .checker-btn { width: 100%; justify-content: center; }
   .email-input, .checker-input { min-width: 0; }
+}
+
+/* Mobile: hide desktop-only week toolbar actions (must be after base .week-actions rule) */
+@media (max-width: 700px) {
+  .week-actions { display: none; }
 }
