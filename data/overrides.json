@@ -1,5 +1,5 @@
 {
-  "_comment": "Manual event overrides. Add private/corporate events here that won't appear in MLB or Ticketmaster APIs.",
+  "_comment": "Manual event overrides. Gallagher Way events live here because their Ticketmaster venue ID (Z7r9jZady5) returns 0 events -- they sell through gallagherway.com and do312.com instead. Add private/corporate Wrigley events here too.",
   "_format": {
     "date": "YYYY-MM-DD",
     "name": "Event name (string)",
@@ -7,7 +7,92 @@
     "type": "private | concert | game | other",
     "source": "manual",
     "lv2": true,
-    "_note": "Set lv2 to false for Gallagher Way events and small events that don't trigger LV2 enforcement"
+    "_note": "Set lv2 to false for Gallagher Way events and small events that do not trigger LV2 enforcement"
   },
-  "overrides": []
+  "overrides": [
+    {
+      "date": "2026-05-02",
+      "name": "Chicago HBCU Baseball Classic",
+      "time": "TBD",
+      "type": "sports",
+      "source": "manual",
+      "lv2": true,
+      "_note": "At Wrigley Field -- LV2 applies"
+    },
+    {
+      "date": "2026-05-14",
+      "name": "Upper Deck Golf",
+      "time": "TBD",
+      "type": "sports",
+      "source": "manual",
+      "lv2": true,
+      "_note": "Multi-day event at Wrigley Field May 14-16"
+    },
+    {
+      "date": "2026-05-15",
+      "name": "Upper Deck Golf",
+      "time": "TBD",
+      "type": "sports",
+      "source": "manual",
+      "lv2": true
+    },
+    {
+      "date": "2026-05-16",
+      "name": "Upper Deck Golf",
+      "time": "TBD",
+      "type": "sports",
+      "source": "manual",
+      "lv2": true
+    },
+    {
+      "_note": "GALLAGHER WAY -- adjacent plaza, NOT inside Wrigley. LV2 is false. Events sell through gallagherway.com / do312.com",
+      "date": "2026-05-17",
+      "name": "Mayday Parade (Gallagher Way)",
+      "time": "6:45 PM",
+      "type": "concert",
+      "source": "manual",
+      "lv2": false
+    },
+    {
+      "date": "2026-06-13",
+      "name": "OK Go (Gallagher Way)",
+      "time": "6:45 PM",
+      "type": "concert",
+      "source": "manual",
+      "lv2": false
+    },
+    {
+      "date": "2026-06-26",
+      "name": "Guster (Gallagher Way)",
+      "time": "6:45 PM",
+      "type": "concert",
+      "source": "manual",
+      "lv2": false
+    },
+    {
+      "date": "2026-08-23",
+      "name": "Golf Day with First Tee Greater Chicago (Gallagher Way)",
+      "time": "10:00 AM",
+      "type": "other",
+      "source": "manual",
+      "lv2": false,
+      "_note": "Free daytime event, ends 1 PM. No LV2 impact."
+    },
+    {
+      "date": "2026-09-26",
+      "name": "WingOut Chicago (Gallagher Way)",
+      "time": "TBD",
+      "type": "other",
+      "source": "manual",
+      "lv2": false
+    },
+    {
+      "date": "2026-09-27",
+      "name": "WingOut Chicago (Gallagher Way)",
+      "time": "TBD",
+      "type": "other",
+      "source": "manual",
+      "lv2": false
+    }
+  ]
 }

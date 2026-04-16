@@ -1,0 +1,35 @@
+name: Monthly Audit
+
+on:
+  schedule:
+    - cron: '0 15 1 * *'   # 1st of each month at 10 AM CT (15:00 UTC)
+  workflow_dispatch:         # Run manually from GitHub Actions UI
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # No pip installs needed -- monthly_audit.py uses stdlib only
+
+      - name: Run monthly audit
+        env:
+          TM_API_KEY:         ${{ secrets.TM_API_KEY }}
+          RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+        run: python scripts/monthly_audit.py
+
+      # If the script exits 1 (FAIL checks), GitHub emails Adam via
+      # the repo's notification settings. The audit email from Resend
+      # is sent regardless of pass/fail inside the script.

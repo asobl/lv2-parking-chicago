@@ -17,6 +17,8 @@ RESEND_AUDIENCE_ID = os.environ.get('RESEND_AUDIENCE_ID', '')
 FROM_EMAIL         = 'LV2 Park <hello@lv2park.com>'
 SITE_URL           = 'https://lv2park.com'
 SPOTHERO_URL       = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park-email'
+SUBSCRIBER_WARN_AT = 80    # Email adam@lobosinnovation.com when list hits this
+ADAM_EMAIL         = 'adam@lobosinnovation.com'
 
 
 def load_week():
@@ -177,6 +179,44 @@ def api_post(path, payload):
         return None
 
 
+def get_subscriber_count():
+    """Returns subscriber count from Resend, or None on error."""
+    req = urllib.request.Request(
+        f'https://api.resend.com/audiences/{RESEND_AUDIENCE_ID}/contacts',
+        headers={'Authorization': f'Bearer {RESEND_API_KEY}'}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+        return len(data.get('data', []))
+    except Exception as e:
+        print(f'[digest] Could not fetch subscriber count: {e}')
+        return None
+
+
+def send_subscriber_warning(count):
+    """Send a one-off alert email to Adam when list approaches the free tier limit."""
+    subject = f'LV2 Park: {count} subscribers -- Resend free tier limit approaching'
+    html = f'''<!DOCTYPE html>
+<html><body style="font-family:system-ui,sans-serif;padding:32px;max-width:480px;">
+  <h2 style="color:#D4720B;">Resend tier heads-up</h2>
+  <p>The LV2 Park email list now has <strong>{count} subscribers</strong>.</p>
+  <p>The Resend free tier sends a max of <strong>100 emails/day</strong>.
+     When the Monday digest hits more than 100 subscribers, it will fail silently.</p>
+  <p><strong>Action:</strong> Upgrade to Resend Pro ($20/mo) at
+     <a href="https://resend.com/pricing">resend.com/pricing</a>
+     before the list passes 100.</p>
+  <p style="font-size:12px;color:#999;">Sent automatically by send_digest.py when subscriber count reached {SUBSCRIBER_WARN_AT}.</p>
+</body></html>'''
+    api_post('/emails', {
+        'from':    FROM_EMAIL,
+        'to':      [ADAM_EMAIL],
+        'subject': subject,
+        'html':    html,
+    })
+    print(f'[digest] Subscriber warning sent to {ADAM_EMAIL} ({count} subscribers)')
+
+
 def main():
     if not RESEND_API_KEY:
         print('[digest] RESEND_API_KEY not set — skipping')
@@ -184,6 +224,13 @@ def main():
     if not RESEND_AUDIENCE_ID:
         print('[digest] RESEND_AUDIENCE_ID not set — skipping')
         sys.exit(0)
+
+    # Check subscriber count before sending digest
+    count = get_subscriber_count()
+    if count is not None:
+        print(f'[digest] Subscriber count: {count}')
+        if count >= SUBSCRIBER_WARN_AT:
+            send_subscriber_warning(count)
 
     print('[digest] Loading week data...')
     data = load_week()
