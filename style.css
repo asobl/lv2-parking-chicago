@@ -78,6 +78,10 @@ body {
   .week-col {
     border-left: none !important;
     border-top: 1px solid #C8C6D4;
+    padding: 20px 16px;
+  }
+  .week-actions {
+    display: none;
   }
 }
 
@@ -92,7 +96,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
+  gap: 8px;
 }
 .site-logo {
   font-size: 18px;
@@ -125,12 +129,13 @@ body {
 .top-nav-link.active { color: #fff; background: rgba(255,255,255,0.12); }
 @media (max-width: 480px) {
   .top-nav {
+    flex: 1;
+    min-width: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap;
     gap: 0;
     scrollbar-width: none;
-    min-width: 0;
   }
   .top-nav::-webkit-scrollbar { display: none; }
   .top-nav-link {
