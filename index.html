@@ -348,5 +348,28 @@
   </footer>
 
   <script src="app.js"></script>
+  <!-- TEMP DEBUG: overflow finder — remove after diagnosing -->
+  <script>
+  (function(){
+    var vw = document.documentElement.clientWidth;
+    var offenders = [];
+    document.querySelectorAll('*').forEach(function(el){
+      var r = el.getBoundingClientRect();
+      if (r.right > vw + 1 || r.left < -1) {
+        el.style.outline = '3px solid red';
+        var tag = el.tagName.toLowerCase();
+        var id = el.id ? '#'+el.id : '';
+        var cls = el.className && typeof el.className === 'string' ? '.'+el.className.trim().split(/\s+/).join('.') : '';
+        offenders.push(tag + id + cls + ' (right:'+Math.round(r.right)+', left:'+Math.round(r.left)+')');
+      }
+    });
+    if (offenders.length) {
+      var banner = document.createElement('div');
+      banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#E84040;color:#fff;font-size:11px;padding:8px 12px;z-index:99999;word-break:break-all;max-height:40vh;overflow-y:auto;';
+      banner.innerHTML = '<strong>OVERFLOW:</strong><br>' + offenders.join('<br>');
+      document.body.appendChild(banner);
+    }
+  })();
+  </script>
 </body>
 </html>
