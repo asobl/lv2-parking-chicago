@@ -583,6 +583,88 @@ body {
   letter-spacing: 0.01em;
 }
 .btn-subscribe:active { opacity: 0.9; }
+.btn-subscribe.loading {
+  opacity: 0.8;
+  pointer-events: none;
+  position: relative;
+}
+.btn-subscribe.loading .btn-label { visibility: hidden; }
+.btn-subscribe.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 20px; height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btn-spin 0.65s linear infinite;
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+
+/* Subscribe success card */
+.subscribe-success {
+  display: none;
+  padding: 20px 0 4px;
+}
+.subscribe-success-headline {
+  font-size: var(--text-h2);
+  font-weight: 900;
+  color: var(--color-text);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.subscribe-success-sub {
+  font-size: var(--text-small);
+  color: var(--color-text-soft);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.subscribe-share-block {
+  background: var(--color-bg);
+  border: 1.5px solid #E0DFF0;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 4px;
+}
+.subscribe-share-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+  margin-bottom: 10px;
+}
+.subscribe-share-tagline {
+  font-size: var(--text-small);
+  color: var(--color-text);
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.subscribe-share-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+.btn-share:active { opacity: 0.8; }
+.btn-share.facebook { background: #1877F2; color: #fff; }
+.btn-share.copy     { background: var(--color-bg-surface); color: var(--color-text); border: 1.5px solid #E0DFF0; }
 .email-note {
   font-size: 11px;
   color: var(--color-text-soft);

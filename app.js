@@ -730,7 +730,7 @@ async function handleEmailSubmit(e) {
   const email = document.getElementById('email-input').value.trim();
   if (!email) return;
   const btn = e.target.querySelector('button');
-  btn.textContent = 'Subscribing...';
+  btn.classList.add('loading');
   btn.disabled = true;
   const tsToken = await getTurnstileToken();
   if (tsWidgetId !== null) turnstile.reset(tsWidgetId);
@@ -751,11 +751,32 @@ async function handleEmailSubmit(e) {
     if (res.ok) {
       document.getElementById('email-form').style.display = 'none';
       const success = document.getElementById('email-success');
-      success.textContent = "You're in. Move your car before 5 PM. We'll handle the rest.";
+      success.innerHTML = `
+        <div class="subscribe-success-headline">You're in.</div>
+        <div class="subscribe-success-sub">
+          Check your email — we just sent you a welcome note.<br>
+          Every Monday morning you'll know which days to move the car and which days to sleep in.
+        </div>
+        <div class="subscribe-share-block">
+          <div class="subscribe-share-label">Tell a neighbor</div>
+          <div class="subscribe-share-tagline">Your neighbor doesn't know about this yet.<br>Fix that before the next game day.</div>
+          <div class="subscribe-share-buttons">
+            <a class="btn-share facebook"
+               href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flv2park.com"
+               target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              Share on Facebook
+            </a>
+            <button class="btn-share copy" onclick="copyLv2Link(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy link
+            </button>
+          </div>
+        </div>`;
       success.style.display = 'block';
     } else throw new Error();
   } catch {
-    btn.textContent = 'Subscribe';
+    btn.classList.remove('loading');
     btn.disabled = false;
     alert('Something went wrong. Try again or email hello@lv2park.com');
   }
@@ -786,6 +807,15 @@ async function handleContactSubmit(e) {
     btn.disabled = false;
     alert('Something went wrong. Email hello@lv2park.com directly.');
   }
+}
+
+function copyLv2Link(btn) {
+  navigator.clipboard.writeText('https://lv2park.com').then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy link';
+    }, 2000);
+  });
 }
 
 /* ─── HELPERS ────────────────────────────────────── */
