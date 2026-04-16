@@ -3,18 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LV2 Park — Is there a game or event at Wrigley today?</title>
-  <meta name="description" content="Is there a game or event at Wrigley Field today? Check LV2 parking status, see the week ahead, and find parking near Wrigley.">
-  <meta property="og:title" content="LV2 Park — Is there a game at Wrigley today?">
-  <meta property="og:description" content="Instant answer: game or event at Wrigley Field today, LV2 parking status, and the full week ahead.">
+  <title>Can I park LV2 today? — LV2 Park</title>
+  <meta name="description" content="Is LV2 parking active near Wrigley Field today? Instant YES or NO — plus enforcement hours, the week ahead, and parking options near Wrigley.">
+  <meta property="og:title" content="Can I park LV2 today? — LV2 Park">
+  <meta property="og:description" content="Instant answer: is LV2 parking enforcement active near Wrigley today? Plus the full week ahead so you know when to move your car.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://lv2park.com">
+  <meta property="og:site_name" content="LV2 Park">
   <meta property="og:image" content="https://lv2park.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@lv2park">
+  <meta name="twitter:title" content="Can I park LV2 today? — LV2 Park">
+  <meta name="twitter:description" content="Instant answer: is LV2 parking active near Wrigley today? See the full week ahead so you know when to move your car.">
   <meta name="twitter:image" content="https://lv2park.com/og-image.png">
   <link rel="canonical" href="https://lv2park.com">
+  <!-- PWA / Add to Home Screen -->
+  <meta name="theme-color" content="#1A1A2E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="LV2 Park">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
 
   <!-- FlexOffers site verification -->
   <meta name="fo-verify" content="df57e9cf-adfa-460f-aa96-0ed23bae5d9b" />
@@ -45,6 +56,22 @@
 </head>
 <body>
 
+  <!-- ADD TO HOME SCREEN BANNER (iOS Safari only, dismissible) -->
+  <div id="a2hs-banner" style="display:none;background:#1A1A2E;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <span>📱 Add to Home Screen: tap <strong style="color:#F5E030;">Share</strong> → "Add to Home Screen"</span>
+    <button onclick="document.getElementById('a2hs-banner').style.display='none';localStorage.setItem('a2hs_dismissed','1')" style="background:none;border:none;color:#9090a8;font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;">×</button>
+  </div>
+  <script>
+    (function(){
+      var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      var isStandalone = window.navigator.standalone;
+      var dismissed = localStorage.getItem('a2hs_dismissed');
+      if (isIOS && !isStandalone && !dismissed) {
+        document.getElementById('a2hs-banner').style.display = 'flex';
+      }
+    })();
+  </script>
+
   <!-- TOP BAR -->
   <div class="top-bar">
     <div class="top-bar-inner">
@@ -69,6 +96,7 @@
           <div class="hero-accent quiet" id="hero-accent"></div>
           <div class="hero-card-inner" style="padding:28px 28px 24px;">
             <div class="hero-eyebrow" id="hero-eyebrow">Loading...</div>
+            <div class="hero-question">Can I park LV2 today?</div>
             <div class="hero-answer" id="hero-answer"></div>
             <div id="hero-body"></div>
             <div class="hero-updated" id="hero-updated"></div>

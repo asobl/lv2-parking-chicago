@@ -180,14 +180,21 @@ body {
   color: var(--color-text-soft);
   margin-bottom: var(--space-xs);
 }
+.hero-question {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-soft);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
 .hero-answer {
-  font-size: var(--text-hero);
+  font-size: clamp(52px, 14vw, var(--text-hero));
   font-weight: 900;
   line-height: 1;
   margin-bottom: var(--space-md);
 }
-.hero-answer.yes { color: var(--color-text); }
-.hero-answer.no  { color: var(--color-green); }
+.hero-answer.yes { color: var(--color-green); }
+.hero-answer.no  { color: var(--color-orange); }
 
 .hero-event-name {
   font-size: var(--text-h2);

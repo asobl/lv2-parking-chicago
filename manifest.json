@@ -1,0 +1,16 @@
+{
+  "name": "LV2 Park",
+  "short_name": "LV2 Park",
+  "description": "Can I park LV2 today? Instant answer for Wrigleyville residents.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1A1A2E",
+  "theme_color": "#1A1A2E",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

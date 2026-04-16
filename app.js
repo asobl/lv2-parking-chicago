@@ -134,46 +134,58 @@ function renderHero(data) {
   const today = new Date();
   eyebrow.textContent = 'Today — ' + today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-  if (data.hasEvent) {
+  // Build events list HTML (reused in multiple branches)
+  function eventsListHtml(events) {
+    if (!events || !events.length) return '';
+    let h = '<div class="hero-events">';
+    for (const ev of events) {
+      h += `<div class="hero-event-row">
+        <div class="hero-event-name">${eventIcon(ev)} ${escHtml(ev.name)}</div>
+        <div class="hero-event-time">${escHtml(ev.time)} CT</div>
+      </div>`;
+    }
+    return h + '</div>';
+  }
+
+  const noteHtml = data.note
+    ? `<div style="font-size:14px;color:var(--color-orange);margin-bottom:16px;font-weight:700;">${escHtml(data.note)}</div>`
+    : '';
+
+  const btnHtml = `<a class="btn-spothero" href="${SPOTHERO_URL}" target="_blank" rel="noopener">Book parking — from $15 <span class="arrow">→</span></a>`;
+
+  if (data.lv2Active) {
+    // LV2 is active -- answer is NO, you cannot safely park here
     card.className   = 'hero-card game-day';
     accent.className = 'hero-accent game-day';
-    answer.textContent = 'YES';
-    answer.className   = 'hero-answer yes';
-
-    let eventsHtml = '<div class="hero-events">';
-    for (const ev of data.events) {
-      const icon = eventIcon(ev);
-      eventsHtml += `
-        <div class="hero-event-row">
-          <div class="hero-event-name">${icon} ${escHtml(ev.name)}</div>
-          <div class="hero-event-time">${escHtml(ev.time)} CT</div>
-        </div>`;
-    }
-    eventsHtml += '</div>';
-
-    const noteHtml = data.note
-      ? `<div style="font-size:14px;color:var(--color-orange);margin-bottom:16px;font-weight:700;">${escHtml(data.note)}</div>`
-      : '';
-
-    const lv2Html = data.lv2Active
-      ? '<div class="lv2-pill active"><div class="lv2-dot"></div> LV2 Active 5–10 PM</div>'
-      : '<div class="lv2-pill quiet"><div class="lv2-dot"></div> LV2 Not Active Today</div>';
-
-    const btnHtml = `<a class="btn-spothero" href="${SPOTHERO_URL}" target="_blank" rel="noopener">Book parking — from $15 <span class="arrow">→</span></a>`;
-    body.innerHTML = eventsHtml + noteHtml + lv2Html + '<div id="enforcement-ticker"></div>' + btnHtml;
-    if (data.lv2Active) loadTicker();
-
-  } else {
-    card.className   = 'hero-card quiet';
-    accent.className = 'hero-accent quiet';
     answer.textContent = 'NO';
     answer.className   = 'hero-answer no';
 
-    const noteHtml = data.note
-      ? `<div style="font-size:14px;color:var(--color-text-soft);margin-bottom:16px;">${escHtml(data.note)}</div>`
-      : '<div class="hero-quiet-msg">No games. No events.<br>Wrigley is quiet today.</div>';
+    const lv2Html = '<div class="lv2-pill active"><div class="lv2-dot"></div> LV2 Active 5–10 PM — Move your car before 5</div>';
+    body.innerHTML = lv2Html + eventsListHtml(data.events) + noteHtml + '<div id="enforcement-ticker"></div>' + btnHtml;
+    loadTicker();
 
-    body.innerHTML = noteHtml + '<div class="lv2-pill quiet"><div class="lv2-dot"></div> LV2 Not Active Today</div>';
+  } else if (data.hasEvent) {
+    // Event today but LV2 not active -- safe to park
+    card.className   = 'hero-card quiet';
+    accent.className = 'hero-accent quiet';
+    answer.textContent = 'YES';
+    answer.className   = 'hero-answer yes';
+
+    const lv2Html = '<div class="lv2-pill quiet"><div class="lv2-dot"></div> LV2 Not Active Today</div>';
+    body.innerHTML = eventsListHtml(data.events) + noteHtml + lv2Html + btnHtml;
+
+  } else {
+    // No event, no LV2 -- safe to park
+    card.className   = 'hero-card quiet';
+    accent.className = 'hero-accent quiet';
+    answer.textContent = 'YES';
+    answer.className   = 'hero-answer yes';
+
+    const quietMsg = data.note
+      ? `<div style="font-size:14px;color:var(--color-text-soft);margin-bottom:16px;">${escHtml(data.note)}</div>`
+      : '<div class="hero-quiet-msg">No games or events today.<br>Park freely in the LV2 zone.</div>';
+
+    body.innerHTML = quietMsg + '<div class="lv2-pill quiet"><div class="lv2-dot"></div> LV2 Not Active Today</div>';
   }
 
   if (updated) {
