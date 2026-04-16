@@ -729,6 +729,22 @@ async function handleEmailSubmit(e) {
   e.preventDefault();
   const email = document.getElementById('email-input').value.trim();
   if (!email) return;
+
+  // Duplicate check via localStorage — covers the common case
+  const seen = JSON.parse(localStorage.getItem('lv2_subscribed') || '[]');
+  if (seen.includes(email)) {
+    document.getElementById('email-form').style.display = 'none';
+    const success = document.getElementById('email-success');
+    success.innerHTML = `
+      <div class="subscribe-success-headline">You're already on the list.</div>
+      <div class="subscribe-success-sub">
+        Every Monday morning — which days to move the car, which days to sleep in.<br>
+        Check your inbox if you haven't seen it yet (check spam too, Chicago's tough).
+      </div>`;
+    success.style.display = 'block';
+    return;
+  }
+
   const btn = e.target.querySelector('button');
   btn.classList.add('loading');
   btn.disabled = true;
@@ -749,6 +765,8 @@ async function handleEmailSubmit(e) {
       body: JSON.stringify({ email, cf_turnstile_response: tsToken })
     });
     if (res.ok) {
+      seen.push(email);
+      localStorage.setItem('lv2_subscribed', JSON.stringify(seen));
       document.getElementById('email-form').style.display = 'none';
       const success = document.getElementById('email-success');
       success.innerHTML = `

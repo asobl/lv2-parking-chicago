@@ -33,6 +33,10 @@ export default {
       return handleContact(request, env);
     }
 
+    if (request.method === 'POST' && url.pathname === '/unsubscribe') {
+      return handleUnsubscribe(request, env);
+    }
+
     return corsResponse(JSON.stringify({ error: 'not found' }), 404, env);
   }
 };
@@ -200,6 +204,49 @@ function confirmationEmailHtml() {
   </div>
 </body>
 </html>`;
+}
+
+// ─── UNSUBSCRIBE ───────────────────────────────────────
+async function handleUnsubscribe(request, env) {
+  let body;
+  try { body = await request.json(); }
+  catch { return corsResponse(JSON.stringify({ error: 'invalid JSON' }), 400, env); }
+
+  const email  = (body.email || '').trim().toLowerCase();
+  const reason = (body.reason || '').trim();
+  const detail = (body.detail || '').trim();
+
+  if (!email || !email.includes('@')) {
+    return corsResponse(JSON.stringify({ error: 'invalid email' }), 400, env);
+  }
+
+  // Mark unsubscribed in Resend audience
+  await fetch(`${RESEND_API}/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, unsubscribed: true })
+  });
+
+  // Send churn feedback to Adam
+  if (reason && env.NOTIFY_EMAIL) {
+    await fetch(`${RESEND_API}/emails`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to: [env.NOTIFY_EMAIL],
+        subject: `Unsubscribe feedback: ${email}`,
+        html: `
+          <p><strong>Someone unsubscribed from LV2 Park</strong></p>
+          <p><strong>Email:</strong> ${escHtml(email)}</p>
+          <p><strong>Reason:</strong> ${escHtml(reason)}</p>
+          ${detail ? `<p><strong>Details:</strong> ${escHtml(detail)}</p>` : ''}
+        `
+      })
+    }).catch(() => {});
+  }
+
+  return corsResponse(JSON.stringify({ ok: true }), 200, env);
 }
 
 // ─── TURNSTILE ─────────────────────────────────────────

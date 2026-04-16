@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unsubscribe — LV2 Park</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .unsub-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+    .unsub-eyebrow {
+      font-size: var(--text-label);
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--color-text-soft);
+      margin-bottom: 10px;
+    }
+    .unsub-headline {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .unsub-sub {
+      font-size: var(--text-body);
+      color: var(--color-text-soft);
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+    .unsub-card {
+      background: var(--color-bg-surface);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+    }
+    .unsub-question {
+      font-size: var(--text-body);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .reason-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .reason-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: #fff;
+      border: 2px solid #E5E4F0;
+      border-radius: var(--radius-md);
+      font-family: var(--font-main);
+      font-size: var(--text-small);
+      font-weight: 700;
+      color: var(--color-text);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .reason-btn:hover { border-color: var(--color-purple); }
+    .reason-btn.selected {
+      border-color: var(--color-purple);
+      background: #F5F4FC;
+      color: var(--color-purple);
+    }
+    .reason-btn .emoji { font-size: 18px; flex-shrink: 0; }
+    .unsub-detail-label {
+      font-size: var(--text-small);
+      font-weight: 700;
+      color: var(--color-text-soft);
+      margin-bottom: 8px;
+    }
+    .btn-unsub-submit {
+      width: 100%;
+      height: 52px;
+      background: var(--color-text);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-main);
+      font-size: var(--text-body);
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    .btn-unsub-submit:disabled { opacity: 0.6; }
+    .unsub-done { display: none; }
+    .unsub-done-headline {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .unsub-done-sub {
+      font-size: var(--text-body);
+      color: var(--color-text-soft);
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+    </div>
+  </div>
+
+  <div class="unsub-wrap">
+
+    <div id="unsub-form-state">
+      <div class="unsub-eyebrow">Unsubscribe</div>
+      <div class="unsub-headline">We'll miss you.<br>Your car probably will too.</div>
+      <div class="unsub-sub">Enter your email below and you're off the list. No hard feelings. Genuinely.</div>
+
+      <div class="unsub-card">
+        <input class="form-input" type="email" id="unsub-email" placeholder="your@email.com" autocomplete="email" style="margin-bottom:20px;">
+
+        <div class="unsub-question">Before you go — what happened? (optional, but we're genuinely curious)</div>
+
+        <div class="reason-options" id="reason-options">
+          <button class="reason-btn" onclick="selectReason(this, 'I moved out of Lakeview / Wrigleyville')">
+            <span class="emoji">📦</span> I moved out of Lakeview / Wrigleyville
+          </button>
+          <button class="reason-btn" onclick="selectReason(this, 'Too many emails')">
+            <span class="emoji">📬</span> Too many emails
+          </button>
+          <button class="reason-btn" onclick="selectReason(this, 'I don\'t drive / park near Wrigley')">
+            <span class="emoji">🚇</span> I don't drive / I take the Red Line like a responsible adult
+          </button>
+          <button class="reason-btn" onclick="selectReason(this, 'My car got towed anyway')">
+            <span class="emoji">🚗</span> My car got towed anyway (we're sorry)
+          </button>
+          <button class="reason-btn" onclick="selectReason(this, 'I just wanted to test the form')">
+            <span class="emoji">🧪</span> I just wanted to test the form
+          </button>
+          <button class="reason-btn" onclick="selectReason(this, 'Something else')">
+            <span class="emoji">🤷</span> Something else
+          </button>
+        </div>
+
+        <div class="unsub-detail-label">Anything else? (we actually read these)</div>
+        <textarea class="form-textarea" id="unsub-detail" placeholder="Tell us what's on your mind. We can take it." style="min-height:80px;"></textarea>
+
+        <button class="btn-unsub-submit" id="unsub-submit-btn" onclick="submitUnsub()">Unsubscribe</button>
+      </div>
+    </div>
+
+    <div class="unsub-done" id="unsub-done-state">
+      <div class="unsub-done-headline">You're off the list.</div>
+      <div class="unsub-done-sub" id="unsub-done-msg">
+        No more Monday emails. Stay safe out there — and move your car before 5 PM just in case.
+      </div>
+      <a href="/" style="display:inline-flex;align-items:center;gap:8px;height:52px;padding:0 24px;background:var(--color-purple);color:#fff;border-radius:var(--radius-md);font-weight:700;font-size:var(--text-body);text-decoration:none;">
+        Back to lv2park.com
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    const WORKER_URL = 'https://lv2park-email.adam-945.workers.dev';
+    let selectedReason = '';
+
+    function selectReason(btn, reason) {
+      document.querySelectorAll('.reason-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedReason = reason;
+    }
+
+    async function submitUnsub() {
+      const email  = document.getElementById('unsub-email').value.trim();
+      const detail = document.getElementById('unsub-detail').value.trim();
+      const btn    = document.getElementById('unsub-submit-btn');
+
+      if (!email || !email.includes('@')) {
+        document.getElementById('unsub-email').focus();
+        return;
+      }
+
+      btn.textContent = 'Unsubscribing...';
+      btn.disabled = true;
+
+      try {
+        await fetch(`${WORKER_URL}/unsubscribe`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, reason: selectedReason, detail })
+        });
+      } catch {}
+
+      // Show done state regardless of API result — always unsubscribe the person
+      document.getElementById('unsub-form-state').style.display = 'none';
+      const done = document.getElementById('unsub-done-state');
+
+      if (selectedReason === 'My car got towed anyway') {
+        document.getElementById('unsub-done-msg').textContent =
+          "You're off the list. We're sorry about the tow. That's exactly why we built this. We hope the next car fares better.";
+      } else if (selectedReason === 'I just wanted to test the form') {
+        document.getElementById('unsub-done-msg').textContent =
+          "Fair enough. Form works great, by the way. You're off the list.";
+      } else if (selectedReason === "I moved out of Lakeview / Wrigleyville") {
+        document.getElementById('unsub-done-msg').textContent =
+          "Good luck out there. Come back if you ever move back — or if you have friends near Wrigley who need a heads up.";
+      }
+
+      // Clear localStorage so they can re-subscribe cleanly
+      const seen = JSON.parse(localStorage.getItem('lv2_subscribed') || '[]');
+      const updated = seen.filter(e => e !== email.toLowerCase());
+      localStorage.setItem('lv2_subscribed', JSON.stringify(updated));
+
+      done.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
