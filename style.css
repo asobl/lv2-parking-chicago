@@ -209,7 +209,7 @@ body {
   margin-bottom: var(--space-md);
 }
 .hero-answer.yes { color: var(--color-green); }
-.hero-answer.no  { color: var(--color-orange); }
+.hero-answer.no  { color: var(--color-red); }
 
 .hero-event-name {
   font-size: var(--text-h2);
