@@ -125,6 +125,7 @@ body {
 .top-nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
 .top-nav-link.active { color: #fff; background: rgba(255,255,255,0.12); }
 @media (max-width: 480px) {
+  .top-bar { padding: 0 0 0 12px; }
   .top-nav {
     flex: 1;
     min-width: 0;
