@@ -20,6 +20,12 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
+try:
+    import requests as _requests
+    _USE_REQUESTS = True
+except ImportError:
+    _USE_REQUESTS = False
+
 # ── Load .env (local development only) ───────────────
 def load_dotenv():
     env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env')
