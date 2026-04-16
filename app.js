@@ -63,8 +63,9 @@ function initTurnstile() {
 function getTurnstileToken() {
   if (!TURNSTILE_SITE_KEY || tsWidgetId === null) return Promise.resolve('');
   return new Promise(resolve => {
-    tsResolve = resolve;
-    turnstile.execute(tsWidgetId);
+    const timeout = setTimeout(() => { tsResolve = null; resolve('__timeout__'); }, 4000);
+    tsResolve = token => { clearTimeout(timeout); resolve(token); };
+    try { turnstile.execute(tsWidgetId); } catch { clearTimeout(timeout); resolve(''); }
   });
 }
 
@@ -732,7 +733,14 @@ async function handleEmailSubmit(e) {
   btn.textContent = 'Subscribing...';
   btn.disabled = true;
   const tsToken = await getTurnstileToken();
-  if (tsWidgetId !== null) turnstile.reset(tsWidgetId); // reset for next use
+  if (tsWidgetId !== null) turnstile.reset(tsWidgetId);
+
+  if (tsToken === '__timeout__') {
+    btn.textContent = 'Subscribe';
+    btn.disabled = false;
+    alert('Security check timed out. Please try again.');
+    return;
+  }
 
   try {
     const res = await fetch(`${WORKER_URL}/subscribe`, {
