@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-16T11:25:30.696627+00:00",
+  "updated": "2026-04-16T20:20:26.739652+00:00",
   "source": "mlb",
   "days": [
     {
@@ -193,8 +193,7 @@
         {
           "name": "Chicago HBCU Baseball Classic",
           "time": "TBD",
-          "type": "sports",
-          "changed": "new"
+          "type": "sports"
         }
       ]
     },
