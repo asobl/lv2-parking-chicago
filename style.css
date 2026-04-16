@@ -81,7 +81,7 @@ body {
     padding: 20px 16px;
   }
   .week-actions {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -140,9 +140,9 @@ body {
   .top-nav::-webkit-scrollbar { display: none; }
   .top-nav-link {
     font-size: 11px;
-    padding: 6px 8px;
+    padding: 6px 5px;
     white-space: nowrap;
-    letter-spacing: 0.04em;
+    letter-spacing: 0;
   }
 }
 
