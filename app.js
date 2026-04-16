@@ -234,7 +234,7 @@ function buildDayRows(days, todayStr) {
       eventsHtml = '<div class="week-event-name empty">Nothing</div>';
     }
 
-    const badgeHtml = day.lv2Active ? '<span class="week-badge">LV2</span>' : '';
+    const badgeHtml = ''; // LV2 info shown in expanded detail panel only
     const chevron   = hasEvent ? '<span class="week-chevron">›</span>' : '';
     const clickAttr = hasEvent ? `onclick="toggleWeekRow(this, '${day.date}')"` : '';
 

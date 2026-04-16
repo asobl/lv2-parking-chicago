@@ -1,1 +1,1930 @@
-{"updated": "2026-04-16T04:56:45.484101+00:00", "source": "mlb", "days": [{"date": "2026-04-15", "dayLabel": "Wed Apr 15", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-16", "dayLabel": "Thu Apr 16", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-17", "dayLabel": "Fri Apr 17", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "New York Mets vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-04-18", "dayLabel": "Sat Apr 18", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "New York Mets vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-04-19", "dayLabel": "Sun Apr 19", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "New York Mets vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-04-20", "dayLabel": "Mon Apr 20", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Philadelphia Phillies vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-04-21", "dayLabel": "Tue Apr 21", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Philadelphia Phillies vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-04-22", "dayLabel": "Wed Apr 22", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Philadelphia Phillies vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-04-23", "dayLabel": "Thu Apr 23", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Philadelphia Phillies vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-04-24", "dayLabel": "Fri Apr 24", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-25", "dayLabel": "Sat Apr 25", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-26", "dayLabel": "Sun Apr 26", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-27", "dayLabel": "Mon Apr 27", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-28", "dayLabel": "Tue Apr 28", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-29", "dayLabel": "Wed Apr 29", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-04-30", "dayLabel": "Thu Apr 30", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-01", "dayLabel": "Fri May 1", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Arizona Diamondbacks vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-02", "dayLabel": "Sat May 2", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Arizona Diamondbacks vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-03", "dayLabel": "Sun May 3", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Arizona Diamondbacks vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-04", "dayLabel": "Mon May 4", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-05-05", "dayLabel": "Tue May 5", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-05-06", "dayLabel": "Wed May 6", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-05-07", "dayLabel": "Thu May 7", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-08", "dayLabel": "Fri May 8", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-09", "dayLabel": "Sat May 9", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-10", "dayLabel": "Sun May 10", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-11", "dayLabel": "Mon May 11", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-12", "dayLabel": "Tue May 12", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-13", "dayLabel": "Wed May 13", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-14", "dayLabel": "Thu May 14", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-15", "dayLabel": "Fri May 15", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-16", "dayLabel": "Sat May 16", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-17", "dayLabel": "Sun May 17", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-18", "dayLabel": "Mon May 18", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-05-19", "dayLabel": "Tue May 19", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-05-20", "dayLabel": "Wed May 20", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-05-21", "dayLabel": "Thu May 21", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-22", "dayLabel": "Fri May 22", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Houston Astros vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-23", "dayLabel": "Sat May 23", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Houston Astros vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-24", "dayLabel": "Sun May 24", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Houston Astros vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-05-25", "dayLabel": "Mon May 25", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-26", "dayLabel": "Tue May 26", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-27", "dayLabel": "Wed May 27", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-28", "dayLabel": "Thu May 28", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-29", "dayLabel": "Fri May 29", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-30", "dayLabel": "Sat May 30", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-05-31", "dayLabel": "Sun May 31", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-01", "dayLabel": "Mon Jun 1", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-02", "dayLabel": "Tue Jun 2", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-03", "dayLabel": "Wed Jun 3", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Athletics vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-06-04", "dayLabel": "Thu Jun 4", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Athletics vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-06-05", "dayLabel": "Fri Jun 5", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Athletics vs. Cubs", "time": "7:05 PM", "type": "game"}, {"name": "San Francisco Giants vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-06-06", "dayLabel": "Sat Jun 6", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "San Francisco Giants vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-06-07", "dayLabel": "Sun Jun 7", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-08", "dayLabel": "Mon Jun 8", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "San Francisco Giants vs. Cubs", "time": "7:20 PM", "type": "game"}]}, {"date": "2026-06-09", "dayLabel": "Tue Jun 9", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-10", "dayLabel": "Wed Jun 10", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-11", "dayLabel": "Thu Jun 11", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Mumford & Sons - Prizefighter Tour", "time": "6:30 PM", "type": "concert"}]}, {"date": "2026-06-12", "dayLabel": "Fri Jun 12", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "R\u00dcF\u00dcS DU SOL NORTH AMERICA 2026", "time": "7:30 PM", "type": "concert"}]}, {"date": "2026-06-13", "dayLabel": "Sat Jun 13", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-14", "dayLabel": "Sun Jun 14", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-15", "dayLabel": "Mon Jun 15", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-16", "dayLabel": "Tue Jun 16", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Colorado Rockies vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-06-17", "dayLabel": "Wed Jun 17", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Colorado Rockies vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-06-18", "dayLabel": "Thu Jun 18", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Colorado Rockies vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-06-19", "dayLabel": "Fri Jun 19", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Toronto Blue Jays vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-06-20", "dayLabel": "Sat Jun 20", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Toronto Blue Jays vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-06-21", "dayLabel": "Sun Jun 21", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Toronto Blue Jays vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-06-22", "dayLabel": "Mon Jun 22", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-23", "dayLabel": "Tue Jun 23", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-24", "dayLabel": "Wed Jun 24", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-25", "dayLabel": "Thu Jun 25", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-26", "dayLabel": "Fri Jun 26", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-27", "dayLabel": "Sat Jun 27", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-28", "dayLabel": "Sun Jun 28", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-29", "dayLabel": "Mon Jun 29", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-06-30", "dayLabel": "Tue Jun 30", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "San Diego Padres vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-07-01", "dayLabel": "Wed Jul 1", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "San Diego Padres vs. Cubs", "time": "7:05 PM", "type": "game", "changed": "time", "prevTime": "1:20 PM"}, {"name": "San Diego Padres vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-07-02", "dayLabel": "Thu Jul 2", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-03", "dayLabel": "Fri Jul 3", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "St. Louis Cardinals vs. Cubs", "time": "3:05 PM", "type": "game"}]}, {"date": "2026-07-04", "dayLabel": "Sat Jul 4", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-05", "dayLabel": "Sun Jul 5", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "St. Louis Cardinals vs. Cubs", "time": "7:08 PM", "type": "game", "changed": "time", "prevTime": "1:30 PM"}, {"name": "St. Louis Cardinals vs. Cubs", "time": "1:30 PM", "type": "game"}]}, {"date": "2026-07-06", "dayLabel": "Mon Jul 6", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-07", "dayLabel": "Tue Jul 7", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-08", "dayLabel": "Wed Jul 8", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-09", "dayLabel": "Thu Jul 9", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-10", "dayLabel": "Fri Jul 10", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-11", "dayLabel": "Sat Jul 11", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "John Mulaney: Mister Whatever", "time": "8:00 PM", "type": "concert"}]}, {"date": "2026-07-12", "dayLabel": "Sun Jul 12", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Tyler Childers - Snipe Hunt", "time": "6:45 PM", "type": "concert"}]}, {"date": "2026-07-13", "dayLabel": "Mon Jul 13", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-14", "dayLabel": "Tue Jul 14", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Noah Kahan: The Great Divide Tour ", "time": "6:30 PM", "type": "concert"}, {"name": "Noah Kahan w/ Gigi Perez", "time": "6:30 PM", "type": "concert"}]}, {"date": "2026-07-15", "dayLabel": "Wed Jul 15", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Noah Kahan: The Great Divide Tour ", "time": "6:30 PM", "type": "concert"}, {"name": "Noah Kahan w/ Gigi Perez", "time": "6:30 PM", "type": "concert"}]}, {"date": "2026-07-16", "dayLabel": "Thu Jul 16", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-17", "dayLabel": "Fri Jul 17", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-18", "dayLabel": "Sat Jul 18", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Minnesota Twins vs. Cubs", "time": "7:05 PM", "type": "game"}, {"name": "Minnesota Twins vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-07-19", "dayLabel": "Sun Jul 19", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Minnesota Twins vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-07-20", "dayLabel": "Mon Jul 20", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-21", "dayLabel": "Tue Jul 21", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Detroit Tigers vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-07-22", "dayLabel": "Wed Jul 22", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Detroit Tigers vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-07-23", "dayLabel": "Thu Jul 23", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Detroit Tigers vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-07-24", "dayLabel": "Fri Jul 24", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-25", "dayLabel": "Sat Jul 25", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-26", "dayLabel": "Sun Jul 26", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-27", "dayLabel": "Mon Jul 27", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-28", "dayLabel": "Tue Jul 28", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-29", "dayLabel": "Wed Jul 29", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-30", "dayLabel": "Thu Jul 30", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-07-31", "dayLabel": "Fri Jul 31", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "New York Yankees vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-01", "dayLabel": "Sat Aug 1", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "New York Yankees vs. Cubs", "time": "6:15 PM", "type": "game"}]}, {"date": "2026-08-02", "dayLabel": "Sun Aug 2", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "New York Yankees vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-03", "dayLabel": "Mon Aug 3", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-04", "dayLabel": "Tue Aug 4", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Los Angeles Dodgers vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-08-05", "dayLabel": "Wed Aug 5", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Los Angeles Dodgers vs. Cubs", "time": "7:05 PM", "type": "game"}, {"name": "Los Angeles Dodgers vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-06", "dayLabel": "Thu Aug 6", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-07", "dayLabel": "Fri Aug 7", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-08", "dayLabel": "Sat Aug 8", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-09", "dayLabel": "Sun Aug 9", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-10", "dayLabel": "Mon Aug 10", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-11", "dayLabel": "Tue Aug 11", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-12", "dayLabel": "Wed Aug 12", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-13", "dayLabel": "Thu Aug 13", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-14", "dayLabel": "Fri Aug 14", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "St. Louis Cardinals vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-15", "dayLabel": "Sat Aug 15", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "St. Louis Cardinals vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-16", "dayLabel": "Sun Aug 16", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "St. Louis Cardinals vs. Cubs", "time": "2:10 PM", "type": "game"}]}, {"date": "2026-08-17", "dayLabel": "Mon Aug 17", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-18", "dayLabel": "Tue Aug 18", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Chicago White Sox vs. Cubs", "time": "7:05 PM", "type": "game"}]}, {"date": "2026-08-19", "dayLabel": "Wed Aug 19", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Chicago White Sox vs. Cubs", "time": "7:05 PM", "type": "game"}, {"name": "Chicago White Sox vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-20", "dayLabel": "Thu Aug 20", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-21", "dayLabel": "Fri Aug 21", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-22", "dayLabel": "Sat Aug 22", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-23", "dayLabel": "Sun Aug 23", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-24", "dayLabel": "Mon Aug 24", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-25", "dayLabel": "Tue Aug 25", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-26", "dayLabel": "Wed Aug 26", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-27", "dayLabel": "Thu Aug 27", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-08-28", "dayLabel": "Fri Aug 28", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-29", "dayLabel": "Sat Aug 29", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-08-30", "dayLabel": "Sun Aug 30", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Cincinnati Reds vs. Cubs", "time": "2:10 PM", "type": "game"}]}, {"date": "2026-08-31", "dayLabel": "Mon Aug 31", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-01", "dayLabel": "Tue Sep 1", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-02", "dayLabel": "Wed Sep 2", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-03", "dayLabel": "Thu Sep 3", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Milwaukee Brewers vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-04", "dayLabel": "Fri Sep 4", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-05", "dayLabel": "Sat Sep 5", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-06", "dayLabel": "Sun Sep 6", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-07", "dayLabel": "Mon Sep 7", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-08", "dayLabel": "Tue Sep 8", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-09", "dayLabel": "Wed Sep 9", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-10", "dayLabel": "Thu Sep 10", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-11", "dayLabel": "Fri Sep 11", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Pittsburgh Pirates vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-09-12", "dayLabel": "Sat Sep 12", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Pittsburgh Pirates vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-09-13", "dayLabel": "Sun Sep 13", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Pittsburgh Pirates vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-09-14", "dayLabel": "Mon Sep 14", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Atlanta Braves vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-15", "dayLabel": "Tue Sep 15", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Atlanta Braves vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-16", "dayLabel": "Wed Sep 16", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Atlanta Braves vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-17", "dayLabel": "Thu Sep 17", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-18", "dayLabel": "Fri Sep 18", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-19", "dayLabel": "Sat Sep 19", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-20", "dayLabel": "Sun Sep 20", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-21", "dayLabel": "Mon Sep 21", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-22", "dayLabel": "Tue Sep 22", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Miami Marlins vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-23", "dayLabel": "Wed Sep 23", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Miami Marlins vs. Cubs", "time": "6:40 PM", "type": "game"}]}, {"date": "2026-09-24", "dayLabel": "Thu Sep 24", "hasEvent": true, "lv2Active": true, "note": null, "events": [{"name": "Miami Marlins vs. Cubs", "time": "1:20 PM", "type": "game"}]}, {"date": "2026-09-25", "dayLabel": "Fri Sep 25", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-26", "dayLabel": "Sat Sep 26", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-27", "dayLabel": "Sun Sep 27", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-28", "dayLabel": "Mon Sep 28", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-29", "dayLabel": "Tue Sep 29", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-09-30", "dayLabel": "Wed Sep 30", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-01", "dayLabel": "Thu Oct 1", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-02", "dayLabel": "Fri Oct 2", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-03", "dayLabel": "Sat Oct 3", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-04", "dayLabel": "Sun Oct 4", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-05", "dayLabel": "Mon Oct 5", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-06", "dayLabel": "Tue Oct 6", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-07", "dayLabel": "Wed Oct 7", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-08", "dayLabel": "Thu Oct 8", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-09", "dayLabel": "Fri Oct 9", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-10", "dayLabel": "Sat Oct 10", "hasEvent": false, "lv2Active": false, "note": null, "events": []}, {"date": "2026-10-11", "dayLabel": "Sun Oct 11", "hasEvent": false, "lv2Active": false, "note": null, "events": []}]}
+{
+  "updated": "2026-04-16T05:05:01.660656+00:00",
+  "source": "mlb",
+  "days": [
+    {
+      "date": "2026-04-16",
+      "dayLabel": "Thu Apr 16",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-17",
+      "dayLabel": "Fri Apr 17",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Mets vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "4:05 PM"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-18",
+      "dayLabel": "Sat Apr 18",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Mets vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-19",
+      "dayLabel": "Sun Apr 19",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Mets vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-20",
+      "dayLabel": "Mon Apr 20",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Philadelphia Phillies vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-21",
+      "dayLabel": "Tue Apr 21",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Philadelphia Phillies vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-22",
+      "dayLabel": "Wed Apr 22",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Philadelphia Phillies vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-23",
+      "dayLabel": "Thu Apr 23",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Philadelphia Phillies vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-24",
+      "dayLabel": "Fri Apr 24",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-25",
+      "dayLabel": "Sat Apr 25",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-26",
+      "dayLabel": "Sun Apr 26",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-27",
+      "dayLabel": "Mon Apr 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-28",
+      "dayLabel": "Tue Apr 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-29",
+      "dayLabel": "Wed Apr 29",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-04-30",
+      "dayLabel": "Thu Apr 30",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-01",
+      "dayLabel": "Fri May 1",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Arizona Diamondbacks vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-02",
+      "dayLabel": "Sat May 2",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Arizona Diamondbacks vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-03",
+      "dayLabel": "Sun May 3",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Arizona Diamondbacks vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-04",
+      "dayLabel": "Mon May 4",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-05",
+      "dayLabel": "Tue May 5",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-06",
+      "dayLabel": "Wed May 6",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-07",
+      "dayLabel": "Thu May 7",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-08",
+      "dayLabel": "Fri May 8",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-09",
+      "dayLabel": "Sat May 9",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-10",
+      "dayLabel": "Sun May 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-11",
+      "dayLabel": "Mon May 11",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-12",
+      "dayLabel": "Tue May 12",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-13",
+      "dayLabel": "Wed May 13",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-14",
+      "dayLabel": "Thu May 14",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-15",
+      "dayLabel": "Fri May 15",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-16",
+      "dayLabel": "Sat May 16",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-17",
+      "dayLabel": "Sun May 17",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-18",
+      "dayLabel": "Mon May 18",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-19",
+      "dayLabel": "Tue May 19",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-20",
+      "dayLabel": "Wed May 20",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-21",
+      "dayLabel": "Thu May 21",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-22",
+      "dayLabel": "Fri May 22",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Houston Astros vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-23",
+      "dayLabel": "Sat May 23",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Houston Astros vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-24",
+      "dayLabel": "Sun May 24",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Houston Astros vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-25",
+      "dayLabel": "Mon May 25",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-26",
+      "dayLabel": "Tue May 26",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-27",
+      "dayLabel": "Wed May 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-28",
+      "dayLabel": "Thu May 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-29",
+      "dayLabel": "Fri May 29",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-30",
+      "dayLabel": "Sat May 30",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-05-31",
+      "dayLabel": "Sun May 31",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-01",
+      "dayLabel": "Mon Jun 1",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-02",
+      "dayLabel": "Tue Jun 2",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-03",
+      "dayLabel": "Wed Jun 3",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Athletics vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-04",
+      "dayLabel": "Thu Jun 4",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Athletics vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-05",
+      "dayLabel": "Fri Jun 5",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Athletics vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        },
+        {
+          "name": "San Francisco Giants vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-06",
+      "dayLabel": "Sat Jun 6",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "San Francisco Giants vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-07",
+      "dayLabel": "Sun Jun 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-08",
+      "dayLabel": "Mon Jun 8",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "San Francisco Giants vs. Cubs",
+          "time": "7:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-09",
+      "dayLabel": "Tue Jun 9",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-10",
+      "dayLabel": "Wed Jun 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-11",
+      "dayLabel": "Thu Jun 11",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Mumford & Sons - Prizefighter Tour",
+          "time": "6:30 PM",
+          "type": "concert"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-12",
+      "dayLabel": "Fri Jun 12",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "R\u00dcF\u00dcS DU SOL NORTH AMERICA 2026",
+          "time": "7:30 PM",
+          "type": "concert"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-13",
+      "dayLabel": "Sat Jun 13",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-14",
+      "dayLabel": "Sun Jun 14",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-15",
+      "dayLabel": "Mon Jun 15",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-16",
+      "dayLabel": "Tue Jun 16",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Colorado Rockies vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-17",
+      "dayLabel": "Wed Jun 17",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Colorado Rockies vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-18",
+      "dayLabel": "Thu Jun 18",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Colorado Rockies vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-19",
+      "dayLabel": "Fri Jun 19",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Toronto Blue Jays vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-20",
+      "dayLabel": "Sat Jun 20",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Toronto Blue Jays vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-21",
+      "dayLabel": "Sun Jun 21",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Toronto Blue Jays vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-22",
+      "dayLabel": "Mon Jun 22",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-23",
+      "dayLabel": "Tue Jun 23",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-24",
+      "dayLabel": "Wed Jun 24",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-25",
+      "dayLabel": "Thu Jun 25",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-26",
+      "dayLabel": "Fri Jun 26",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-27",
+      "dayLabel": "Sat Jun 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-28",
+      "dayLabel": "Sun Jun 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-29",
+      "dayLabel": "Mon Jun 29",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-06-30",
+      "dayLabel": "Tue Jun 30",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "San Diego Padres vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-01",
+      "dayLabel": "Wed Jul 1",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "San Diego Padres vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "1:20 PM"
+        },
+        {
+          "name": "San Diego Padres vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-02",
+      "dayLabel": "Thu Jul 2",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-03",
+      "dayLabel": "Fri Jul 3",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "St. Louis Cardinals vs. Cubs",
+          "time": "3:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-04",
+      "dayLabel": "Sat Jul 4",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-05",
+      "dayLabel": "Sun Jul 5",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "St. Louis Cardinals vs. Cubs",
+          "time": "7:08 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "1:30 PM"
+        },
+        {
+          "name": "St. Louis Cardinals vs. Cubs",
+          "time": "1:30 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-06",
+      "dayLabel": "Mon Jul 6",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-07",
+      "dayLabel": "Tue Jul 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-08",
+      "dayLabel": "Wed Jul 8",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-09",
+      "dayLabel": "Thu Jul 9",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-10",
+      "dayLabel": "Fri Jul 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-11",
+      "dayLabel": "Sat Jul 11",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "John Mulaney: Mister Whatever",
+          "time": "8:00 PM",
+          "type": "concert"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-12",
+      "dayLabel": "Sun Jul 12",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Tyler Childers - Snipe Hunt",
+          "time": "6:45 PM",
+          "type": "concert"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-13",
+      "dayLabel": "Mon Jul 13",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-14",
+      "dayLabel": "Tue Jul 14",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Noah Kahan: The Great Divide Tour ",
+          "time": "6:30 PM",
+          "type": "concert"
+        },
+        {
+          "name": "Noah Kahan w/ Gigi Perez",
+          "time": "6:30 PM",
+          "type": "concert"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-15",
+      "dayLabel": "Wed Jul 15",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Noah Kahan: The Great Divide Tour ",
+          "time": "6:30 PM",
+          "type": "concert"
+        },
+        {
+          "name": "Noah Kahan w/ Gigi Perez",
+          "time": "6:30 PM",
+          "type": "concert"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-16",
+      "dayLabel": "Thu Jul 16",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-17",
+      "dayLabel": "Fri Jul 17",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-18",
+      "dayLabel": "Sat Jul 18",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Minnesota Twins vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "1:20 PM"
+        },
+        {
+          "name": "Minnesota Twins vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-19",
+      "dayLabel": "Sun Jul 19",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Minnesota Twins vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-20",
+      "dayLabel": "Mon Jul 20",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-21",
+      "dayLabel": "Tue Jul 21",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Detroit Tigers vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-22",
+      "dayLabel": "Wed Jul 22",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Detroit Tigers vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-23",
+      "dayLabel": "Thu Jul 23",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Detroit Tigers vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-07-24",
+      "dayLabel": "Fri Jul 24",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-25",
+      "dayLabel": "Sat Jul 25",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-26",
+      "dayLabel": "Sun Jul 26",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-27",
+      "dayLabel": "Mon Jul 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-28",
+      "dayLabel": "Tue Jul 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-29",
+      "dayLabel": "Wed Jul 29",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-30",
+      "dayLabel": "Thu Jul 30",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-07-31",
+      "dayLabel": "Fri Jul 31",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Yankees vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-01",
+      "dayLabel": "Sat Aug 1",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Yankees vs. Cubs",
+          "time": "6:15 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-02",
+      "dayLabel": "Sun Aug 2",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "New York Yankees vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-03",
+      "dayLabel": "Mon Aug 3",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-04",
+      "dayLabel": "Tue Aug 4",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Los Angeles Dodgers vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-05",
+      "dayLabel": "Wed Aug 5",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Los Angeles Dodgers vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "1:20 PM"
+        },
+        {
+          "name": "Los Angeles Dodgers vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-06",
+      "dayLabel": "Thu Aug 6",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-07",
+      "dayLabel": "Fri Aug 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-08",
+      "dayLabel": "Sat Aug 8",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-09",
+      "dayLabel": "Sun Aug 9",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-10",
+      "dayLabel": "Mon Aug 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-11",
+      "dayLabel": "Tue Aug 11",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-12",
+      "dayLabel": "Wed Aug 12",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-13",
+      "dayLabel": "Thu Aug 13",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-14",
+      "dayLabel": "Fri Aug 14",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "St. Louis Cardinals vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-15",
+      "dayLabel": "Sat Aug 15",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "St. Louis Cardinals vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-16",
+      "dayLabel": "Sun Aug 16",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "St. Louis Cardinals vs. Cubs",
+          "time": "2:10 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-17",
+      "dayLabel": "Mon Aug 17",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-18",
+      "dayLabel": "Tue Aug 18",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Chicago White Sox vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "dayLabel": "Wed Aug 19",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Chicago White Sox vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "1:20 PM"
+        },
+        {
+          "name": "Chicago White Sox vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-20",
+      "dayLabel": "Thu Aug 20",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-21",
+      "dayLabel": "Fri Aug 21",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-22",
+      "dayLabel": "Sat Aug 22",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-23",
+      "dayLabel": "Sun Aug 23",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-24",
+      "dayLabel": "Mon Aug 24",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-25",
+      "dayLabel": "Tue Aug 25",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-26",
+      "dayLabel": "Wed Aug 26",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-27",
+      "dayLabel": "Thu Aug 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-08-28",
+      "dayLabel": "Fri Aug 28",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-29",
+      "dayLabel": "Sat Aug 29",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-30",
+      "dayLabel": "Sun Aug 30",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Cincinnati Reds vs. Cubs",
+          "time": "2:10 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-31",
+      "dayLabel": "Mon Aug 31",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-01",
+      "dayLabel": "Tue Sep 1",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-02",
+      "dayLabel": "Wed Sep 2",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-03",
+      "dayLabel": "Thu Sep 3",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Milwaukee Brewers vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-04",
+      "dayLabel": "Fri Sep 4",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-05",
+      "dayLabel": "Sat Sep 5",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-06",
+      "dayLabel": "Sun Sep 6",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-07",
+      "dayLabel": "Mon Sep 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-08",
+      "dayLabel": "Tue Sep 8",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-09",
+      "dayLabel": "Wed Sep 9",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-10",
+      "dayLabel": "Thu Sep 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-11",
+      "dayLabel": "Fri Sep 11",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Pittsburgh Pirates vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-12",
+      "dayLabel": "Sat Sep 12",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Pittsburgh Pirates vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-13",
+      "dayLabel": "Sun Sep 13",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Pittsburgh Pirates vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "dayLabel": "Mon Sep 14",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Atlanta Braves vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-15",
+      "dayLabel": "Tue Sep 15",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Atlanta Braves vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-16",
+      "dayLabel": "Wed Sep 16",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Atlanta Braves vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-17",
+      "dayLabel": "Thu Sep 17",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-18",
+      "dayLabel": "Fri Sep 18",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-19",
+      "dayLabel": "Sat Sep 19",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-20",
+      "dayLabel": "Sun Sep 20",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-21",
+      "dayLabel": "Mon Sep 21",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-22",
+      "dayLabel": "Tue Sep 22",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Miami Marlins vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-23",
+      "dayLabel": "Wed Sep 23",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Miami Marlins vs. Cubs",
+          "time": "6:40 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-24",
+      "dayLabel": "Thu Sep 24",
+      "hasEvent": true,
+      "lv2Active": true,
+      "note": null,
+      "events": [
+        {
+          "name": "Miami Marlins vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-25",
+      "dayLabel": "Fri Sep 25",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-26",
+      "dayLabel": "Sat Sep 26",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-27",
+      "dayLabel": "Sun Sep 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-28",
+      "dayLabel": "Mon Sep 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-29",
+      "dayLabel": "Tue Sep 29",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-09-30",
+      "dayLabel": "Wed Sep 30",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-01",
+      "dayLabel": "Thu Oct 1",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-02",
+      "dayLabel": "Fri Oct 2",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-03",
+      "dayLabel": "Sat Oct 3",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-04",
+      "dayLabel": "Sun Oct 4",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-05",
+      "dayLabel": "Mon Oct 5",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-06",
+      "dayLabel": "Tue Oct 6",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-07",
+      "dayLabel": "Wed Oct 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-08",
+      "dayLabel": "Thu Oct 8",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-09",
+      "dayLabel": "Fri Oct 9",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-10",
+      "dayLabel": "Sat Oct 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-11",
+      "dayLabel": "Sun Oct 11",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-12",
+      "dayLabel": "Mon Oct 12",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    }
+  ]
+}
