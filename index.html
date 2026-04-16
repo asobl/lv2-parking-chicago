@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="style.css">
+  <!-- Cloudflare Turnstile captcha -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4FCPSHLCTX"></script>
@@ -214,6 +216,7 @@
       <div class="email-sub">Which days have games. Which days LV2 is in effect. One short email, free.</div>
       <form class="email-form" id="email-form" onsubmit="handleEmailSubmit(event)">
         <input class="form-input" type="email" id="email-input" placeholder="your@email.com" required autocomplete="email">
+        <div id="turnstile-widget"></div>
         <button class="btn-subscribe" type="submit">Subscribe</button>
         <div class="email-note">No spam. Unsubscribe anytime.</div>
       </form>

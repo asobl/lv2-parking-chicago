@@ -1,9 +1,10 @@
 /* ─── LV2 PARK — app.js ──────────────────────────── */
 
-const DATA_TODAY   = '/data/today.json';
-const DATA_WEEK    = '/data/week.json';
-const SPOTHERO_URL = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park';
-const WORKER_URL   = 'https://lv2park-email.adam-945.workers.dev';
+const DATA_TODAY        = '/data/today.json';
+const DATA_WEEK         = '/data/week.json';
+const SPOTHERO_URL      = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park';
+const WORKER_URL        = 'https://lv2park-email.adam-945.workers.dev';
+const TURNSTILE_SITE_KEY = ''; // Set after creating widget at dash.cloudflare.com/turnstile
 
 /* ─── EVENT ICONS ────────────────────────────────── */
 const ICONS = {
@@ -34,7 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
   loadWeek();
   initMap();
   initIcsModal();
+  initTurnstile();
 });
+
+function initTurnstile() {
+  if (!TURNSTILE_SITE_KEY) return; // not configured yet
+  const el = document.getElementById('turnstile-widget');
+  if (!el || typeof turnstile === 'undefined') return;
+  turnstile.render(el, {
+    sitekey: TURNSTILE_SITE_KEY,
+    theme:   'light',
+    size:    'normal',
+    callback: () => {} // token stored in widget, retrieved on submit
+  });
+}
 
 /* ─── TODAY ──────────────────────────────────────── */
 async function loadToday() {
@@ -699,11 +713,16 @@ async function handleEmailSubmit(e) {
   const btn = e.target.querySelector('button');
   btn.textContent = 'Subscribing...';
   btn.disabled = true;
+  // Include Turnstile token if widget is active
+  const tsToken = TURNSTILE_SITE_KEY && typeof turnstile !== 'undefined'
+    ? turnstile.getResponse(document.getElementById('turnstile-widget'))
+    : '';
+
   try {
     const res = await fetch(`${WORKER_URL}/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, cf_turnstile_response: tsToken })
     });
     if (res.ok) {
       document.getElementById('email-form').style.display = 'none';

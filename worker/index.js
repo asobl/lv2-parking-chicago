@@ -7,8 +7,9 @@
  *
  * Environment variables (set in Cloudflare dashboard, never in code):
  *   RESEND_API_KEY      — from resend.com
- *   RESEND_AUDIENCE_ID  — from resend.com/audiences (create one called "lv2park-subscribers")
- *   NOTIFY_EMAIL        — where contact form submissions get forwarded (Adam's email)
+ *   RESEND_AUDIENCE_ID  — from resend.com/audiences
+ *   NOTIFY_EMAIL        — where contact form submissions get forwarded
+ *   TURNSTILE_SECRET    — from dash.cloudflare.com/turnstile (optional, enables captcha)
  */
 
 const ALLOWED_ORIGIN = 'https://lv2park.com';
@@ -38,6 +39,14 @@ export default {
 
 // ─── SUBSCRIBE ────────────────────────────────────────
 async function handleSubscribe(request, env) {
+  // Capture subscriber metadata from Cloudflare request
+  const cf     = request.cf || {};
+  const zip    = cf.postalCode || '';
+  const city   = cf.city || '';
+  const region = cf.regionCode || cf.region || '';
+  const ua     = request.headers.get('User-Agent') || '';
+  const device = detectDevice(ua);
+
   let body;
   try {
     body = await request.json();
@@ -48,6 +57,18 @@ async function handleSubscribe(request, env) {
   const email = (body.email || '').trim().toLowerCase();
   if (!email || !email.includes('@')) {
     return corsResponse(JSON.stringify({ error: 'invalid email' }), 400, env);
+  }
+
+  // Turnstile captcha — only enforced if TURNSTILE_SECRET is configured
+  if (env.TURNSTILE_SECRET) {
+    const token = body.cf_turnstile_response || '';
+    if (!token) {
+      return corsResponse(JSON.stringify({ error: 'captcha required' }), 400, env);
+    }
+    const valid = await verifyTurnstile(token, env.TURNSTILE_SECRET, request);
+    if (!valid) {
+      return corsResponse(JSON.stringify({ error: 'captcha failed' }), 400, env);
+    }
   }
 
   // 1. Add to Resend audience
@@ -66,7 +87,7 @@ async function handleSubscribe(request, env) {
     return corsResponse(JSON.stringify({ error: 'could not subscribe' }), 500, env);
   }
 
-  // 2. Send confirmation email
+  // 2. Send welcome email to subscriber
   await fetch(`${RESEND_API}/emails`, {
     method: 'POST',
     headers: {
@@ -80,6 +101,29 @@ async function handleSubscribe(request, env) {
       html: confirmationEmailHtml()
     })
   });
+
+  // 3. Internal subscriber notification to Adam
+  const location = [city, region, zip].filter(Boolean).join(', ') || 'unknown';
+  await fetch(`${RESEND_API}/emails`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to: [env.NOTIFY_EMAIL],
+      subject: `New subscriber: ${email}`,
+      html: `
+        <p style="font-family:sans-serif;">
+          <strong>New LV2 Park subscriber</strong><br><br>
+          <strong>Email:</strong> ${escHtml(email)}<br>
+          <strong>Location:</strong> ${escHtml(location)}<br>
+          <strong>Device:</strong> ${escHtml(device)}<br>
+        </p>
+      `
+    })
+  }).catch(() => {}); // non-blocking — don't fail subscribe if notification fails
 
   return corsResponse(JSON.stringify({ ok: true }), 200, env);
 }
@@ -156,6 +200,27 @@ function confirmationEmailHtml() {
   </div>
 </body>
 </html>`;
+}
+
+// ─── TURNSTILE ─────────────────────────────────────────
+async function verifyTurnstile(token, secret, request) {
+  const ip = request.headers.get('CF-Connecting-IP') || '';
+  const form = new FormData();
+  form.append('secret', secret);
+  form.append('response', token);
+  if (ip) form.append('remoteip', ip);
+  const res  = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form });
+  const data = await res.json();
+  return data.success === true;
+}
+
+// ─── DEVICE DETECTION ──────────────────────────────────
+function detectDevice(ua) {
+  if (!ua) return 'unknown';
+  if (/iPad/i.test(ua)) return 'tablet';
+  if (/iPhone|Android.*Mobile|Mobile/i.test(ua)) return 'mobile';
+  if (/Android/i.test(ua)) return 'tablet';
+  return 'desktop';
 }
 
 // ─── HELPERS ──────────────────────────────────────────
