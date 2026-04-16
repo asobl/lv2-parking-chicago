@@ -14,7 +14,7 @@ import os
 import sys
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 try:
     import requests as _requests
@@ -43,10 +43,66 @@ load_dotenv()
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from health_check import run_all_checks, save_log
 
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
-ALERT_TO       = 'adam@lobosinnovation.com'
-FROM_EMAIL     = 'LV2 Park Monitor <hello@lv2park.com>'
-SITE_URL       = 'https://lv2park.com'
+RESEND_API_KEY  = os.environ.get('RESEND_API_KEY', '')
+ALERT_TO        = 'adam@lobosinnovation.com'
+FROM_EMAIL      = 'LV2 Park Monitor <hello@lv2park.com>'
+SITE_URL        = 'https://lv2park.com'
+SCHEDULE_PATH   = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'blog', 'schedule.json')
+
+
+# ── Blog post tracker ─────────────────────────────────
+
+def get_published_last_month(run_time):
+    """Return posts from schedule.json whose publish_date fell in the previous calendar month."""
+    # First day of the current month
+    first_this_month = run_time.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    # Last day of previous month
+    last_prev = first_this_month - timedelta(days=1)
+    # First day of previous month
+    first_prev = last_prev.replace(day=1)
+
+    try:
+        with open(SCHEDULE_PATH) as f:
+            posts = json.load(f)
+    except Exception:
+        return []
+
+    published = []
+    for p in posts:
+        try:
+            pub = datetime.strptime(p['publish_date'], '%Y-%m-%d').replace(tzinfo=timezone.utc)
+            if first_prev <= pub <= last_prev.replace(hour=23, minute=59, second=59):
+                published.append(p)
+        except Exception:
+            continue
+    return published
+
+
+def get_upcoming_this_month(run_time):
+    """Return posts scheduled to publish during the current calendar month."""
+    first = run_time.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    # Last day of current month: go to first of next month minus 1 day
+    if first.month == 12:
+        next_month = first.replace(year=first.year + 1, month=1)
+    else:
+        next_month = first.replace(month=first.month + 1)
+    last = next_month - timedelta(days=1)
+
+    try:
+        with open(SCHEDULE_PATH) as f:
+            posts = json.load(f)
+    except Exception:
+        return []
+
+    upcoming = []
+    for p in posts:
+        try:
+            pub = datetime.strptime(p['publish_date'], '%Y-%m-%d').replace(tzinfo=timezone.utc)
+            if first <= pub <= last.replace(hour=23, minute=59, second=59):
+                upcoming.append(p)
+        except Exception:
+            continue
+    return upcoming
 
 
 # ── Email builder ─────────────────────────────────────
@@ -66,6 +122,60 @@ STATUS_LABELS = {
     'warn': 'WARN',
     'fail': 'FAIL',
 }
+
+def build_blog_section(run_time):
+    published = get_published_last_month(run_time)
+    upcoming  = get_upcoming_this_month(run_time)
+
+    prev_label = (run_time.replace(day=1) - timedelta(days=1)).strftime('%B %Y')
+    curr_label = run_time.strftime('%B %Y')
+
+    rows_pub = ''
+    if published:
+        for p in published:
+            rows_pub += f'''
+        <tr>
+          <td style="padding:8px 14px;border-bottom:1px solid #F0EFF8;font-size:13px;color:#1A1A2E;vertical-align:top;">
+            <a href="{SITE_URL}/blog/{p['slug']}" style="color:#6B64D4;text-decoration:none;">{p['title']}</a>
+          </td>
+          <td style="padding:8px 14px;border-bottom:1px solid #F0EFF8;font-size:12px;color:#6B6B80;white-space:nowrap;vertical-align:top;">
+            {p['publish_date']} &middot; {p.get('label','')}
+          </td>
+        </tr>'''
+    else:
+        rows_pub = '<tr><td colspan="2" style="padding:10px 14px;font-size:13px;color:#6B6B80;">No posts went live last month.</td></tr>'
+
+    rows_up = ''
+    if upcoming:
+        for p in upcoming:
+            rows_up += f'''
+        <tr>
+          <td style="padding:8px 14px;border-bottom:1px solid #F0EFF8;font-size:13px;color:#1A1A2E;vertical-align:top;">
+            {p['title']}
+          </td>
+          <td style="padding:8px 14px;border-bottom:1px solid #F0EFF8;font-size:12px;color:#6B6B80;white-space:nowrap;vertical-align:top;">
+            {p['publish_date']} &middot; {p.get('label','')}
+          </td>
+        </tr>'''
+    else:
+        rows_up = '<tr><td colspan="2" style="padding:10px 14px;font-size:13px;color:#6B6B80;">No posts scheduled this month.</td></tr>'
+
+    return f'''
+    <div style="padding:0 28px 20px;">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6B6B80;margin-bottom:6px;">
+        Blog: published in {prev_label}
+      </div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #F0EFF8;border-radius:8px;overflow:hidden;margin-bottom:16px;">
+        {rows_pub}
+      </table>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6B6B80;margin-bottom:6px;">
+        Blog: scheduled in {curr_label}
+      </div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #F0EFF8;border-radius:8px;overflow:hidden;">
+        {rows_up}
+      </table>
+    </div>'''
+
 
 def build_html(results, run_time):
     month_label = run_time.strftime('%B %Y')
@@ -171,6 +281,8 @@ def build_html(results, run_time):
     </div>
 
     {f'<div style="padding:0 28px 20px;">{action_items}</div>' if action_items else ''}
+
+    {build_blog_section(run_time)}
 
     <div style="margin:16px 28px 24px;padding:16px;background:#F5F4F0;border-radius:10px;">
       <div style="font-size:13px;color:#6B6B80;line-height:1.7;">
