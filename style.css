@@ -120,7 +120,22 @@ body {
 }
 .top-nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
 .top-nav-link.active { color: #fff; background: rgba(255,255,255,0.12); }
-@media (max-width: 480px) { .top-nav { display: none; } }
+@media (max-width: 480px) {
+  .top-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    gap: 0;
+    scrollbar-width: none;
+  }
+  .top-nav::-webkit-scrollbar { display: none; }
+  .top-nav-link {
+    font-size: 11px;
+    padding: 6px 8px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+}
 
 /* ─── WEEK COLUMN (desktop) ──────────────────────── */
 .week-col {
