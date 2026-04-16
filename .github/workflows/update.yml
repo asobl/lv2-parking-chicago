@@ -3,7 +3,9 @@ name: Daily Data Update
 on:
   schedule:
     - cron: '0 11 * * *'   # 6 AM CT (UTC-5) -- morning run
-    - cron: '0 20 * * *'   # 3 PM CT (UTC-5) -- afternoon run catches postponements
+    - cron: '0 20 * * *'   # 3 PM CT (UTC-5) -- afternoon run + game day scan
+    - cron: '0 22 * * *'   # 5 PM CT (UTC-5) -- enforcement window opens
+    - cron: '0 01 * * *'   # 8 PM CT (UTC-5) -- mid-enforcement scan
   workflow_dispatch:         # Manual trigger from GitHub Actions UI
 
 permissions:
@@ -30,14 +32,6 @@ jobs:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: python scripts/fetch_data.py
 
-      - name: Commit and push updated data
-        run: |
-          git config user.name  "lv2park-bot"
-          git config user.email "bot@lv2park.com"
-          git add data/today.json data/week.json data/health.json
-          git diff --staged --quiet || git commit -m "Daily update $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
-          git push
-
       - name: Send Monday digest
         env:
           RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
@@ -62,3 +56,43 @@ jobs:
           else
             echo "Not Monday — skipping traffic check"
           fi
+
+      - name: Live ticker scan (game days only)
+        run: |
+          LV2=$(python3 -c "import json; d=json.load(open('data/today.json')); print('yes' if d.get('lv2Active') else 'no')")
+          if [ "$LV2" = "yes" ]; then
+            echo "LV2 active today — running ticker scan"
+            python scripts/scan_tickets.py --production
+          else
+            echo "No LV2 today — skipping scan"
+          fi
+
+      - name: Generate game recap (morning after game days)
+        run: |
+          # Check if yesterday had a game (using week.json)
+          YESTERDAY=$(date -d 'yesterday' +%Y-%m-%d 2>/dev/null || date -v-1d +%Y-%m-%d)
+          HOUR=$(date +%H)
+          HAD_GAME=$(python3 -c "
+          import json
+          from datetime import date, timedelta
+          yesterday = (date.today() - timedelta(days=1)).isoformat()
+          try:
+              data = json.load(open('data/week.json'))
+              day = next((d for d in data['days'] if d['date'] == yesterday), None)
+              print('yes' if day and day.get('hasEvent') else 'no')
+          except: print('no')
+          ")
+          if [ "\$HAD_GAME" = "yes" ] && [ "\$HOUR" -lt "14" ]; then
+            echo "Morning after game day — generating recap"
+            python scripts/generate_recaps.py --date \$YESTERDAY
+          else
+            echo "No recap needed"
+          fi
+
+      - name: Commit updated data + recaps
+        run: |
+          git config user.name  "lv2park-bot"
+          git config user.email "bot@lv2park.com"
+          git add data/today.json data/week.json data/health.json data/ticker_state.json data/enforcement-today.json game-recaps/ || true
+          git diff --staged --quiet || git commit -m "Auto update $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+          git push
