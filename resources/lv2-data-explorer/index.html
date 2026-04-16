@@ -22,6 +22,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../style.css" id="lv2-shared">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -194,6 +196,31 @@
           <div class="stat-pill-number">19.4</div>
           <div class="stat-pill-label">avg tickets<br>per game day</div>
         </div>
+      </div>
+
+      <!-- TICKET MAP -->
+      <div class="section-label">Ticket Density Map</div>
+      <div class="chart-card" style="margin-bottom:20px;">
+        <div class="chart-title">Every ticket address, mapped (2018–2023)</div>
+        <p class="chart-subtitle">9,434 tickets across 3,164 unique addresses. Color shows how many times each spot was cited over 6 seasons. Click any dot for details.</p>
+
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px;align-items:center;">
+          <div style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;">
+            <span style="width:13px;height:13px;border-radius:50%;background:#e84040;display:inline-block;flex-shrink:0;"></span>15+ tickets
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;">
+            <span style="width:13px;height:13px;border-radius:50%;background:#f0a030;display:inline-block;flex-shrink:0;"></span>8–14 tickets
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;">
+            <span style="width:13px;height:13px;border-radius:50%;background:#f5c020;display:inline-block;flex-shrink:0;"></span>4–7 tickets
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--color-text-soft);">
+            <span style="width:13px;height:13px;border-radius:50%;background:#8898aa;display:inline-block;flex-shrink:0;"></span>1–3 tickets
+          </div>
+        </div>
+
+        <div id="ticket-map" style="height:500px;border-radius:12px;overflow:hidden;border:1px solid #eeedf0;"></div>
+        <p class="chart-annotation" style="margin-top:10px;">Positions are block-accurate using the Chicago street grid. 2018–2023 FOIA dataset. 100% of tickets geocoded.</p>
       </div>
 
       <!-- STREET LOOKUP -->
@@ -828,5 +855,77 @@
     });
   })();
   </script>
+
+  <script>
+  // ---- TICKET DENSITY MAP ----
+  (function() {
+    var map = L.map('ticket-map', {
+      center: [41.956, -87.667],
+      zoom: 14,
+      scrollWheelZoom: false
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    function ticketColor(count) {
+      if (count >= 15) return '#e84040';
+      if (count >= 8)  return '#f0a030';
+      if (count >= 4)  return '#f5c020';
+      return '#8898aa';
+    }
+
+    function ticketRadius(count) {
+      if (count >= 15) return 9;
+      if (count >= 8)  return 7;
+      if (count >= 4)  return 5;
+      return 3.5;
+    }
+
+    // Data path is relative to the page location
+    var dataPath = '../../data/ticket-map-data.json';
+
+    fetch(dataPath)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var points = data.points;
+
+        // Draw dim points first (bottom layer), then higher counts on top
+        var buckets = [[], [], [], []]; // dim, yellow, orange, red
+        points.forEach(function(p) {
+          if (p.count >= 15)     buckets[3].push(p);
+          else if (p.count >= 8) buckets[2].push(p);
+          else if (p.count >= 4) buckets[1].push(p);
+          else                   buckets[0].push(p);
+        });
+
+        buckets.forEach(function(bucket) {
+          bucket.forEach(function(p) {
+            var circle = L.circleMarker([p.lat, p.lng], {
+              radius:      ticketRadius(p.count),
+              fillColor:   ticketColor(p.count),
+              color:       '#fff',
+              weight:      p.count >= 8 ? 1.5 : 1,
+              opacity:     0.9,
+              fillOpacity: p.count >= 4 ? 0.85 : 0.6
+            }).addTo(map);
+
+            circle.bindPopup(
+              '<strong>' + p.addr + '</strong><br>' +
+              p.count + ' ticket' + (p.count !== 1 ? 's' : '') + ' (2018–2023)'
+            );
+          });
+        });
+      })
+      .catch(function(err) {
+        document.getElementById('ticket-map').innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#6b6b80;font-size:14px;">Map data not available in local preview. Deploy to see the map.</div>';
+      });
+  })();
+  </script>
+
 </body>
 </html>

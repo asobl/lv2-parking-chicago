@@ -1,0 +1,106 @@
+[
+  {
+    "slug": "lv2-data-analysis.html",
+    "title": "We analyzed 9,400+ LV2 parking tickets near Wrigley. Here's what we found.",
+    "excerpt": "By 5:05 PM on a game day, enforcement officers are writing 60–70 tickets per minute. Here's the full breakdown by street, time, and event type.",
+    "label": "FOIA Data",
+    "publish_date": "2026-04-10",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "what-is-lv2.html",
+    "title": "What is LV2? The Chicago parking zone that tows your car in minutes.",
+    "excerpt": "LV2 changed in 2023. It now applies to all Cubs games, not just night games. Here's exactly what the zone covers, what it costs, and how to get a permit.",
+    "label": "Explainer",
+    "publish_date": "2026-04-10",
+    "accent": "#E05A00"
+  },
+  {
+    "slug": "chicago-city-sticker-faq.html",
+    "title": "Chicago City Sticker FAQ: What Every Driver in the City Needs to Know",
+    "excerpt": "Every Chicago resident who owns a vehicle must buy a city sticker from the City Clerk. It's also the first step before getting a resident parking permit for zones like LV2.",
+    "label": "Rules",
+    "publish_date": "2026-04-23",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "lv2-resident-permit-apply-online.html",
+    "title": "You Can Apply for Your LV2 Permit Online and Get It Mailed to You",
+    "excerpt": "If your address is in the 47th Ward portion of the LV2 zone, Mat Martin's office has an online form. Apply, and the permit arrives in the mail. No office visit required.",
+    "label": "Permits",
+    "publish_date": "2026-04-30",
+    "accent": "#3d7d7f"
+  },
+  {
+    "slug": "lv2-cubs-game-guest-pass.html",
+    "title": "LV2 Guest Pass for Cubs Games: How to Get One for Your Visitors",
+    "excerpt": "If friends or family are parking at your address on a game day, a standard parking permit won't help them. The 47th Ward issues special LV2 Cubs Game guest passes. Here's how it works.",
+    "label": "Permits",
+    "publish_date": "2026-05-07",
+    "accent": "#3d7d7f"
+  },
+  {
+    "slug": "contest-chicago-parking-ticket.html",
+    "title": "How to Contest a Chicago Parking Ticket (Including LV2 Tickets)",
+    "excerpt": "You can fight a Chicago parking ticket online, by mail, or in person. LV2 tickets have specific defenses that are worth knowing before you pay.",
+    "label": "Rules",
+    "publish_date": "2026-05-14",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "wrigley-field-concert-parking.html",
+    "title": "Wrigley Field Concert Parking: How It's Different from a Cubs Game",
+    "excerpt": "LV2 still applies for concerts at Wrigley, but the timing and lot situation are different. Here's what to know before a show.",
+    "label": "Game Day",
+    "publish_date": "2026-05-21",
+    "accent": "#9a7f00"
+  },
+  {
+    "slug": "red-line-vs-driving-wrigley.html",
+    "title": "Red Line vs. Driving to Wrigley Field: An Honest Comparison",
+    "excerpt": "The right answer depends on where you're coming from and how many people are in your car. Here's the actual math on time, cost, and convenience.",
+    "label": "Game Day",
+    "publish_date": "2026-05-28",
+    "accent": "#9a7f00"
+  },
+  {
+    "slug": "lv2-enforcement-peak-times.html",
+    "title": "When Officers Hit LV2 Streets: What the Ticket Data Actually Shows",
+    "excerpt": "We analyzed 9,434 LV2 tickets by time and street. Sheffield and Kenmore get hit within the first 60 seconds of enforcement. Here's the full breakdown.",
+    "label": "Data",
+    "publish_date": "2026-06-04",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "chicago-permit-parking-explained.html",
+    "title": "Chicago Permit Parking Explained: How Zones Work and How to Apply",
+    "excerpt": "Chicago has over 100 residential permit parking zones. Here's how they work, how to find yours, and how to get a permit — using LV2 as the example.",
+    "label": "Rules",
+    "publish_date": "2026-06-11",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "lv2-history.html",
+    "title": "The History of LV2 Parking Near Wrigley Field",
+    "excerpt": "LV2 started as a night-game-only program in the 2000s. In 2023 it expanded to all Cubs home games including day games and postseason. Here's the full timeline with sources.",
+    "label": "History",
+    "publish_date": "2026-06-18",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "chicago-parking-signs-guide.html",
+    "title": "Chicago Parking Signs Explained: Every Type, What It Means, and What It Costs to Ignore",
+    "excerpt": "Permit zones, street cleaning, snow bans, loading zones, pay boxes. Here's every Chicago parking sign type with plain-English explanations and the ordinance behind each.",
+    "label": "Rules",
+    "publish_date": "2026-06-25",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "chicago-street-sweeping-by-ward.html",
+    "title": "Chicago Street Sweeping Schedules Near Wrigley: What the Signs Mean and When to Move",
+    "excerpt": "Sweeping season runs April–November. Near Wrigley, it overlaps with Cubs season — some days you're moving for both LV2 and street sweeping. Here's how to find your ward's schedule.",
+    "label": "Rules",
+    "publish_date": "2026-07-02",
+    "accent": "#b85a00"
+  }
+]
