@@ -16,6 +16,12 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
+try:
+    import requests as _requests
+    _USE_REQUESTS = True
+except ImportError:
+    _USE_REQUESTS = False
+
 # ── Load .env ─────────────────────────────────────────
 def load_dotenv():
     env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env')
@@ -195,19 +201,28 @@ def send_email(subject, html):
     if not RESEND_API_KEY:
         print('[audit] RESEND_API_KEY not set -- cannot send email')
         return False
-    payload = json.dumps({
-        'from':    FROM_EMAIL,
-        'to':      [ALERT_TO],
-        'subject': subject,
-        'html':    html,
-    }).encode('utf-8')
+    payload = {'from': FROM_EMAIL, 'to': [ALERT_TO], 'subject': subject, 'html': html}
+    if _USE_REQUESTS:
+        try:
+            r = _requests.post(
+                'https://api.resend.com/emails',
+                json=payload,
+                headers={'Authorization': f'Bearer {RESEND_API_KEY}'},
+                timeout=15
+            )
+            if r.status_code in (200, 201):
+                print(f'[audit] Email sent. ID: {r.json().get("id")}')
+                return True
+            print(f'[audit] Resend error HTTP {r.status_code}: {r.text[:200]}')
+            return False
+        except Exception as e:
+            print(f'[audit] Send failed: {e}')
+            return False
+    # urllib fallback (GitHub Actions / Linux)
+    data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(
-        'https://api.resend.com/emails',
-        data=payload,
-        headers={
-            'Authorization': f'Bearer {RESEND_API_KEY}',
-            'Content-Type':  'application/json',
-        },
+        'https://api.resend.com/emails', data=data,
+        headers={'Authorization': f'Bearer {RESEND_API_KEY}', 'Content-Type': 'application/json'},
         method='POST'
     )
     try:
@@ -216,8 +231,7 @@ def send_email(subject, html):
             print(f'[audit] Email sent. ID: {result.get("id")}')
             return True
     except urllib.error.HTTPError as e:
-        body = e.read().decode()
-        print(f'[audit] Resend error HTTP {e.code}: {body}')
+        print(f'[audit] Resend error HTTP {e.code}: {e.read().decode()}')
         return False
 
 
