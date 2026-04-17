@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Core pages -->
   <url>
     <loc>https://lv2park.com/</loc>
     <lastmod>2026-04-17</lastmod>
@@ -26,8 +24,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
-
-  <!-- Resource pages -->
   <url>
     <loc>https://lv2park.com/resources/lv2-parking-rules/</loc>
     <lastmod>2026-04-17</lastmod>
@@ -95,7 +91,6 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- Blog posts (published only -- future posts added as publish_date arrives) -->
   <url>
     <loc>https://lv2park.com/blog/lv2-data-analysis.html</loc>
     <lastmod>2026-04-10</lastmod>
@@ -109,7 +104,6 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Game recaps -->
   <url>
     <loc>https://lv2park.com/game-recaps/2026-04-12-cubs-vs-pittsburgh-pirates.html</loc>
     <lastmod>2026-04-13</lastmod>
