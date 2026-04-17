@@ -1,5 +1,10 @@
 # Never commit secrets
 .env
+*.json.bak
+docs/*.json
+*service-account*.json
+*sa-*.json
+*-sa-*.json
 
 # Python
 __pycache__/
