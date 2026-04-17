@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LV2 Zone Explorer: Street-Level Parking Map Near Wrigley | LV2 Park</title>
+  <meta name="description" content="Interactive street-level map of the LV2 parking zone near Wrigley Field. Toggle enforcement data, zone boundaries, ward lines, and ticket density by street.">
+  <link rel="canonical" href="https://lv2park.com/resources/lv2-zone-explorer/">
+  <meta property="og:title" content="LV2 Zone Explorer: Street-Level Parking Map Near Wrigley">
+  <meta property="og:description" content="Toggle zone boundaries, ticket density, and ward lines on a street-level map of the LV2 parking zone.">
+  <meta property="og:url" content="https://lv2park.com/resources/lv2-zone-explorer/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="LV2 Park">
+  <meta property="og:image" content="https://lv2park.com/og-image.png">
+  <meta name="theme-color" content="#1A1A2E">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .explorer-wrap {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 32px var(--content-pad) 60px;
+    }
+
+    .explorer-header { margin-bottom: 20px; }
+    .explorer-header h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.15; margin-bottom: 8px; }
+    .explorer-header p { font-size: var(--text-body); color: var(--color-text-soft); line-height: 1.6; }
+
+    /* MAP + PANEL LAYOUT */
+    .explorer-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .explorer-map-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid #C8C6D4;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    #zone-map { height: 580px; width: 100%; background: #f0f0f4; }
+    @media (max-width: 720px) { #zone-map { height: 420px; } }
+
+    /* PANEL — horizontal 3-column row below the map */
+    .explorer-panel {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      border: 1px solid #C8C6D4;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .panel-section {
+      flex: 1;
+      padding: 18px 20px;
+      border-right: 1px solid #eee;
+    }
+    .panel-section:last-child { border-right: none; }
+    @media (max-width: 800px) {
+      .explorer-panel { flex-direction: column; }
+      .panel-section { border-right: none; border-bottom: 1px solid #eee; }
+      .panel-section:last-child { border-bottom: none; }
+    }
+    .panel-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--color-text-soft);
+      margin-bottom: 10px;
+    }
+
+    /* LAYER TOGGLES */
+    .tog {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f7;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+    .tog:last-child { border-bottom: none; }
+    .tog input { cursor: pointer; width: 14px; height: 14px; margin-top: 3px; flex-shrink: 0; accent-color: var(--color-purple); }
+    .sw { width: 22px; height: 5px; border-radius: 3px; flex-shrink: 0; margin-top: 6px; }
+    .tl { flex: 1; font-size: 12px; font-weight: 600; color: var(--color-text); }
+    .tn { font-size: 10px; color: var(--color-text-soft); font-weight: 400; margin-top: 1px; }
+
+    /* LEGEND */
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 11px;
+      color: var(--color-text-soft);
+    }
+    .legend-swatch { flex-shrink: 0; }
+
+    /* NOTES */
+    .note-item {
+      font-size: 11px;
+      line-height: 1.5;
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .note-item:last-child { margin-bottom: 0; }
+    .note-item b { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; font-weight: 700; }
+    .note-warn { background: #fff8ed; border-left: 3px solid #f0a030; color: #7a4000; }
+    .note-info { background: #f0f4ff; border-left: 3px solid #6B64D4; color: #2a2060; }
+    .note-ok   { background: #f0faf0; border-left: 3px solid #4caf50; color: #1a4a20; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/resources/lv2-parking-rules/" class="top-nav-link">Rules</a>
+        <a href="/resources/lv2-parking-map/" class="top-nav-link">Map</a>
+        <a href="/resources/cubs-game-day-parking/" class="top-nav-link">Game Day</a>
+        <a href="/resources/lv2-data-explorer/" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="explorer-wrap">
+
+    <div class="explorer-header">
+      <span class="cat-tag rc-map" style="display:inline-block;margin-bottom:12px;">Zone Explorer</span>
+      <h1>LV2 Zone Explorer</h1>
+      <p>Street-level map of the LV2 parking zone near Wrigley Field. Toggle layers to see zone boundaries, ward lines, and where 9,434 parking tickets were issued 2018&ndash;2023. Coordinates verified against OpenStreetMap.</p>
+    </div>
+
+    <div class="explorer-layout">
+
+      <div class="explorer-map-wrap">
+        <div id="zone-map"></div>
+      </div>
+
+      <div class="explorer-panel">
+
+        <div class="panel-section">
+          <div class="panel-label">Layers</div>
+
+          <label class="tog">
+            <input type="checkbox" id="t-383-ns" checked>
+            <span class="sw" style="background:#6B64D4;"></span>
+            <span class="tl">Zone 383 N-S streets
+              <div class="tn">Solid = has FOIA data &middot; Dashed = data gap</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-383-ew" checked>
+            <span class="sw" style="background:#6B64D4;opacity:0.5;"></span>
+            <span class="tl">Zone 383 E-W streets
+              <div class="tn">Belmont, Roscoe, Cornelia, Addison, Waveland, etc.</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-lv2w-ns" checked>
+            <span class="sw" style="background:#f0a030;"></span>
+            <span class="tl">LV2 West Strip streets
+              <div class="tn">Marshfield, Paulina, Hermitage, Wolcott (west of Ashland)</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-lv2w-ew" checked>
+            <span class="sw" style="background:#f0a030;opacity:0.5;"></span>
+            <span class="tl">LV2 West Strip E-W
+              <div class="tn">Roscoe, Cornelia, Grace, Waveland western blocks</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-lv2n" checked>
+            <span class="sw" style="background:#e8a020;opacity:0.7;"></span>
+            <span class="tl">LV2 North streets
+              <div class="tn">Irving Park to Montrose (Hutchinson, Cullom, Sunnyside, etc.)</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-commercial" checked>
+            <span class="sw" style="background:#aaa;"></span>
+            <span class="tl">Commercial arterials
+              <div class="tn">Addison, Belmont, Irving Park, Clark (no permit requirement)</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-tickets" checked>
+            <span class="sw" style="background:#e84040;"></span>
+            <span class="tl">Ticket density dots
+              <div class="tn">9,434 geocoded tickets, 2018&ndash;2023 (FOIA data)</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-bounds">
+            <span class="sw" style="background:transparent;border:2px dashed #6B64D4;"></span>
+            <span class="tl">Zone boundary polygons
+              <div class="tn">Zone 383 (purple) &middot; LV2 West Strip (orange) &middot; LV2 North (teal)</div>
+            </span>
+          </label>
+
+          <label class="tog">
+            <input type="checkbox" id="t-wards">
+            <span class="sw" style="background:transparent;border:2px solid #2a7f3d;"></span>
+            <span class="tl">Ward boundaries
+              <div class="tn">Official 2023 &mdash; Wards 32, 43, 44, 46, 47</div>
+            </span>
+          </label>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-label">Legend</div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:24px;height:4px;background:#6B64D4;border-radius:2px;"></span>
+            Zone 383 — has FOIA data
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:24px;height:0;border-top:2px dashed #6B64D4;"></span>
+            Zone 383 — FOIA gap
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:24px;height:4px;background:#f0a030;border-radius:2px;"></span>
+            LV2 West Strip (47th Ward)
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:24px;height:4px;background:#e8a020;border-radius:2px;opacity:0.7;"></span>
+            LV2 North streets
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:24px;height:4px;background:#aaa;border-radius:2px;"></span>
+            Commercial (no permit)
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e84040;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+            High ticket density
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f0a030;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+            Medium ticket density
+          </div>
+          <div class="legend-row">
+            <span class="legend-swatch" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#8898aa;border:1px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+            Low ticket density
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-label">Why tickets cluster on the west</div>
+          <div class="note-item note-warn">
+            <b>East side: FOIA data gap</b>
+            Sheffield, Kenmore, Clifton, Racine — dashed purple lines — have zero tickets in the data. These blocks are closest to Wrigley and almost certainly the most-ticketed streets in the zone. The data is missing, not the enforcement.
+          </div>
+          <div class="note-item note-info">
+            <b>West Strip is a different zone</b>
+            Marshfield, Paulina, Hermitage are WEST of Ashland. They're LV2 (§9-68-023), not Zone 383 (§9-68-022), and sit in the 47th Ward. Toggle "Ward boundaries" to see the line.
+          </div>
+          <div class="note-item note-ok">
+            <b>Commercial streets have almost no tickets</b>
+            Addison (4 tickets), Irving Park (1), Ashland (2). Bars and restaurants on these corridors don't require residential permits.
+          </div>
+        </div>
+
+      </div><!-- /panel -->
+    </div><!-- /layout -->
+  </div><!-- /wrap -->
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">Street coordinates verified against OpenStreetMap Nominatim. Ticket data from City of Chicago FOIA request (2018&ndash;2023). Ward boundaries from City of Chicago Open Data Portal (dataset p293-wvbd, 2023). Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
+      <div class="footer-nav">
+        <div class="footer-col">
+          <div class="footer-col-label">LV2 Zone</div>
+          <a href="/">Today's Status</a>
+          <a href="/resources/lv2-parking-rules/">LV2 Rules</a>
+          <a href="/resources/lv2-parking-map/">Zone Map</a>
+          <a href="/resources/chicago-permit-zones-wrigley/">Permit Zones</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Game Day</div>
+          <a href="/resources/cubs-game-day-parking/">Game Day Parking</a>
+          <a href="/resources/wrigley-field-parking-guide/">Parking Guide</a>
+          <a href="/resources/wrigley-field-parking-shuttle/">Shuttle Guide</a>
+          <a href="/resources/wrigley-divvy-scooters/">Divvy + Scooters</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Data</div>
+          <a href="/resources/lv2-data-explorer/">Data Explorer</a>
+          <a href="/resources/wrigley-parking-ticket-data/">Ticket Data</a>
+          <a href="/blog/lv2-data-analysis.html">FOIA Analysis</a>
+          <a href="/blog/lv2-enforcement-peak-times.html">Peak Enforcement</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Maps</div>
+          <a href="/resources/lv2-parking-map/">Zone Map</a>
+          <a href="/resources/lv2-zone-explorer/">Zone Explorer</a>
+          <a href="/resources/wrigley-divvy-scooters/">Divvy + Scooters</a>
+          <a href="/downloads/lv2-zone-map.html">Printable Map</a>
+        </div>
+      </div>
+      <div class="footer-copy">&copy; 2026 LV2 Park</div>
+    </div>
+  </footer>
+
+  <script>
+// ── Nominatim-verified coordinate lookup ────────────────────────
+const LAT_BELMONT    = 41.939777;
+const LAT_ALDINE     = 41.940579;
+const LAT_MELROSE    = 41.942657;
+const LAT_SCHOOL     = 41.941600;
+const LAT_HENDERSON  = 41.944505;
+const LAT_ROSCOE     = 41.943423;
+const LAT_DAKIN      = 41.944617;
+const LAT_NEWPORT    = 41.946397;
+const LAT_CORNELIA   = 41.945288;
+const LAT_BROMPTON   = 41.946535;
+const LAT_EDDY       = 41.946202;
+const LAT_ADDISON    = 41.947062;
+const LAT_WAVELAND   = 41.947647;
+const LAT_BERTEAU    = 41.948891;
+const LAT_GRACE      = 41.950720;
+const LAT_PATTERSON  = 41.953397;
+const LAT_IRVING     = 41.954491;
+const LAT_HUTCHINSON = 41.959112;
+const LAT_MONTROSE   = 41.961693;
+const LAT_CUYLER     = 41.955333;
+const LAT_WARNER     = 41.957306;
+const LAT_CULLOM     = 41.959885;
+const LAT_PENSACOLA  = 41.960933;
+const LAT_SUNNYSIDE  = 41.963644;
+const LAT_WILSON     = 41.965542;
+
+const LNG_HALSTED    = -87.649861;
+const LNG_CLIFTON    = -87.650778;
+const LNG_SHEFFIELD  = -87.654444;
+const LNG_KENMORE    = -87.655361;
+const LNG_SEMINARY   = -87.657683;
+const LNG_RACINE     = -87.659278;
+const LNG_WAYNE      = -87.660056;
+const LNG_SOUTHPORT  = -87.664141;
+const LNG_GREENVIEW  = -87.666618;
+const LNG_ASHLAND    = -87.669252;
+const LNG_MARSHFIELD = -87.670190;
+const LNG_HONORE     = -87.670144;
+const LNG_PAULINA    = -87.671418;
+const LNG_WOOD       = -87.671418;
+const LNG_HERMITAGE  = -87.672586;
+const LNG_WOLCOTT    = -87.672540;
+const LNG_DAMEN      = -87.678666;
+const LNG_LEAVITT    = -87.683520;
+const LNG_OAKLEY     = -87.686010;
+
+const BROADWAY = [
+  [LAT_BELMONT, -87.644500],
+  [LAT_ADDISON, -87.651500],
+  [LAT_IRVING,  -87.655100]
+];
+const CLARK_ST = [
+  [LAT_BELMONT,  -87.641100],
+  [LAT_ADDISON,  -87.645800],
+  [LAT_IRVING,   -87.650800],
+  [LAT_MONTROSE, -87.647000]
+];
+const LINCOLN_AVE = [
+  [41.939304, -87.668278],
+  [41.943370, -87.670986],
+  [41.946176, -87.673308],
+  [41.950560, -87.676578],
+  [41.954491, -87.679700]
+];
+
+// Broadway longitude at each E-W street latitude (linear interpolation)
+function broadwayLng(lat) {
+  if (lat <= LAT_ADDISON) {
+    var t = (lat - LAT_BELMONT) / (LAT_ADDISON - LAT_BELMONT);
+    return BROADWAY[0][1] + t * (BROADWAY[1][1] - BROADWAY[0][1]);
+  } else {
+    var t = (lat - LAT_ADDISON) / (LAT_IRVING - LAT_ADDISON);
+    return BROADWAY[1][1] + t * (BROADWAY[2][1] - BROADWAY[1][1]);
+  }
+}
+
+// ── Map init ────────────────────────────────────────────────────
+var map = L.map('zone-map', {
+  center: [41.9490, -87.6620],
+  zoom: 14,
+  zoomControl: true,
+  scrollWheelZoom: false
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  subdomains: 'abcd', maxZoom: 19
+}).addTo(map);
+
+// Wrigley Field marker
+var wrigleyIcon = L.divIcon({
+  html: '<div style="position:relative;width:0;height:0;"><div style="position:absolute;bottom:9px;left:0;transform:translateX(-50%);background:#1A1A2E;color:#F5E030;font-size:12px;font-weight:900;padding:6px 12px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.5);border:2px solid #F5E030;letter-spacing:.05em;">&#127967; WRIGLEY FIELD</div><div style="position:absolute;bottom:0;left:0;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1A1A2E;"></div></div>',
+  className: '', iconSize: [0,0], iconAnchor: [0,0]
+});
+L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
+  .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
+
+// ── Layer helpers ───────────────────────────────────────────────
+function nsLine(lng, latS, latN, color, dash, weight, name, tip) {
+  var opts = { color: color, weight: weight || 3, opacity: 0.85 };
+  if (dash) opts.dashArray = dash;
+  return L.polyline([[latS, lng],[latN, lng]], opts)
+    .bindTooltip('<strong>' + name + '</strong>' + (tip ? '<br><small>' + tip + '</small>' : ''), { sticky: true });
+}
+function ewLine(lat, lngW, lngE, color, dash, weight, name, tip) {
+  var opts = { color: color, weight: weight || 3, opacity: 0.85 };
+  if (dash) opts.dashArray = dash;
+  return L.polyline([[lat, lngW],[lat, lngE]], opts)
+    .bindTooltip('<strong>' + name + '</strong>' + (tip ? '<br><small>' + tip + '</small>' : ''), { sticky: true });
+}
+function diagLine(pts, color, dash, weight, name, tip) {
+  var opts = { color: color, weight: weight || 3, opacity: 0.85 };
+  if (dash) opts.dashArray = dash;
+  return L.polyline(pts, opts)
+    .bindTooltip('<strong>' + name + '</strong>' + (tip ? '<br><small>' + tip + '</small>' : ''), { sticky: true });
+}
+
+var C383  = '#6B64D4';
+var CLV2W = '#f0a030';
+var CLV2N = '#e8a020';
+var CCOMM = '#aaa';
+
+// ── Zone 383 N-S streets ────────────────────────────────────────
+var g383ns = L.layerGroup([
+  nsLine(LNG_HALSTED,   LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Halsted St (800W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_CLIFTON,   LAT_BELMONT, LAT_WAVELAND, C383, '6 5', 3, 'Clifton Ave (840W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_SHEFFIELD, LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Sheffield Ave (1000W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_KENMORE,   LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Kenmore Ave (1040W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_SEMINARY,  LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Seminary Ave (1134W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_RACINE,    LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Racine Ave (1200W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_WAYNE,     LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Wayne Ave (1232W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_SOUTHPORT, LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Southport Ave (1400W)', 'Zone 383 — 334 tickets (north edge only)'),
+  nsLine(LNG_GREENVIEW, LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Greenview Ave (1500W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_ASHLAND,   LAT_BELMONT, LAT_IRVING, CCOMM, null, 3, 'Ashland Ave (1600W)', 'Zone 383 western boundary — commercial, 2 tickets'),
+]);
+
+// ── Zone 383 E-W streets ────────────────────────────────────────
+var g383ew = L.layerGroup([
+  ewLine(LAT_BELMONT,  broadwayLng(LAT_BELMONT),  LNG_ASHLAND, CCOMM, null, 3, 'Belmont Ave (3200N)', 'Southern boundary — commercial'),
+  ewLine(LAT_SCHOOL,   broadwayLng(LAT_SCHOOL),   LNG_ASHLAND, C383, null, 3, 'School St (3300N)', '~60 tickets (western blocks)'),
+  ewLine(LAT_MELROSE,  broadwayLng(LAT_MELROSE),  LNG_ASHLAND, C383, '6 5', 3, 'Melrose St', 'FOIA gap'),
+  ewLine(LAT_ROSCOE,   broadwayLng(LAT_ROSCOE),   LNG_ASHLAND, C383, null, 3, 'Roscoe St (3400N)', '~851 tickets (western blocks)'),
+  ewLine(LAT_HENDERSON,broadwayLng(LAT_HENDERSON),LNG_ASHLAND, C383, '6 5', 3, 'Henderson St', 'FOIA gap'),
+  ewLine(LAT_DAKIN,    broadwayLng(LAT_DAKIN),    LNG_ASHLAND, C383, '6 5', 3, 'Dakin St', 'FOIA gap'),
+  ewLine(LAT_NEWPORT,  broadwayLng(LAT_NEWPORT),  LNG_ASHLAND, C383, '6 5', 3, 'Newport Ave', 'FOIA gap'),
+  ewLine(LAT_CORNELIA, broadwayLng(LAT_CORNELIA), LNG_ASHLAND, C383, null, 3, 'Cornelia Ave (3500N)', '~120 tickets (western blocks)'),
+  ewLine(LAT_ADDISON,  broadwayLng(LAT_ADDISON),  LNG_ASHLAND, CCOMM, null, 3, 'Addison St (3600N)', 'Commercial — 4 tickets'),
+  ewLine(LAT_WAVELAND, broadwayLng(LAT_WAVELAND), LNG_ASHLAND, C383, null, 3, 'Waveland Ave (3632N)', '~222 tickets (western blocks)'),
+  ewLine(LAT_BERTEAU,  broadwayLng(LAT_BERTEAU),  LNG_ASHLAND, C383, null, 3, 'Berteau Ave (3700N)', '~268 tickets (western blocks)'),
+  ewLine(LAT_GRACE,    broadwayLng(LAT_GRACE),    LNG_ASHLAND, C383, null, 3, 'Grace St (3800N)', '~180 tickets (western blocks)'),
+  ewLine(LAT_PATTERSON,broadwayLng(LAT_PATTERSON),LNG_ASHLAND, C383, null, 3, 'Patterson Ave', '~465 tickets (western blocks)'),
+  ewLine(LAT_IRVING,   broadwayLng(LAT_IRVING),   LNG_ASHLAND, CCOMM, null, 3, 'Irving Park Rd (4000N)', 'Northern boundary — commercial, 1 ticket'),
+]);
+
+// ── LV2 West Strip N-S streets ──────────────────────────────────
+var gLV2wns = L.layerGroup([
+  nsLine(LNG_MARSHFIELD, LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Marshfield Ave (1634W)', '2,269 tickets — highest in dataset'),
+  nsLine(LNG_HONORE,     LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Honore St (1632W)', 'LV2 West Strip'),
+  nsLine(LNG_PAULINA,    LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Paulina St (1700W)', '1,323 tickets'),
+  nsLine(LNG_WOOD,       LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Wood St (1700W)', 'LV2 West Strip'),
+  nsLine(LNG_HERMITAGE,  LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Hermitage Ave (1734W)', '901 tickets'),
+  nsLine(LNG_WOLCOTT,    LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Wolcott Ave (1732W)', 'LV2 West Strip'),
+  nsLine(LNG_DAMEN,      LAT_ROSCOE, LAT_IRVING, CLV2W, '6 5', 3, 'Damen Ave (2000W)', 'LV2 West Strip — FOIA gap'),
+  nsLine(LNG_LEAVITT,    LAT_ROSCOE, LAT_IRVING, CLV2W, '6 5', 3, 'Leavitt St (2200W)', 'LV2 West Strip — FOIA gap'),
+  nsLine(LNG_OAKLEY,     LAT_ROSCOE, LAT_IRVING, CLV2W, '6 5', 3, 'Oakley Ave (2300W)', 'LV2 West Strip — FOIA gap'),
+  diagLine(LINCOLN_AVE, CLV2W, '4 4', 2, 'Lincoln Ave', 'Diagonal — LV2 West Strip'),
+]);
+
+// ── LV2 West Strip E-W streets ──────────────────────────────────
+var gLV2wew = L.layerGroup([
+  ewLine(LAT_ROSCOE,   LNG_ASHLAND, LNG_DAMEN, CLV2W, null, 2, 'Roscoe St (W strip)', '~851 tickets total'),
+  ewLine(LAT_CORNELIA, LNG_ASHLAND, LNG_DAMEN, CLV2W, '4 4', 2, 'Cornelia Ave (W strip)', 'LV2 West Strip'),
+  ewLine(LAT_GRACE,    LNG_ASHLAND, LNG_DAMEN, CLV2W, '4 4', 2, 'Grace St (W strip)', 'LV2 West Strip'),
+  ewLine(LAT_WAVELAND, LNG_ASHLAND, LNG_DAMEN, CLV2W, null, 2, 'Waveland Ave (W strip)', '~222 tickets total'),
+]);
+
+// ── LV2 North streets ───────────────────────────────────────────
+var gLV2n = L.layerGroup([
+  ewLine(LAT_CUYLER,    LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, '4 4', 2, 'Cuyler Ave (4700N)', 'LV2 North'),
+  ewLine(LAT_WARNER,    LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, '4 4', 2, 'Warner Ave (4658N)', 'LV2 North'),
+  ewLine(LAT_HUTCHINSON,LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, null, 2, 'Hutchinson St', 'LV2 North — has ticket data'),
+  ewLine(LAT_CULLOM,    LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, null, 2, 'Cullom Ave', 'LV2 North — has ticket data'),
+  ewLine(LAT_PENSACOLA, LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, null, 2, 'Pensacola Ave', 'LV2 North'),
+  ewLine(LAT_MONTROSE,  LNG_SOUTHPORT, LNG_ASHLAND, CCOMM, null, 3, 'Montrose Ave (4400N)', 'Northern boundary — commercial'),
+  ewLine(LAT_SUNNYSIDE, LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, '4 4', 2, 'Sunnyside Ave (4500N)', 'LV2 North'),
+]);
+
+// ── Commercial arterials ─────────────────────────────────────────
+var gComm = L.layerGroup([
+  diagLine(BROADWAY, CCOMM, null, 3, 'Broadway', 'Eastern boundary — diagonal commercial'),
+  diagLine(CLARK_ST, CCOMM, null, 3, 'Clark St', 'Commercial — diagonal'),
+]);
+
+// ── Ticket dots ──────────────────────────────────────────────────
+var gTickets = L.layerGroup();
+function ticketColor(c) {
+  if (c >= 15) return '#e84040';
+  if (c >= 8)  return '#f0a030';
+  if (c >= 4)  return '#f5c020';
+  return '#8898aa';
+}
+function ticketRadius(c) {
+  if (c >= 15) return 9;
+  if (c >= 8)  return 7;
+  if (c >= 4)  return 5;
+  return 3.5;
+}
+fetch('/data/ticket-map-data.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var buckets = [[], [], [], []];
+    data.points.forEach(function(p) {
+      if      (p.count >= 15) buckets[3].push(p);
+      else if (p.count >= 8)  buckets[2].push(p);
+      else if (p.count >= 4)  buckets[1].push(p);
+      else                    buckets[0].push(p);
+    });
+    buckets.forEach(function(bucket) {
+      bucket.forEach(function(p) {
+        L.circleMarker([p.lat, p.lng], {
+          radius: ticketRadius(p.count),
+          fillColor: ticketColor(p.count),
+          color: '#fff', weight: 1.5,
+          opacity: 0.9, fillOpacity: 0.85
+        }).addTo(gTickets)
+          .bindPopup('<strong>' + p.addr + '</strong><br>' + p.count + ' ticket' + (p.count !== 1 ? 's' : '') + ' (2018–2023)');
+      });
+    });
+  })
+  .catch(function() {});
+
+// ── Zone boundary polygons ───────────────────────────────────────
+var gBounds = L.layerGroup([
+  L.polygon([
+    [LAT_IRVING,  LNG_ASHLAND],
+    [LAT_IRVING,  BROADWAY[2][1]],
+    [LAT_BELMONT, BROADWAY[0][1]],
+    [LAT_BELMONT, LNG_ASHLAND]
+  ], { color: C383, weight: 2, opacity: 0.5, fillColor: C383, fillOpacity: 0.05, dashArray: '6 4' })
+    .bindTooltip('Zone 383 boundary', { sticky: true }),
+
+  L.polygon([
+    [LAT_IRVING,  -87.675800],
+    [LAT_IRVING,  LNG_ASHLAND],
+    [LAT_ROSCOE,  LNG_ASHLAND],
+    [LAT_ROSCOE,  -87.675800]
+  ], { color: CLV2W, weight: 2, opacity: 0.5, fillColor: CLV2W, fillOpacity: 0.05, dashArray: '6 4' })
+    .bindTooltip('LV2 West Strip boundary', { sticky: true }),
+
+  L.polygon([
+    [LAT_MONTROSE, LNG_ASHLAND],
+    [LAT_MONTROSE, CLARK_ST[3][1]],
+    [LAT_IRVING,   CLARK_ST[2][1]],
+    [LAT_IRVING,   LNG_ASHLAND]
+  ], { color: '#3d7d7f', weight: 2, opacity: 0.5, fillColor: '#3d7d7f', fillOpacity: 0.05, dashArray: '6 4' })
+    .bindTooltip('LV2 North boundary', { sticky: true }),
+]);
+
+// ── Ward boundaries ──────────────────────────────────────────────
+var WARD_GJ = {"type":"FeatureCollection","features":[
+  {"type":"Feature","properties":{"ward":44,"label":"44th Ward","color":"#2a7f3d"},"geometry":{"type":"Polygon","coordinates":[[[-87.65681542380315,41.95139799354678],[-87.65680645290765,41.951086731753584],[-87.65323484064666,41.951143625809905],[-87.65317327897375,41.949061763888594],[-87.64954158697878,41.949115002811446],[-87.64942985050739,41.94546126484843],[-87.64614785162901,41.94550178312233],[-87.64573955964441,41.94484114025138],[-87.64179723542811,41.946159926518725],[-87.64220671030796,41.94687217745875],[-87.6407434238908,41.94761758516729],[-87.6380363245517,41.94826724654733],[-87.63625294072166,41.94576362094624],[-87.63301001349335,41.94254819051868],[-87.6338695920618,41.94140361429568],[-87.63385627288004,41.94038499045798],[-87.63229203178673,41.93723516193391],[-87.63202766681478,41.935687288131426],[-87.63044280932964,41.93366614001121],[-87.63066379761574,41.93253440480535],[-87.63073061248495,41.93306326818322],[-87.65871047917963,41.932556206513766],[-87.6589685850161,41.93983803819245],[-87.66382092616092,41.939764881110875],[-87.66383290094625,41.940219266457994],[-87.66444777780144,41.94021179866598],[-87.66453953478332,41.943408264267696],[-87.66574741767856,41.94378099313464],[-87.6658176409866,41.946541674980416],[-87.66642634512712,41.946530336191344],[-87.66653019704539,41.95067393982403],[-87.6641181634995,41.9507113515076],[-87.66416875551991,41.9525334316996],[-87.66082656810016,41.95258115156098],[-87.66224996082232,41.95437810497724],[-87.65679197676974,41.954451508803714],[-87.65681542380315,41.95139799354678]]]}},
+  {"type":"Feature","properties":{"ward":47,"label":"47th Ward","color":"#1a5fa8"},"geometry":{"type":"Polygon","coordinates":[[[-87.65978566403044,41.97332400472591],[-87.65976791001175,41.97267625333766],[-87.66114028247796,41.97265246430216],[-87.66104646544504,41.96901903361903],[-87.66749666120914,41.96890048914182],[-87.66598649678389,41.96174601701734],[-87.66425807249774,41.957620744305046],[-87.66421530950424,41.95435490075211],[-87.6690488606186,41.95429035428986],[-87.66897065663157,41.9510970221946],[-87.66576339424576,41.951138269474455],[-87.66575153800379,41.95068602143428],[-87.66653019704539,41.95067393982403],[-87.66642634512712,41.946530336191344],[-87.6658176409866,41.946541674980416],[-87.66574741767856,41.94378099313464],[-87.6651426085563,41.94378699226283],[-87.6651321511479,41.94339887332851],[-87.67603112680123,41.94324697211859],[-87.67608032411114,41.94506250368338],[-87.6797149622082,41.9450254110305],[-87.67975151282745,41.94637664801217],[-87.68096893209778,41.94635826713004],[-87.6809812787037,41.946831483780784],[-87.68825771828546,41.94673081030085],[-87.68798678840396,41.93610394093644],[-87.69036736887955,41.93686524638789],[-87.69148630601163,41.93879180212737],[-87.69363310804529,41.94025506323335],[-87.69542825186058,41.943204244595485],[-87.69686355923712,41.95000625763125],[-87.6945546869739,41.95392229723957],[-87.69426710488615,41.957030244769605],[-87.69470348054406,41.96110153981486],[-87.69562386261246,41.96317916453586],[-87.69859628990828,41.96619981924659],[-87.69746299983292,41.966209999567376],[-87.69798425037965,41.966710159289036],[-87.68884838213513,41.96675825064067],[-87.68896461349809,41.97041223534247],[-87.67923885140226,41.97057353340557],[-87.67929591881901,41.97239773506536],[-87.67630854565658,41.97244460724525],[-87.67632328479665,41.973313970745274],[-87.66956039187856,41.97343570277849],[-87.66957684245486,41.974339401715405],[-87.66820802315243,41.97436578984672],[-87.66841697192183,41.976190594255556],[-87.65986612826194,41.97632276322761],[-87.65978566403044,41.97332400472591]]]}},
+  {"type":"Feature","properties":{"ward":32,"label":"32nd Ward","color":"#1a8a6e"},"geometry":{"type":"Polygon","coordinates":[[[-87.68096912508611,41.94636477041803],[-87.67975151282745,41.94637664801217],[-87.6797149622082,41.9450254110305],[-87.67608032411114,41.94506250368338],[-87.67603112680123,41.94324697211859],[-87.66453953478332,41.943408264267696],[-87.66444777780144,41.94021179866598],[-87.66382092616092,41.939764881110875],[-87.6589685850161,41.93983803819245],[-87.6584533871608,41.92529161345386],[-87.6681458152771,41.92515157985834],[-87.66811150695132,41.92427774266858],[-87.66318501725333,41.92074098962776],[-87.6630368755731,41.91929188587268],[-87.65778112869086,41.91616546409581],[-87.654387584081,41.91305218922876],[-87.65547934534241,41.91249852789532],[-87.65407963188241,41.910824100972725],[-87.68722069732127,41.91032086695694],[-87.68825771828546,41.94673081030085],[-87.68096912508611,41.94636477041803]]]}},
+  {"type":"Feature","properties":{"ward":43,"label":"43rd Ward","color":"#9b4a9b"},"geometry":{"type":"Polygon","coordinates":[[[-87.63182975888245,41.93305418270661],[-87.63068706670731,41.93186893062846],[-87.63091026555212,41.92932156285991],[-87.62961828668885,41.926718517634576],[-87.63027496896513,41.92574762813716],[-87.62993780214364,41.9235474682962],[-87.6283363065845,41.92307395562778],[-87.62947969787481,41.92239700024271],[-87.62853576795526,41.92103323109086],[-87.62770477853768,41.921368163666074],[-87.62891721217001,41.920729124228444],[-87.62795613005886,41.91950484337131],[-87.62732504025948,41.919746792890805],[-87.62841927325331,41.91925856781965],[-87.62815204148755,41.91880445853278],[-87.6268000822853,41.918251447101035],[-87.62790894609915,41.91760033550822],[-87.62670522575581,41.9164350092855],[-87.62609272712454,41.91683576408596],[-87.62681257560581,41.916285945108385],[-87.62319408520658,41.91377647627759],[-87.62057238140882,41.91337036030556],[-87.62020817007932,41.914555908996476],[-87.62098925838515,41.91478539896497],[-87.62015647630712,41.91457888680288],[-87.6205010826786,41.913359269445316],[-87.62329009013798,41.91247015883907],[-87.62509515201536,41.91026523262724],[-87.62357245935353,41.90407730707041],[-87.62871026439143,41.90485436457404],[-87.62888562417793,41.911223007566925],[-87.63168235155709,41.91118052890782],[-87.63281457097706,41.91310764035419],[-87.63986089957989,41.912874731745184],[-87.63980635988075,41.911096804877026],[-87.64435615713003,41.91098676000089],[-87.64444886647719,41.91388576143116],[-87.64836123578198,41.913827162279865],[-87.64827157340306,41.910919619702796],[-87.64950135467393,41.91090048646488],[-87.65828012022459,41.917193960765495],[-87.65827908575505,41.91984698534081],[-87.65706737859128,41.91986707685665],[-87.65712567418203,41.92167999276421],[-87.65833494855077,41.92166144216534],[-87.65839416734066,41.923476621287946],[-87.65718665420448,41.92349536109294],[-87.65722848413621,41.9248121434642],[-87.6584533871608,41.92529161345386],[-87.65871047917963,41.932556206513766],[-87.63182975888245,41.93305418270661]]]}},
+  {"type":"Feature","properties":{"ward":46,"label":"46th Ward","color":"#c47a2b"},"geometry":{"type":"Polygon","coordinates":[[[-87.64521285239933,41.96973539157894],[-87.64429753841335,41.969896789745675],[-87.64296523809683,41.96805536720933],[-87.64048626556189,41.96692491442254],[-87.63199476175619,41.965068382234314],[-87.63096173799524,41.96842075098213],[-87.63196935486246,41.96854120681439],[-87.63088210516729,41.968539992799535],[-87.63190691728778,41.96592326801659],[-87.63099581722116,41.963231547862684],[-87.63145423643749,41.96245294359343],[-87.6374576320995,41.9593656806756],[-87.6403687514876,41.95920656166302],[-87.64094715756171,41.96048977438019],[-87.63703130377554,41.96060205714027],[-87.63539567674562,41.96194361837751],[-87.63572601150285,41.962768338397694],[-87.6412496734336,41.9623377903227],[-87.64224003835606,41.96162130704683],[-87.64102186505957,41.95935112243317],[-87.641745141517,41.958364302940346],[-87.64101250223287,41.954761077858066],[-87.6380363245517,41.94826724654733],[-87.6407434238908,41.94761758516729],[-87.64220671030796,41.94687217745875],[-87.64179723542811,41.946159926518725],[-87.64573955964441,41.94484114025138],[-87.64614785162901,41.94550178312233],[-87.64942985050739,41.94546126484843],[-87.64954158697878,41.949115002811446],[-87.65317327897375,41.949061763888594],[-87.65323484064666,41.951143625809905],[-87.65680645290765,41.951086731753584],[-87.65679197676974,41.954451508803714],[-87.66224996082232,41.95437810497724],[-87.66082656810016,41.95258115156098],[-87.66416875551991,41.9525334316996],[-87.6641181634995,41.9507113515076],[-87.66897065663157,41.9510970221946],[-87.6690488606186,41.95429035428986],[-87.66421530950424,41.95435490075211],[-87.66425807249774,41.957620744305046],[-87.66598649678389,41.96174601701734],[-87.66749666120914,41.96890048914182],[-87.66104646544504,41.96901903361903],[-87.66110036265823,41.97119499495446],[-87.65866559191835,41.97152666900381],[-87.65040244970763,41.97159091517034],[-87.64968830005647,41.969361953578805],[-87.64521285239933,41.96973539157894]]]}
+}]};
+
+var gWards = L.layerGroup();
+var wardTips = {
+  44: '44th Ward — official 2023 boundary. Alderman Bennett. Permit zone 383 east of Greenview.',
+  47: '47th Ward — official 2023 boundary. Alderman Martin. Covers LV2 West Strip and Zone 383 western strip (Greenview to Ashland).',
+  32: '32nd Ward — official 2023 boundary. West of Damen/Ashland.',
+  43: '43rd Ward — official 2023 boundary. Lincoln Park, south of Belmont.',
+  46: '46th Ward — official 2023 boundary. East Lakeview, east of Broadway to lakefront.'
+};
+var wardCenter = { 44: [41.948, -87.657], 47: [41.960, -87.677], 32: [41.942, -87.671], 43: [41.930, -87.644], 46: [41.957, -87.641] };
+L.geoJSON(WARD_GJ, {
+  style: function(f) {
+    var c = f.properties.color;
+    return { color: c, weight: 2, opacity: 0.85, fillColor: c, fillOpacity: 0.04 };
+  },
+  onEachFeature: function(f, layer) {
+    var w = f.properties.ward;
+    layer.bindTooltip(wardTips[w], { sticky: true });
+    L.marker(wardCenter[w], {
+      icon: L.divIcon({
+        html: '<div style="background:'+f.properties.color+';color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap;opacity:0.9;">'+f.properties.label+'</div>',
+        className: '', iconSize: [0,0], iconAnchor: [38,10]
+      }), interactive: false
+    }).addTo(gWards);
+  }
+}).addTo(gWards);
+
+// ── Add default layers ───────────────────────────────────────────
+g383ns.addTo(map);
+g383ew.addTo(map);
+gLV2wns.addTo(map);
+gLV2wew.addTo(map);
+gLV2n.addTo(map);
+gComm.addTo(map);
+gTickets.addTo(map);
+
+// ── Toggle handlers ──────────────────────────────────────────────
+[
+  ['t-383-ns',    g383ns],
+  ['t-383-ew',    g383ew],
+  ['t-lv2w-ns',   gLV2wns],
+  ['t-lv2w-ew',   gLV2wew],
+  ['t-lv2n',      gLV2n],
+  ['t-commercial',gComm],
+  ['t-tickets',   gTickets],
+  ['t-bounds',    gBounds],
+  ['t-wards',     gWards],
+].forEach(function(pair) {
+  document.getElementById(pair[0]).addEventListener('change', function() {
+    this.checked ? pair[1].addTo(map) : map.removeLayer(pair[1]);
+  });
+});
+  </script>
+
+  <script>
+    const LV2_WORKER = 'https://lv2park-worker.adam-945.workers.dev';
+    function getSessionId() {
+      let id = sessionStorage.getItem('lv2_sid');
+      if (!id) { id = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('lv2_sid', id); }
+      return id;
+    }
+    function getDevice() { return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'; }
+    function lv2Track(endpoint, data) {
+      try { fetch(LV2_WORKER + endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, device: getDevice(), sessionId: getSessionId() }) }); } catch(e) {}
+    }
+    lv2Track('/log-pageview', { page: '/resources/lv2-zone-explorer/' });
+  </script>
+
+</body>
+</html>
