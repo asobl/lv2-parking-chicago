@@ -230,7 +230,7 @@
             <div class="legend-item"><div class="legend-dot" style="background:#F0A030;opacity:0.6;"></div> Lime slow zone (~8 mph cap)</div>
             <div class="legend-item"><div class="legend-dot" style="background:#0058A9;"></div> Divvy station</div>
             <div class="legend-item"><div class="legend-dot" style="background:#4CAF50;"></div> Lime preferred parking</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#5B9EA0;"></div> Wrigley Field</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#1A1A2E;border:2px solid #F5E030;"></div> Wrigley Field</div>
           </div>
         </div>
 
@@ -460,16 +460,18 @@
   <script>
     // Map centered on Wrigley
     var map = L.map('micro-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6553], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 19
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd', maxZoom: 19
     }).addTo(map);
 
-    // Wrigley Field marker
+    // Wrigley Field marker — canonical dark/yellow style
     var wrigleyIcon = L.divIcon({
-      html: '<div style="background:#5B9EA0;color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;white-space:nowrap;font-family:Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);">&#x26BE; Wrigley Field</div>',
-      className: '', iconAnchor: [48, 20]
+      html: '<div style="position:relative;width:0;height:0;"><div style="position:absolute;bottom:9px;left:0;transform:translateX(-50%);background:#1A1A2E;color:#F5E030;font-size:12px;font-weight:900;padding:6px 12px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.5);border:2px solid #F5E030;letter-spacing:.05em;">&#127967; WRIGLEY FIELD</div><div style="position:absolute;bottom:0;left:0;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1A1A2E;"></div></div>',
+      className: '', iconSize: [0, 0], iconAnchor: [0, 0]
     });
-    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map);
+    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
+      .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
 
     // Lime no-ride zone (tight perimeter ~2 blocks around gate)
     L.circle([41.9484, -87.6553], {

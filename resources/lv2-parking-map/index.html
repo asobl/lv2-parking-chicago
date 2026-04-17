@@ -219,7 +219,11 @@
               Medium-ticket streets
             </div>
             <div class="legend-item">
-              <div class="legend-dot" style="background:#5B9EA0;"></div>
+              <div class="legend-dot" style="background:#5B9EA0;opacity:0.7;"></div>
+              Low-ticket streets
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#1A1A2E;border:2px solid #F5E030;"></div>
               Wrigley Field
             </div>
           </div>
@@ -384,30 +388,61 @@
     // Initialize Leaflet map centered on Wrigley Field
     var map = L.map('lv2-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6553], 15);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd', maxZoom: 19
     }).addTo(map);
 
-    // Wrigley Field marker
+    // Wrigley Field marker — canonical dark/yellow style
     var wrigleyIcon = L.divIcon({
-      html: '<div style="background:#5B9EA0;color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;white-space:nowrap;font-family:Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);">Wrigley Field</div>',
-      className: '', iconAnchor: [40, 20]
+      html: '<div style="position:relative;width:0;height:0;"><div style="position:absolute;bottom:9px;left:0;transform:translateX(-50%);background:#1A1A2E;color:#F5E030;font-size:12px;font-weight:900;padding:6px 12px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.5);border:2px solid #F5E030;letter-spacing:.05em;">&#127967; WRIGLEY FIELD</div><div style="position:absolute;bottom:0;left:0;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1A1A2E;"></div></div>',
+      className: '', iconSize: [0, 0], iconAnchor: [0, 0]
     });
-    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map);
+    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
+      .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
 
-    // Approximate LV2 zone polygon (Wrigleyville)
+    // LV2 zone polygon — coordinates Nominatim-verified (matches zone-research.html)
+    // Broadway is the diagonal eastern boundary
     var lv2Zone = L.polygon([
-      [41.9580, -87.6700],
-      [41.9580, -87.6480],
-      [41.9360, -87.6480],
-      [41.9360, -87.6700]
+      [41.954491, -87.669252],  // NW: Irving Park & Ashland
+      [41.954491, -87.655100],  // NE: Irving Park & Broadway
+      [41.939777, -87.644500],  // SE: Belmont & Broadway (diagonal east boundary)
+      [41.939777, -87.669252],  // SW: Belmont & Ashland
     ], {
-      color: '#6B64D4', weight: 2, opacity: 0.8,
-      fillColor: '#6B64D4', fillOpacity: 0.12
+      color: '#6B64D4', weight: 3, opacity: 0.85,
+      fillColor: '#6B64D4', fillOpacity: 0.12,
+      dashArray: '6 4'
     }).addTo(map);
 
-    lv2Zone.bindTooltip('LV2 Permit Zone', { permanent: false, direction: 'center' });
+    lv2Zone.bindTooltip('LV2 Permit Zone (Zone 383)<br>Belmont to Irving Park, Broadway to Ashland', { permanent: false, direction: 'center' });
+
+    // FOIA street heatmap — 9,434 LV2 tickets 2018–2023
+    function ticketCountToColor(t) {
+      if (t > 1500) return '#E84040';
+      if (t > 800)  return '#F0A030';
+      if (t > 300)  return '#C9A030';
+      return '#5B9EA0';
+    }
+    fetch('/data/lv2-streets.geojson')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(geojson) {
+        if (!geojson) return;
+        L.geoJSON(geojson, {
+          style: function(f) {
+            return {
+              color: ticketCountToColor(f.properties.tickets),
+              weight: f.properties.tickets > 1500 ? 6 : f.properties.tickets > 900 ? 5 : 4,
+              opacity: 0.9
+            };
+          },
+          onEachFeature: function(f, layer) {
+            if (f.properties) layer.bindPopup(
+              '<strong>' + f.properties.street + '</strong><br>~' + f.properties.tickets.toLocaleString() + ' LV2 tickets (2018–2023)'
+            );
+          }
+        }).addTo(map);
+      })
+      .catch(function() {});
 
     // ── AUTOCOMPLETE + ADDRESS CHECKER ───────────────────
 
@@ -510,7 +545,7 @@
 
     // ── ZONE CHECK ────────────────────────────────────────
 
-    const LV2_BOUNDS = { minLat: 41.936, maxLat: 41.958, minLon: -87.670, maxLon: -87.648 };
+    const LV2_BOUNDS = { minLat: 41.9398, maxLat: 41.9545, minLon: -87.6693, maxLon: -87.6445 };
 
     function isInsideLV2(lat, lon) {
       return lat >= LV2_BOUNDS.minLat && lat <= LV2_BOUNDS.maxLat &&

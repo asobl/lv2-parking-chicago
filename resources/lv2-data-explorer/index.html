@@ -854,6 +854,18 @@
     });
     L.marker([41.9484, -87.6553], { icon: wrigleyIcon, interactive: false }).addTo(map);
 
+    // LV2 zone boundary — Nominatim-verified, Broadway diagonal east edge
+    L.polygon([
+      [41.954491, -87.669252],  // NW: Irving Park & Ashland
+      [41.954491, -87.655100],  // NE: Irving Park & Broadway
+      [41.939777, -87.644500],  // SE: Belmont & Broadway (diagonal)
+      [41.939777, -87.669252],  // SW: Belmont & Ashland
+    ], {
+      color: '#6B64D4', weight: 2, opacity: 0.5,
+      fillColor: '#6B64D4', fillOpacity: 0.04,
+      dashArray: '6 4', interactive: false
+    }).addTo(map);
+
     function ticketColor(count) {
       if (count >= 15) return '#e84040';
       if (count >= 8)  return '#f0a030';

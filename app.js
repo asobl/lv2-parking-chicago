@@ -410,12 +410,12 @@ function initMap() {
   // LV2 Zone boundary — confirmed from 44th Ward official site
   // "Zone 383 from Belmont to Irving and Broadway to Ashland is a Tow Zone 5–10 PM for night games"
   // Source: 44thward.org/resources/wrigley-field-neighborhood-information/chicago-cubs-parking-restriction-reminders/
-  // Broadway is diagonal; longitude estimated from FOIA street coordinates
+  // Broadway is diagonal; coordinates Nominatim-verified (matches zone-research.html)
   L.polygon([
-    [41.9536, -87.6700],  // NW: Irving Park & Ashland
-    [41.9536, -87.6510],  // NE: Irving Park & Broadway
-    [41.9399, -87.6530],  // SE: Belmont & Broadway (diagonal, slightly west at south end)
-    [41.9399, -87.6700],  // SW: Belmont & Ashland
+    [41.954491, -87.669252],  // NW: Irving Park & Ashland
+    [41.954491, -87.655100],  // NE: Irving Park & Broadway
+    [41.939777, -87.644500],  // SE: Belmont & Broadway (diagonal east boundary)
+    [41.939777, -87.669252],  // SW: Belmont & Ashland
   ], {
     color: '#6B64D4', weight: 3, opacity: 0.85,
     fillColor: '#6B64D4', fillOpacity: 0.12,
