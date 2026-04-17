@@ -425,6 +425,94 @@ def _build_enforcement_from_foia(foia_streets, game_date):
       </div>'''
 
 
+# ── Blog post schedule (slug + publish date) ─────────────────────────────────
+# Source of truth for sitemap generation. Add new posts here when scheduled.
+BLOG_POSTS = [
+    {'slug': 'lv2-data-analysis.html',              'publish_date': '2026-04-10'},
+    {'slug': 'what-is-lv2.html',                    'publish_date': '2026-04-10'},
+    {'slug': 'chicago-city-sticker-faq.html',        'publish_date': '2026-04-23'},
+    {'slug': 'lv2-resident-permit-apply-online.html','publish_date': '2026-04-30'},
+    {'slug': 'lv2-cubs-game-guest-pass.html',        'publish_date': '2026-05-07'},
+    {'slug': 'contest-chicago-parking-ticket.html',  'publish_date': '2026-05-14'},
+    {'slug': 'wrigley-field-concert-parking.html',   'publish_date': '2026-05-21'},
+    {'slug': 'red-line-vs-driving-wrigley.html',     'publish_date': '2026-05-28'},
+    {'slug': 'lv2-enforcement-peak-times.html',      'publish_date': '2026-06-04'},
+    {'slug': 'chicago-permit-parking-explained.html','publish_date': '2026-06-11'},
+    {'slug': 'lv2-history.html',                    'publish_date': '2026-06-18'},
+    {'slug': 'chicago-parking-signs-guide.html',     'publish_date': '2026-06-25'},
+    {'slug': 'chicago-street-sweeping-by-ward.html', 'publish_date': '2026-07-02'},
+    {'slug': 'how-we-track-lv2-enforcement.html',    'publish_date': '2026-07-09'},
+]
+
+# ── Sitemap generator ─────────────────────────────────────────────────────────
+
+def generate_sitemap(out_path='sitemap.xml', recaps_dir='game-recaps'):
+    today_str = date.today().isoformat()
+
+    static_urls = [
+        # Core pages
+        {'loc': '/',                                       'changefreq': 'daily',   'priority': '1.0', 'lastmod': today_str},
+        {'loc': '/blog/',                                  'changefreq': 'weekly',  'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/resources/',                             'changefreq': 'monthly', 'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/about/',                                 'changefreq': 'monthly', 'priority': '0.4', 'lastmod': today_str},
+        # Resource pages
+        {'loc': '/resources/lv2-parking-rules/',           'changefreq': 'monthly', 'priority': '0.8', 'lastmod': today_str},
+        {'loc': '/resources/lv2-parking-map/',             'changefreq': 'monthly', 'priority': '0.8', 'lastmod': today_str},
+        {'loc': '/resources/chicago-permit-zones-wrigley/','changefreq': 'monthly', 'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/resources/cubs-game-day-parking/',       'changefreq': 'monthly', 'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/resources/wrigley-field-parking-guide/', 'changefreq': 'monthly', 'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/resources/wrigley-field-parking-shuttle/','changefreq': 'monthly','priority': '0.6', 'lastmod': today_str},
+        {'loc': '/resources/wrigley-parking-ticket-data/', 'changefreq': 'monthly', 'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/resources/lv2-enforcement-tracker/',     'changefreq': 'daily',   'priority': '0.7', 'lastmod': today_str},
+        {'loc': '/resources/lv2-data-explorer/',           'changefreq': 'monthly', 'priority': '0.6', 'lastmod': today_str},
+        {'loc': '/resources/lv2-zone-explorer/',           'changefreq': 'monthly', 'priority': '0.6', 'lastmod': today_str},
+        {'loc': '/resources/wrigley-divvy-scooters/',      'changefreq': 'monthly', 'priority': '0.5', 'lastmod': today_str},
+    ]
+
+    # Blog posts: only include those whose publish_date <= today
+    blog_urls = [
+        {'loc': f'/blog/{p["slug"]}', 'changefreq': 'monthly', 'priority': '0.8', 'lastmod': p['publish_date']}
+        for p in BLOG_POSTS
+        if p['publish_date'] <= today_str
+    ]
+
+    # Game recaps: scan the directory for all .html files
+    recap_urls = []
+    if os.path.isdir(recaps_dir):
+        for fname in sorted(os.listdir(recaps_dir)):
+            if not fname.endswith('.html'):
+                continue
+            # Derive lastmod from the date in the filename (YYYY-MM-DD-...)
+            m = re.match(r'^(\d{4}-\d{2}-\d{2})', fname)
+            lastmod = m.group(1) if m else today_str
+            recap_urls.append({
+                'loc': f'/game-recaps/{fname}',
+                'changefreq': 'never',
+                'priority': '0.4',
+                'lastmod': lastmod,
+            })
+
+    all_urls = static_urls + blog_urls + recap_urls
+
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in all_urls:
+        lines += [
+            '  <url>',
+            f'    <loc>{SITE_URL}{u["loc"]}</loc>',
+            f'    <lastmod>{u["lastmod"]}</lastmod>',
+            f'    <changefreq>{u["changefreq"]}</changefreq>',
+            f'    <priority>{u["priority"]}</priority>',
+            '  </url>',
+        ]
+    lines.append('</urlset>')
+
+    with open(out_path, 'w') as f:
+        f.write('\n'.join(lines) + '\n')
+
+    print(f'[sitemap] Written: {out_path} ({len(all_urls)} URLs, {len(blog_urls)} blog posts, {len(recap_urls)} recaps)')
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def generate_for_game(game, foia_streets, out_dir='game-recaps'):
@@ -488,6 +576,8 @@ def main():
         if args.preview:
             import subprocess
             subprocess.run(['open', path])
+        else:
+            generate_sitemap()
 
     elif args.season:
         print(f'[recaps] Fetching {args.season} Cubs schedule...')
@@ -501,6 +591,7 @@ def main():
             time.sleep(0.5)  # polite rate limit on weather API
 
         print(f'[recaps] Done. {len(done_games)} pages generated.')
+        generate_sitemap()
 
     else:
         parser.print_help()

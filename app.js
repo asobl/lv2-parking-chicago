@@ -899,6 +899,7 @@ async function handleEmailSubmit(e) {
     if (res.ok) {
       seen.push(email);
       localStorage.setItem('lv2_subscribed', JSON.stringify(seen));
+      if (typeof gtag !== 'undefined') gtag('event', 'sign_up', { method: 'email' });
       document.getElementById('email-form').style.display = 'none';
       const success = document.getElementById('email-success');
       success.innerHTML = `

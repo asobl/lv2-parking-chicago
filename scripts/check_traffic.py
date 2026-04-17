@@ -57,6 +57,70 @@ def get_ga4_sessions(property_id, sa_json_str):
     return sessions, users
 
 
+def get_ga4_top_pages(property_id, sa_json_str, limit=5):
+    """Returns list of (page_path, sessions) for top pages over last 28 days."""
+    token = get_google_token(sa_json_str, 'https://www.googleapis.com/auth/analytics.readonly')
+
+    payload = {
+        'dateRanges': [{'startDate': '28daysAgo', 'endDate': 'today'}],
+        'dimensions': [{'name': 'pagePath'}],
+        'metrics': [{'name': 'sessions'}],
+        'orderBys': [{'metric': {'metricName': 'sessions'}, 'desc': True}],
+        'limit': limit
+    }
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(
+        f'https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runReport',
+        data=data,
+        headers={
+            'Authorization': f'Bearer {token}',
+            'Content-Type': 'application/json'
+        },
+        method='POST'
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        result = json.loads(resp.read())
+
+    pages = []
+    for row in result.get('rows', []):
+        path = row['dimensionValues'][0]['value']
+        sessions = int(row['metricValues'][0]['value'])
+        pages.append((path, sessions))
+    return pages
+
+
+def get_ga4_top_sources(property_id, sa_json_str, limit=5):
+    """Returns list of (source/medium, sessions) for top traffic sources over last 28 days."""
+    token = get_google_token(sa_json_str, 'https://www.googleapis.com/auth/analytics.readonly')
+
+    payload = {
+        'dateRanges': [{'startDate': '28daysAgo', 'endDate': 'today'}],
+        'dimensions': [{'name': 'sessionSourceMedium'}],
+        'metrics': [{'name': 'sessions'}],
+        'orderBys': [{'metric': {'metricName': 'sessions'}, 'desc': True}],
+        'limit': limit
+    }
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(
+        f'https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runReport',
+        data=data,
+        headers={
+            'Authorization': f'Bearer {token}',
+            'Content-Type': 'application/json'
+        },
+        method='POST'
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        result = json.loads(resp.read())
+
+    sources = []
+    for row in result.get('rows', []):
+        source = row['dimensionValues'][0]['value']
+        sessions = int(row['metricValues'][0]['value'])
+        sources.append((source, sessions))
+    return sources
+
+
 def send_reapply_email(sessions, users):
     subject = f'LV2 Park: {sessions} sessions this month — time to reapply to FlexOffers'
     html = f'''<!DOCTYPE html>
@@ -112,7 +176,7 @@ def send_reapply_email(sessions, users):
         return json.loads(resp.read())
 
 
-def send_weekly_status(sessions, users):
+def send_weekly_status(sessions, users, top_pages=None, top_sources=None):
     """Send a simple weekly traffic status to Adam every Monday."""
     date_str = datetime.now().strftime('%b %-d')
     pct = min(100, round(sessions / FLEXOFFERS_THRESHOLD * 100))
@@ -120,7 +184,36 @@ def send_weekly_status(sessions, users):
     bar = '█' * bar_filled + '░' * (20 - bar_filled)
     remaining = max(0, FLEXOFFERS_THRESHOLD - sessions)
 
-    subject = f'LV2 Park traffic: {sessions} sessions (last 28d) — {date_str}'
+    # Build top pages rows
+    pages_html = ''
+    if top_pages:
+        rows = ''.join(
+            f'<tr><td style="padding:6px 0;font-size:13px;color:#1A1A2E;border-bottom:1px solid #EEEDF0;">'
+            f'<a href="{SITE_URL}{path}" style="color:#6B64D4;text-decoration:none;">{path}</a></td>'
+            f'<td style="padding:6px 0 6px 16px;font-size:13px;font-weight:700;color:#1A1A2E;text-align:right;border-bottom:1px solid #EEEDF0;">{s}</td></tr>'
+            for path, s in top_pages
+        )
+        pages_html = f'''
+      <div style="margin-bottom:20px;">
+        <div style="font-size:12px;font-weight:700;color:#6B6B80;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Top Pages (28d)</div>
+        <table style="width:100%;border-collapse:collapse;">{rows}</table>
+      </div>'''
+
+    # Build top sources rows
+    sources_html = ''
+    if top_sources:
+        rows = ''.join(
+            f'<tr><td style="padding:6px 0;font-size:13px;color:#1A1A2E;border-bottom:1px solid #EEEDF0;">{src}</td>'
+            f'<td style="padding:6px 0 6px 16px;font-size:13px;font-weight:700;color:#1A1A2E;text-align:right;border-bottom:1px solid #EEEDF0;">{s}</td></tr>'
+            for src, s in top_sources
+        )
+        sources_html = f'''
+      <div style="margin-bottom:20px;">
+        <div style="font-size:12px;font-weight:700;color:#6B6B80;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Top Sources (28d)</div>
+        <table style="width:100%;border-collapse:collapse;">{rows}</table>
+      </div>'''
+
+    subject = f'LV2 Park traffic: {sessions} sessions (last 28d) -- {date_str}'
     html = f'''<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
@@ -128,14 +221,17 @@ def send_weekly_status(sessions, users):
   <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;">
     <div style="height:5px;background:#F5E030;"></div>
     <div style="padding:28px 28px 24px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6B6B80;margin-bottom:8px;">LV2 PARK — WEEKLY TRAFFIC</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6B6B80;margin-bottom:8px;">LV2 PARK -- WEEKLY TRAFFIC</div>
       <h1 style="font-size:26px;font-weight:900;color:#1A1A2E;margin:0 0 20px;">{sessions} sessions · {users} users<br><span style="color:#6B6B80;font-size:16px;font-weight:400;">last 28 days</span></h1>
 
       <div style="background:#F5F4F0;border-radius:10px;padding:16px 20px;margin-bottom:20px;">
         <div style="font-size:12px;font-weight:700;color:#6B6B80;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">FlexOffers reapply goal: {FLEXOFFERS_THRESHOLD} sessions</div>
         <div style="font-family:monospace;font-size:14px;color:#1A1A2E;margin-bottom:6px;">{bar} {pct}%</div>
-        <div style="font-size:13px;color:#6B6B80;">{f"Need {remaining} more sessions to reapply." if remaining > 0 else "Threshold reached — reapply now."}</div>
+        <div style="font-size:13px;color:#6B6B80;">{f"Need {remaining} more sessions to reapply." if remaining > 0 else "Threshold reached -- reapply now."}</div>
       </div>
+
+      {pages_html}
+      {sources_html}
 
       <a href="https://analytics.google.com"
          style="display:inline-block;background:#1A1A2E;color:#F5E030;font-size:14px;font-weight:700;padding:10px 20px;border-radius:8px;text-decoration:none;">
@@ -242,9 +338,23 @@ def main():
 
     print(f'[traffic] Sessions (28d): {sessions} | Users: {users}')
 
+    # Fetch top pages and sources
+    top_pages = []
+    top_sources = []
+    try:
+        top_pages = get_ga4_top_pages(GA4_PROPERTY_ID, GOOGLE_SA_JSON)
+        print(f'[traffic] Top pages: {top_pages}')
+    except Exception as e:
+        print(f'[traffic] Could not fetch top pages: {e}')
+    try:
+        top_sources = get_ga4_top_sources(GA4_PROPERTY_ID, GOOGLE_SA_JSON)
+        print(f'[traffic] Top sources: {top_sources}')
+    except Exception as e:
+        print(f'[traffic] Could not fetch top sources: {e}')
+
     # Always send weekly status
     try:
-        send_weekly_status(sessions, users)
+        send_weekly_status(sessions, users, top_pages, top_sources)
         print('[traffic] Weekly status email sent')
     except Exception as e:
         print(f'[traffic] Could not send status email: {e}')
