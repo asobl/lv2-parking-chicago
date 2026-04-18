@@ -1,9 +1,15 @@
 {
-  "date": "2026-04-17",
-  "updated": "2026-04-18T01:33:33.854501+00:00",
+  "date": "2026-04-18",
+  "updated": "2026-04-18T11:14:11.046103+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "New York Mets vs. Cubs",
+      "time": "1:20 PM",
+      "type": "game"
+    }
+  ]
 }
