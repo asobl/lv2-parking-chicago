@@ -130,7 +130,20 @@ function renderHero(data) {
   const updated = document.getElementById('hero-updated');
 
   const today = new Date();
-  eyebrow.textContent = 'Today — ' + today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const todayCT = today.toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }); // 'YYYY-MM-DD'
+  eyebrow.textContent = 'Today — ' + today.toLocaleDateString('en-US', { timeZone: 'America/Chicago', weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Stale data guard: today.json was written for a different calendar date (happens
+  // between the last nightly run and the midnight cron). Don't show yesterday's answer.
+  if (data.date && data.date !== todayCT) {
+    card.className   = 'hero-card quiet';
+    accent.className = 'hero-accent quiet';
+    answer.textContent = '...';
+    answer.className   = 'hero-answer yes';
+    body.innerHTML = '<div class="hero-quiet-msg">Status refreshing — check the schedule below or visit <a href="https://mlb.com/cubs/schedule" style="color:var(--color-purple);">mlb.com</a> for today\'s game.</div>';
+    if (updated) updated.textContent = 'Updated ' + formatUpdated(data.updated);
+    return;
+  }
 
   // Build events list HTML (reused in multiple branches)
   function eventsListHtml(events) {

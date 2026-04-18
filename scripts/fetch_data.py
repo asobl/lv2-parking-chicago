@@ -352,10 +352,24 @@ def has_real_event(events):
 
 
 # ─── BUILD OUTPUT DICTS ───────────────────────────────
-def build_day(date_str, events):
+def build_day(date_str, events, now_ct=None):
     active_events = [e for e in events if e.get('status', 'Scheduled') not in GONE_STATUSES]
     has_event = bool(active_events)
     lv2 = is_lv2_active(has_event, active_events)
+
+    # Enforcement window override: LV2 is active 5–10 PM on any game day,
+    # even if the game finished early (status=Final). A day game ending at 4 PM
+    # does not cancel the evening enforcement window.
+    if not lv2 and now_ct and date_str == now_ct.date().isoformat() and 17 <= now_ct.hour < 22:
+        enforcement_events = [
+            e for e in events
+            if e.get('lv2') is not False and e.get('status') not in {'Postponed', 'Cancelled', 'Not Necessary'}
+        ]
+        if enforcement_events:
+            lv2 = True
+            has_event = True
+            active_events = enforcement_events  # show the game even though it's Final
+
     note = event_note(events)
 
     return {
@@ -390,7 +404,8 @@ def write_health(source, error=None):
 
 # ─── MAIN ─────────────────────────────────────────────
 def main():
-    today_str = today_ct().isoformat()
+    now_ct   = datetime.now(CT)
+    today_str = now_ct.date().isoformat()
     now_utc = datetime.now(timezone.utc).isoformat()
     print(f'[run] {now_utc} — fetching data for {today_str}')
 
@@ -423,7 +438,7 @@ def main():
 
     # ── Step 5: Build today.json
     today_events = by_date.get(today_str, [])
-    today_day = build_day(today_str, today_events)
+    today_day = build_day(today_str, today_events, now_ct=now_ct)
     today_json = {
         'date':      today_str,
         'updated':   now_utc,

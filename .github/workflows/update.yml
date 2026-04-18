@@ -2,6 +2,7 @@ name: Daily Data Update
 
 on:
   schedule:
+    - cron: '0 5 * * *'    # 12 AM CT (UTC-5) -- midnight run, resets today.json for new date
     - cron: '0 11 * * *'   # 6 AM CT (UTC-5) -- morning run
     - cron: '0 20 * * *'   # 3 PM CT (UTC-5) -- afternoon run + game day scan
     - cron: '0 22 * * *'   # 5 PM CT (UTC-5) -- enforcement window opens
