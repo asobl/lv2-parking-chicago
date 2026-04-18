@@ -66,8 +66,10 @@
     function dismissA2hs() {
       document.getElementById('a2hs-banner').style.display = 'none';
       localStorage.setItem('a2hs_dismissed', '1');
+      if (typeof gtag !== 'undefined') gtag('event', 'a2hs_dismissed', { event_category: 'pwa' });
     }
     function iosShare() {
+      if (typeof gtag !== 'undefined') gtag('event', 'a2hs_add_tap', { event_category: 'pwa', method: 'ios' });
       if (navigator.share) {
         navigator.share({ title: 'LV2 Park', url: window.location.href });
       }
@@ -99,6 +101,7 @@
     })();
     function installA2hs() {
       if (!_deferredPrompt) return;
+      if (typeof gtag !== 'undefined') gtag('event', 'a2hs_add_tap', { event_category: 'pwa', method: 'android' });
       _deferredPrompt.prompt();
       _deferredPrompt.userChoice.then(function(){ _deferredPrompt = null; dismissA2hs(); });
     }
