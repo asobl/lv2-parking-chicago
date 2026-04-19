@@ -1,18 +1,20 @@
 {
-  "updated": "2026-04-19T20:14:19.327768+00:00",
+  "updated": "2026-04-19T22:08:28.737476+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-04-19",
       "dayLabel": "Sun Apr 19",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "New York Mets vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-04-19"
         }
       ]
     },
