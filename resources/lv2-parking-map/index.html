@@ -70,6 +70,14 @@
       border-radius: 3px;
       flex-shrink: 0;
     }
+    .legend-toggle {
+      padding: 6px 14px; border-radius: 100px; border: 2px solid #C8C6D4;
+      background: #fff; font-family: var(--font-main); font-size: var(--text-small);
+      font-weight: 700; cursor: pointer; color: var(--color-text); white-space: nowrap;
+    }
+    .legend-toggle:hover { border-color: var(--color-purple); color: var(--color-purple); }
+    .legend-toggle.active { background: var(--color-purple); color: #fff; border-color: var(--color-purple); }
+    .legend-ticket-key { display: flex; gap: 16px; flex-wrap: wrap; }
 
     /* ADDRESS CHECKER */
     .address-checker {
@@ -201,30 +209,37 @@
       <article class="article-body">
 
         <h2>Interactive LV2 Zone Map</h2>
-        <p>The map below shows the LV2 permit parking zone boundary (purple) and the streets inside the zone. Zoom in on your block to see exactly where the boundary falls.</p>
+        <p>The map below shows both the LV2 permit parking zone (orange, night-game tow zone) and Zone 383 (purple, year-round residential permit parking). These are separate zones with different permits. Zoom in on your block to see exactly where the boundary falls.</p>
 
         <div class="map-card">
           <div id="lv2-map"></div>
           <div class="map-legend">
             <div class="legend-item">
+              <div class="legend-dot" style="background:#C2185B;opacity:0.7;"></div>
+              LV2 Streets (night-game tow zone)
+            </div>
+            <div class="legend-item">
               <div class="legend-dot" style="background:#6B64D4;opacity:0.7;"></div>
-              LV2 Zone
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#E84040;opacity:0.7;"></div>
-              High-ticket streets (FOIA data)
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#F0A030;opacity:0.7;"></div>
-              Medium-ticket streets
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#5B9EA0;opacity:0.7;"></div>
-              Low-ticket streets
+              Zone 383 (year-round permit)
             </div>
             <div class="legend-item">
               <div class="legend-dot" style="background:#1A1A2E;border:2px solid #F5E030;"></div>
               Wrigley Field
+            </div>
+            <button class="legend-toggle" id="ticket-toggle" onclick="toggleTickets()">Show ticket heatmap</button>
+            <div class="legend-ticket-key" id="ticket-key" style="display:none;">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#E84040;opacity:0.7;"></div>
+                High-ticket streets
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#F0A030;opacity:0.7;"></div>
+                Medium-ticket streets
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#5B9EA0;opacity:0.7;"></div>
+                Low-ticket streets
+              </div>
             </div>
           </div>
         </div>
@@ -321,8 +336,8 @@
           <p class="email-disclaimer">You'll get the PDF link by email. Unsubscribe any time.</p>
         </div>
 
-        <h2>Neighboring Permit Zones</h2>
-        <p>The LV2 zone sits within a larger permit parking area. The streets just outside the LV2 boundary may fall under Zone 383 (Lakeview) or Zone 143 (Lincoln Park). Those zones operate year-round, not just on game days.</p>
+        <h2>LV2 vs Zone 383: Two Different Zones</h2>
+        <p>LV2 and Zone 383 are separate zones with separate permits. LV2 is a night-game tow zone (5-10 PM, Cubs night games only). Zone 383 is year-round residential permit parking. An LV2 permit is <strong>not valid</strong> on Zone 383 streets, and a Zone 383 sticker is <strong>not valid</strong> on LV2 streets. The streets outside both zones may fall under Zone 143 (Lincoln Park), which also operates year-round.</p>
         <p>For a full comparison of how the zones overlap, see the <a href="/resources/chicago-permit-zones-wrigley/">Chicago permit zones guide</a>.</p>
 
       </article>
@@ -394,7 +409,7 @@
 
   <script>
     // Initialize Leaflet map centered on Wrigley Field
-    var map = L.map('lv2-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6553], 15);
+    var map = L.map('lv2-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9505, -87.6600], 14);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -409,22 +424,46 @@
     L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
       .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St');
 
-    // LV2 zone polygon — coordinates Nominatim-verified (matches zone-research.html)
-    // Broadway is the diagonal eastern boundary
-    var lv2Zone = L.polygon([
+    // ── Zone 383 — year-round residential permit parking (around Wrigley) ──
+    // Bounded by Irving Park (N), Broadway diagonal (E), Belmont (S), Ashland (W)
+    var zone383 = L.polygon([
       [41.954491, -87.669252],  // NW: Irving Park & Ashland
       [41.954491, -87.655100],  // NE: Irving Park & Broadway
-      [41.939777, -87.644500],  // SE: Belmont & Broadway (diagonal east boundary)
+      [41.947062, -87.651500],  // Addison & Broadway
+      [41.939777, -87.644500],  // SE: Belmont & Broadway
       [41.939777, -87.669252],  // SW: Belmont & Ashland
     ], {
-      color: '#6B64D4', weight: 3, opacity: 0.85,
-      fillColor: '#6B64D4', fillOpacity: 0.12,
+      color: '#6B64D4', weight: 2, opacity: 0.7,
+      fillColor: '#6B64D4', fillOpacity: 0.08,
       dashArray: '6 4'
     }).addTo(map);
+    zone383.bindTooltip('Zone 383 — Year-round residential permit parking<br>Irving Park to Belmont, Ashland to Broadway', { permanent: false, direction: 'center' });
 
-    lv2Zone.bindTooltip('LV2 Permit Zone (Zone 383)<br>Belmont to Irving Park, Broadway to Ashland', { permanent: false, direction: 'center' });
+    // ── LV2 individual streets (magenta) from OSM GeoJSON ──
+    var LV2_COLOR = '#C2185B';
+    fetch('/data/lv2-zone-streets.geojson')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(geojson) {
+        if (!geojson) return;
+        L.geoJSON(geojson, {
+          style: function() {
+            return { color: LV2_COLOR, weight: 4, opacity: 0.75 };
+          },
+          onEachFeature: function(f, layer) {
+            var p = f.properties;
+            var section = p.section === 'north' ? 'north section' : 'west section';
+            layer.bindTooltip(
+              '<strong>' + p.street + '</strong><br><small>LV2 zone, ' + section + '</small>',
+              { sticky: true }
+            );
+          }
+        }).addTo(map);
+      })
+      .catch(function() {});
 
     // FOIA street heatmap — 9,434 LV2 tickets 2018–2023
+    // Loaded but OFF by default, toggled by button
+    var ticketLayer = null;
     function ticketCountToColor(t) {
       if (t > 1500) return '#E84040';
       if (t > 800)  return '#F0A030';
@@ -435,7 +474,7 @@
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(geojson) {
         if (!geojson) return;
-        L.geoJSON(geojson, {
+        ticketLayer = L.geoJSON(geojson, {
           style: function(f) {
             return {
               color: ticketCountToColor(f.properties.tickets),
@@ -448,9 +487,26 @@
               '<strong>' + f.properties.street + '</strong><br>~' + f.properties.tickets.toLocaleString() + ' LV2 tickets (2018–2023)'
             );
           }
-        }).addTo(map);
+        });
       })
       .catch(function() {});
+
+    function toggleTickets() {
+      var btn = document.getElementById('ticket-toggle');
+      var key = document.getElementById('ticket-key');
+      if (!ticketLayer) return;
+      if (map.hasLayer(ticketLayer)) {
+        map.removeLayer(ticketLayer);
+        btn.textContent = 'Show ticket heatmap';
+        btn.classList.remove('active');
+        key.style.display = 'none';
+      } else {
+        ticketLayer.addTo(map);
+        btn.textContent = 'Hide ticket heatmap';
+        btn.classList.add('active');
+        key.style.display = 'flex';
+      }
+    }
 
     // ── AUTOCOMPLETE + ADDRESS CHECKER ───────────────────
 
@@ -553,30 +609,58 @@
 
     // ── ZONE CHECK ────────────────────────────────────────
 
-    const LV2_BOUNDS = { minLat: 41.9398, maxLat: 41.9545, minLon: -87.6693, maxLon: -87.6445 };
-
-    function isInsideLV2(lat, lon) {
-      return lat >= LV2_BOUNDS.minLat && lat <= LV2_BOUNDS.maxLat &&
-             lon >= LV2_BOUNDS.minLon && lon <= LV2_BOUNDS.maxLon;
+    // LV2 North: Montrose to Irving Park, Wolcott/Ravenswood to Greenview
+    function isInsideLV2North(lat, lon) {
+      return lat >= 41.954491 && lat <= 41.961693 &&
+             lon >= -87.675800 && lon <= -87.666618;
     }
 
-    function showResult(inside) {
+    // LV2 West: Irving Park to Roscoe, Wolcott to Ashland
+    function isInsideLV2West(lat, lon) {
+      return lat >= 41.943423 && lat <= 41.954491 &&
+             lon >= -87.675800 && lon <= -87.669252;
+    }
+
+    // Zone 383: Irving Park to Belmont, Ashland to Broadway (diagonal)
+    function isInsideZone383(lat, lon) {
+      if (lat < 41.939777 || lat > 41.954491) return false;
+      if (lon < -87.669252) return false;
+      // Broadway runs diagonally: interpolate east boundary
+      var t = (lat - 41.939777) / (41.954491 - 41.939777);
+      var eastLon = -87.644500 + t * (-87.655100 - (-87.644500));
+      return lon <= eastLon;
+    }
+
+    function isInsideLV2(lat, lon) {
+      return isInsideLV2North(lat, lon) || isInsideLV2West(lat, lon);
+    }
+
+    function getZone(lat, lon) {
+      if (isInsideLV2(lat, lon)) return 'lv2';
+      if (isInsideZone383(lat, lon)) return 'zone383';
+      return 'outside';
+    }
+
+    function showResult(zone) {
       resultBox.style.display = 'block';
-      if (inside) {
+      if (zone === 'lv2') {
         resultBox.className = 'checker-result inside';
-        resultBox.innerHTML = '&#9888; This address is inside the LV2 zone. LV2 restrictions apply 5&ndash;10 PM on game days and major events. Check the signs on your block to confirm.';
+        resultBox.innerHTML = '&#9888; This address is inside the <strong>LV2 zone</strong> (night-game tow zone). LV2 restrictions apply 5&ndash;10 PM on Cubs night games. You need an LV2 permit, not a Zone 383 sticker. Check the signs on your block to confirm.';
+      } else if (zone === 'zone383') {
+        resultBox.className = 'checker-result inside';
+        resultBox.innerHTML = '&#9888; This address is inside <strong>Zone 383</strong> (year-round residential permit parking). Zone 383 operates all year, not just on game days. During night games, cars without a valid Zone 383 sticker can be towed. Note: LV2 permits are <em>not</em> valid on Zone 383 streets. Check the signs on your block to confirm.';
       } else {
         resultBox.className = 'checker-result outside';
-        resultBox.innerHTML = '&#10003; This address appears to be outside the LV2 zone. Always verify with the signs on your block. <a href="/resources/lv2-parking-rules/" style="color:inherit;">Learn more about LV2 rules.</a>';
+        resultBox.innerHTML = '&#10003; This address appears to be outside both the LV2 and Zone 383 areas. Always verify with the signs on your block. <a href="/resources/lv2-parking-rules/" style="color:inherit;">Learn more about LV2 rules.</a>';
       }
     }
 
     function checkAddressFromCoords(lat, lon, addressText) {
-      const inside = isInsideLV2(lat, lon);
-      showResult(inside);
-      logSearch(addressText, inside ? 'inside' : 'outside', lat, lon, true);
+      const zone = getZone(lat, lon);
+      showResult(zone);
+      logSearch(addressText, zone, lat, lon, true);
       if (window._searchMarker) map.removeLayer(window._searchMarker);
-      const color = inside ? '#F0A030' : '#5B9EA0';
+      const color = zone === 'outside' ? '#5B9EA0' : zone === 'lv2' ? '#C2185B' : '#6B64D4';
       window._searchMarker = L.circleMarker([lat, lon], {
         radius: 10, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9
       }).addTo(map).bindPopup(addressText).openPopup();
@@ -597,11 +681,16 @@
       } else {
         // Fallback keyword match
         const lower = addr.toLowerCase();
-        const inside = ['sheffield','kenmore','clifton','seminary','southport','waveland',
-          'addison','clark','halsted','cornelia','school','roscoe','newport','grace',
-          'patterson','brompton','racine','lakewood','hermitage'].some(s => lower.includes(s));
-        showResult(inside);
-        logSearch(addr, inside ? 'inside' : 'outside', null, null, false);
+        const lv2Streets = ['hermitage','paulina','marshfield','wolcott','honore','cullom',
+          'warner','belle plaine','cuyler','byron','larchmont','berenice','bradley'];
+        const z383Streets = ['sheffield','kenmore','clifton','seminary','southport','waveland',
+          'addison','halsted','cornelia','school','roscoe','newport','grace',
+          'patterson','brompton','racine','lakewood','wayne'];
+        var fallbackZone = 'outside';
+        if (lv2Streets.some(s => lower.includes(s))) fallbackZone = 'lv2';
+        else if (z383Streets.some(s => lower.includes(s))) fallbackZone = 'zone383';
+        showResult(fallbackZone);
+        logSearch(addr, fallbackZone, null, null, false);
       }
     }
 

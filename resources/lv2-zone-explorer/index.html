@@ -169,26 +169,10 @@
           </label>
 
           <label class="tog">
-            <input type="checkbox" id="t-lv2w-ns" checked>
-            <span class="sw" style="background:#f0a030;"></span>
-            <span class="tl">LV2 West Strip streets
-              <div class="tn">Marshfield, Paulina, Hermitage, Wolcott (west of Ashland)</div>
-            </span>
-          </label>
-
-          <label class="tog">
-            <input type="checkbox" id="t-lv2w-ew" checked>
-            <span class="sw" style="background:#f0a030;opacity:0.5;"></span>
-            <span class="tl">LV2 West Strip E-W
-              <div class="tn">Roscoe, Cornelia, Grace, Waveland western blocks</div>
-            </span>
-          </label>
-
-          <label class="tog">
-            <input type="checkbox" id="t-lv2n" checked>
-            <span class="sw" style="background:#e8a020;opacity:0.7;"></span>
-            <span class="tl">LV2 North streets
-              <div class="tn">Irving Park to Montrose (Hutchinson, Cullom, Sunnyside, etc.)</div>
+            <input type="checkbox" id="t-lv2" checked>
+            <span class="sw" style="background:#C2185B;"></span>
+            <span class="tl">LV2 streets
+              <div class="tn">West section (Roscoe to Irving Park) + North section (Irving Park to Wilson)</div>
             </span>
           </label>
 
@@ -475,38 +459,24 @@ var g383ew = L.layerGroup([
   ewLine(LAT_IRVING,   broadwayLng(LAT_IRVING),   LNG_ASHLAND, CCOMM, null, 3, 'Irving Park Rd (4000N)', 'Northern boundary — commercial, 1 ticket'),
 ]);
 
-// ── LV2 West Strip N-S streets ──────────────────────────────────
-var gLV2wns = L.layerGroup([
-  nsLine(LNG_MARSHFIELD, LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Marshfield Ave (1634W)', '2,269 tickets — highest in dataset'),
-  nsLine(LNG_HONORE,     LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Honore St (1632W)', 'LV2 West Strip'),
-  nsLine(LNG_PAULINA,    LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Paulina St (1700W)', '1,323 tickets'),
-  nsLine(LNG_WOOD,       LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Wood St (1700W)', 'LV2 West Strip'),
-  nsLine(LNG_HERMITAGE,  LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Hermitage Ave (1734W)', '901 tickets'),
-  nsLine(LNG_WOLCOTT,    LAT_ROSCOE, LAT_IRVING, CLV2W, null, 3, 'Wolcott Ave (1732W)', 'LV2 West Strip'),
-  nsLine(LNG_DAMEN,      LAT_ROSCOE, LAT_IRVING, CLV2W, '6 5', 3, 'Damen Ave (2000W)', 'LV2 West Strip — FOIA gap'),
-  nsLine(LNG_LEAVITT,    LAT_ROSCOE, LAT_IRVING, CLV2W, '6 5', 3, 'Leavitt St (2200W)', 'LV2 West Strip — FOIA gap'),
-  nsLine(LNG_OAKLEY,     LAT_ROSCOE, LAT_IRVING, CLV2W, '6 5', 3, 'Oakley Ave (2300W)', 'LV2 West Strip — FOIA gap'),
-  diagLine(LINCOLN_AVE, CLV2W, '4 4', 2, 'Lincoln Ave', 'Diagonal — LV2 West Strip'),
-]);
-
-// ── LV2 West Strip E-W streets ──────────────────────────────────
-var gLV2wew = L.layerGroup([
-  ewLine(LAT_ROSCOE,   LNG_ASHLAND, LNG_DAMEN, CLV2W, null, 2, 'Roscoe St (W strip)', '~851 tickets total'),
-  ewLine(LAT_CORNELIA, LNG_ASHLAND, LNG_DAMEN, CLV2W, '4 4', 2, 'Cornelia Ave (W strip)', 'LV2 West Strip'),
-  ewLine(LAT_GRACE,    LNG_ASHLAND, LNG_DAMEN, CLV2W, '4 4', 2, 'Grace St (W strip)', 'LV2 West Strip'),
-  ewLine(LAT_WAVELAND, LNG_ASHLAND, LNG_DAMEN, CLV2W, null, 2, 'Waveland Ave (W strip)', '~222 tickets total'),
-]);
-
-// ── LV2 North streets ───────────────────────────────────────────
-var gLV2n = L.layerGroup([
-  ewLine(LAT_CUYLER,    LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, '4 4', 2, 'Cuyler Ave (4700N)', 'LV2 North'),
-  ewLine(LAT_WARNER,    LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, '4 4', 2, 'Warner Ave (4658N)', 'LV2 North'),
-  ewLine(LAT_HUTCHINSON,LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, null, 2, 'Hutchinson St', 'LV2 North — has ticket data'),
-  ewLine(LAT_CULLOM,    LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, null, 2, 'Cullom Ave', 'LV2 North — has ticket data'),
-  ewLine(LAT_PENSACOLA, LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, null, 2, 'Pensacola Ave', 'LV2 North'),
-  ewLine(LAT_MONTROSE,  LNG_SOUTHPORT, LNG_ASHLAND, CCOMM, null, 3, 'Montrose Ave (4400N)', 'Northern boundary — commercial'),
-  ewLine(LAT_SUNNYSIDE, LNG_SOUTHPORT, LNG_ASHLAND, CLV2N, '4 4', 2, 'Sunnyside Ave (4500N)', 'LV2 North'),
-]);
+// ── LV2 streets from GeoJSON ─────────────────────────────────────
+var gLV2 = L.layerGroup();
+fetch('/data/lv2-zone-streets.geojson')
+  .then(function(r) { return r.ok ? r.json() : null; })
+  .then(function(geojson) {
+    if (!geojson) return;
+    L.geoJSON(geojson, {
+      style: function() {
+        return { color: '#C2185B', weight: 4, opacity: 0.75 };
+      },
+      onEachFeature: function(f, layer) {
+        var p = f.properties;
+        var section = p.section === 'north' ? 'north section' : 'west section';
+        layer.bindTooltip('<strong>' + p.street + '</strong><br><small>LV2 zone, ' + section + '</small>', { sticky: true });
+      }
+    }).addTo(gLV2);
+  })
+  .catch(function() {});
 
 // ── Commercial arterials ─────────────────────────────────────────
 var gComm = L.layerGroup([
@@ -617,9 +587,7 @@ L.geoJSON(WARD_GJ, {
 // ── Add default layers ───────────────────────────────────────────
 g383ns.addTo(map);
 g383ew.addTo(map);
-gLV2wns.addTo(map);
-gLV2wew.addTo(map);
-gLV2n.addTo(map);
+gLV2.addTo(map);
 gComm.addTo(map);
 gTickets.addTo(map);
 
@@ -627,9 +595,7 @@ gTickets.addTo(map);
 [
   ['t-383-ns',    g383ns],
   ['t-383-ew',    g383ew],
-  ['t-lv2w-ns',   gLV2wns],
-  ['t-lv2w-ew',   gLV2wew],
-  ['t-lv2n',      gLV2n],
+  ['t-lv2',       gLV2],
   ['t-commercial',gComm],
   ['t-tickets',   gTickets],
   ['t-bounds',    gBounds],

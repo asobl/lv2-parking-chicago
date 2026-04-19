@@ -420,37 +420,31 @@ function initMap() {
   L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map)
     .bindPopup('<strong>Wrigley Field</strong><br>1060 W Addison St<br>Home of the Chicago Cubs');
 
-  // LV2 Zone boundary — confirmed from 44th Ward official site
-  // "Zone 383 from Belmont to Irving and Broadway to Ashland is a Tow Zone 5–10 PM for night games"
-  // Source: 44thward.org/resources/wrigley-field-neighborhood-information/chicago-cubs-parking-restriction-reminders/
-  // Broadway is diagonal; coordinates Nominatim-verified (matches zone-research.html)
+  // Zone 383 boundary (dashed purple)
   L.polygon([
     [41.954491, -87.669252],  // NW: Irving Park & Ashland
     [41.954491, -87.655100],  // NE: Irving Park & Broadway
-    [41.939777, -87.644500],  // SE: Belmont & Broadway (diagonal east boundary)
+    [41.947062, -87.651500],  // Addison & Broadway
+    [41.939777, -87.644500],  // SE: Belmont & Broadway
     [41.939777, -87.669252],  // SW: Belmont & Ashland
   ], {
-    color: '#6B64D4', weight: 3, opacity: 0.85,
-    fillColor: '#6B64D4', fillOpacity: 0.12,
+    color: '#6B64D4', weight: 2, opacity: 0.7,
+    fillColor: '#6B64D4', fillOpacity: 0.08,
     dashArray: '6 4'
   }).addTo(map)
-    .bindPopup('<strong>LV2 Tow Zone</strong><br>Belmont to Irving Park, Broadway to Ashland<br>Tow zone active 5–10 PM on game and event days.<br><small>Source: 44th Ward</small>');
+    .bindTooltip('Zone 383 — Year-round residential permit parking', { permanent: false, direction: 'center' });
 
-  // Real OSM road geometry — fetched from OpenStreetMap, ticket counts from FOIA 2018–2023
-  fetch('/data/lv2-streets.geojson')
+  // LV2 individual streets from OSM GeoJSON
+  fetch('/data/lv2-zone-streets.geojson')
     .then(r => r.ok ? r.json() : null)
     .then(geojson => {
       if (!geojson) return;
       L.geoJSON(geojson, {
-        style: f => ({
-          color: ticketCountToColor(f.properties.tickets),
-          weight: f.properties.tickets > 1500 ? 6 : f.properties.tickets > 900 ? 5 : 4,
-          opacity: 0.9
-        }),
+        style: () => ({ color: '#C2185B', weight: 4, opacity: 0.75 }),
         onEachFeature: (f, layer) => {
-          if (f.properties) layer.bindPopup(
-            `<strong>${f.properties.street}</strong><br>~${f.properties.tickets.toLocaleString()} LV2 tickets (2018–2023)`
-          );
+          const p = f.properties;
+          const section = p.section === 'north' ? 'north section' : 'west section';
+          layer.bindTooltip(`<strong>${p.street}</strong><br><small>LV2 zone, ${section}</small>`, { sticky: true });
         }
       }).addTo(map);
     })
