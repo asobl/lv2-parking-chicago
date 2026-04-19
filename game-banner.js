@@ -14,19 +14,22 @@
       // Only show when LV2 is actually active today and data is current
       if (!d.lv2Active || d.date !== todayLocal) return;
 
-      // Build label from first event, fall back to generic
-      var label = 'Wrigley event today';
+      // Build labels — full for desktop, short for mobile
+      var shortLabel = '\u26be\u00a0Game today';
+      var fullLabel  = '\u26be\u00a0Wrigley event today';
       if (d.events && d.events.length) {
         var ev = d.events[0];
         var icon = ev.type === 'game' ? '\u26be' : '\u{1F3B5}';
-        label = icon + '\u00a0' + (ev.name || 'Event') + (ev.time ? ', ' + ev.time : '');
+        shortLabel = icon + '\u00a0' + (ev.type === 'game' ? 'Game today' : 'Event today');
+        fullLabel  = icon + '\u00a0' + (ev.name || 'Event') + (ev.time ? ', ' + ev.time : '');
       }
 
       var banner = document.createElement('div');
       banner.id = 'game-day-banner';
       banner.innerHTML =
         '<div class="gdb-inner">' +
-          '<span class="gdb-label">' + label + '</span>' +
+          '<span class="gdb-label-full">'  + fullLabel  + '</span>' +
+          '<span class="gdb-label-short">' + shortLabel + '</span>' +
           '<span class="gdb-sep">\u2014</span>' +
           '<span class="gdb-msg">LV2 no parking after 5\u202fPM</span>' +
           '<a class="gdb-link" href="/">See today\'s status \u2192</a>' +
