@@ -1,23 +1,7 @@
 {
-  "updated": "2026-04-19T01:33:31.909943+00:00",
+  "updated": "2026-04-19T05:41:49.983785+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-04-18",
-      "dayLabel": "Sat Apr 18",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "New York Mets vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-04-18"
-        }
-      ]
-    },
     {
       "date": "2026-04-19",
       "dayLabel": "Sun Apr 19",
@@ -1974,6 +1958,14 @@
     {
       "date": "2026-10-14",
       "dayLabel": "Wed Oct 14",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-15",
+      "dayLabel": "Thu Oct 15",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
