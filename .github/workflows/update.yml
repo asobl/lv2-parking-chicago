@@ -106,7 +106,7 @@ jobs:
         run: |
           git config user.name  "lv2park-bot"
           git config user.email "bot@lv2park.com"
-          git add product/web/data/today.json product/web/data/week.json product/web/data/health.json product/web/data/ticker_state.json product/web/data/enforcement-today.json product/web/game-recaps/ product/web/sitemap.xml || true
+          git add product/web/data/today.json product/web/data/week.json product/web/data/health.json product/web/data/ticker_state.json product/web/data/enforcement-today.json product/web/game-recaps/ product/web/sitemap.xml product/web/index.html || true
           if git diff --staged --quiet; then
             echo "pages_changed=false" >> $GITHUB_OUTPUT
           else

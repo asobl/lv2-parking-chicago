@@ -402,6 +402,56 @@ def write_health(source, error=None):
     })
 
 
+def update_meta_description(today_json):
+    """Rewrite the <meta name="description"> in index.html to reflect today's status.
+    This keeps Google's search snippet accurate instead of showing the static fallback.
+    """
+    index_path = os.path.join(os.path.dirname(DATA_DIR), 'index.html')
+    if not os.path.exists(index_path):
+        print('[meta] index.html not found, skipping', file=sys.stderr)
+        return
+
+    lv2_active = today_json.get('lv2Active', False)
+    events = today_json.get('events', [])
+    event_name = events[0]['name'] if events else None
+
+    if lv2_active and event_name:
+        # e.g. "Rockies vs. Cubs" → "Cubs game day"
+        desc = (
+            f'LV2 ticket zone is ACTIVE near Wrigley tonight 5-10 PM — '
+            f'{event_name}. Move your car before 5 PM or get a ticket.'
+        )
+    elif lv2_active:
+        desc = (
+            'LV2 ticket zone is ACTIVE near Wrigley tonight 5-10 PM. '
+            'Move your car before 5 PM or get a ticket.'
+        )
+    else:
+        desc = (
+            'LV2 is not active today — no game or event near Wrigley. '
+            'Check back on the next game day. Free Monday email alert available.'
+        )
+
+    try:
+        with open(index_path) as f:
+            html = f.read()
+        import re
+        updated = re.sub(
+            r'<meta name="description" content="[^"]*">',
+            f'<meta name="description" content="{desc}">',
+            html,
+            count=1
+        )
+        if updated == html:
+            print('[meta] no change to meta description')
+            return
+        with open(index_path, 'w') as f:
+            f.write(updated)
+        print(f'[meta] updated description: {"ACTIVE" if lv2_active else "inactive"}')
+    except Exception as e:
+        print(f'[meta] failed to update: {e}', file=sys.stderr)
+
+
 # ─── MAIN ─────────────────────────────────────────────
 def main():
     now_ct   = datetime.now(CT)
@@ -509,6 +559,9 @@ def main():
 
     # ── Step 7: Health file
     write_health(mlb_source)
+
+    # ── Step 8: Update meta description in index.html for accurate Google snippet
+    update_meta_description(today_json)
 
     print(f'[done] today: hasEvent={today_json["hasEvent"]}, lv2={today_json["lv2Active"]}')
     if today_json['events']:

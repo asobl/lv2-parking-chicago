@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Blue parking-sign background with rounded corners -->
+  <rect width="32" height="32" rx="6" fill="#1565C0"/>
+  <!-- Bold white P -->
+  <text x="5" y="24" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="22" fill="white">P</text>
+  <!-- Yellow question mark superscript -->
+  <text x="20" y="14" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="13" fill="#F5E030">?</text>
+</svg>
