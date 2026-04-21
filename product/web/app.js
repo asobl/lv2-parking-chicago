@@ -21,8 +21,8 @@ function ticketUrl(ev) {
   const base = `https://www.ticketmaster.com/search?q=${q}`;
   return TM_AFF_ID ? `${base}&track=${TM_AFF_ID}&utm_source=lv2park` : base;
 }
-const WORKER_URL        = 'https://lv2park-email.adam-945.workers.dev';
-const TURNSTILE_SITE_KEY = '0x4AAAAAAC-Mur2UjOBs1zDs';
+const WORKER_URL        = '__WORKER_URL__';
+const TURNSTILE_SITE_KEY = '__TURNSTILE_SITE_KEY__';
 
 /* ─── EVENT ICONS ────────────────────────────────── */
 const ICONS = {

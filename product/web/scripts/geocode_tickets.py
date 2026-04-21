@@ -14,7 +14,7 @@ import openpyxl, re, json
 from collections import Counter
 
 # ---------- PATHS ----------
-FOIA_PATH = "/Users/asobol/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Hobbies/FOIA_Sobol_A51907_20230828.xlsx"
+FOIA_PATH = os.environ.get('FOIA_PATH', '')
 OUT_PATH  = "data/ticket-map-data.json"
 
 # ---------- CHICAGO GRID MATH ----------

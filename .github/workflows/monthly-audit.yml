@@ -29,6 +29,8 @@ jobs:
           TM_API_KEY:         ${{ secrets.TM_API_KEY }}
           RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
           RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          NOTIFY_EMAIL:       ${{ secrets.NOTIFY_EMAIL }}
+          WORKER_URL:         ${{ secrets.WORKER_URL }}
         run: python scripts/monthly_audit.py
 
       # If the script exits 1 (FAIL checks), GitHub emails Adam via

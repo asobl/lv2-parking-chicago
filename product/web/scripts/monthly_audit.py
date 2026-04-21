@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 LV2 Park -- Monthly Audit
-Runs all health checks and emails a full report to adam@lobosinnovation.com.
+Runs all health checks and emails a full report to the configured NOTIFY_EMAIL.
 
 Triggered by GitHub Actions on the 1st of each month.
 Also runnable locally: python scripts/monthly_audit.py
@@ -44,7 +44,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from health_check import run_all_checks, save_log
 
 RESEND_API_KEY  = os.environ.get('RESEND_API_KEY', '')
-ALERT_TO        = 'adam@lobosinnovation.com'
+ALERT_TO        = os.environ.get('NOTIFY_EMAIL', '')
 FROM_EMAIL      = 'LV2 Park Monitor <hello@lv2park.com>'
 SITE_URL        = 'https://lv2park.com'
 SCHEDULE_PATH   = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'blog', 'schedule.json')

@@ -47,7 +47,7 @@ load_dotenv()
 TM_API_KEY         = os.environ.get('TM_API_KEY', '')
 RESEND_API_KEY     = os.environ.get('RESEND_API_KEY', '')
 RESEND_AUDIENCE_ID = os.environ.get('RESEND_AUDIENCE_ID', '')
-WORKER_URL         = 'https://lv2park-email.adam-945.workers.dev'
+WORKER_URL         = os.environ.get('WORKER_URL', '')
 SITE_URL           = 'https://lv2park.com'
 SUBSCRIBER_WARN_AT = 80
 

@@ -17,8 +17,8 @@ RESEND_AUDIENCE_ID = os.environ.get('RESEND_AUDIENCE_ID', '')
 FROM_EMAIL         = 'LV2 Park <hello@lv2park.com>'
 SITE_URL           = 'https://lv2park.com'
 SPOTHERO_URL       = 'https://spothero.com/search?latitude=41.9484&longitude=-87.6553&utm_source=lv2park-email'
-SUBSCRIBER_WARN_AT = 80    # Email adam@lobosinnovation.com when list hits this
-ADAM_EMAIL         = 'adam@lobosinnovation.com'
+SUBSCRIBER_WARN_AT = 80
+NOTIFY_EMAIL       = os.environ.get('NOTIFY_EMAIL', '')
 
 
 def load_week():
@@ -226,11 +226,11 @@ def send_subscriber_warning(count):
 </body></html>'''
     api_post('/emails', {
         'from':    FROM_EMAIL,
-        'to':      [ADAM_EMAIL],
+        'to':      [NOTIFY_EMAIL],
         'subject': subject,
         'html':    html,
     })
-    print(f'[digest] Subscriber warning sent to {ADAM_EMAIL} ({count} subscribers)')
+    print(f'[digest] Subscriber warning sent to {NOTIFY_EMAIL} ({count} subscribers)')
 
 
 def main():

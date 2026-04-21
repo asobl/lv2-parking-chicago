@@ -16,7 +16,7 @@ from datetime import datetime
 RESEND_API_KEY   = os.environ.get('RESEND_API_KEY', '')
 GA4_PROPERTY_ID  = os.environ.get('GA4_PROPERTY_ID', '')   # numeric, e.g. 123456789
 GOOGLE_SA_JSON   = os.environ.get('GOOGLE_SA_JSON', '')
-ADAM_EMAIL       = 'adam@lobosinnovation.com'
+NOTIFY_EMAIL     = os.environ.get('NOTIFY_EMAIL', '')
 FROM_EMAIL       = 'LV2 Park <hello@lv2park.com>'
 SITE_URL         = 'https://lv2park.com'
 
@@ -159,7 +159,7 @@ def send_reapply_email(sessions, users):
 
     data = json.dumps({
         'from': FROM_EMAIL,
-        'to': [ADAM_EMAIL],
+        'to': [NOTIFY_EMAIL],
         'subject': subject,
         'html': html
     }).encode('utf-8')
@@ -247,7 +247,7 @@ def send_weekly_status(sessions, users, top_pages=None, top_sources=None):
 
     data = json.dumps({
         'from': FROM_EMAIL,
-        'to': [ADAM_EMAIL],
+        'to': [NOTIFY_EMAIL],
         'subject': subject,
         'html': html
     }).encode('utf-8')
