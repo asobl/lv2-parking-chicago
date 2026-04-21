@@ -1,10 +1,16 @@
 # Never commit secrets
 .env
 *.json.bak
-docs/*.json
 *service-account*.json
 *sa-*.json
 *-sa-*.json
+
+# Planning and private docs -- never in the public repo
+docs/
+product/web/internal/
+product/web/og-image*src.html
+lv2park-parking-lot.md
+progress.md
 
 # Python
 __pycache__/
