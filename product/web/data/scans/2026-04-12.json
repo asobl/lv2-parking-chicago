@@ -1,0 +1,14 @@
+{
+  "date": "2026-04-12",
+  "ticket_count": 287,
+  "peak_minute": "5:03 PM",
+  "scan_ok": true,
+  "last_checked": "2026-04-12T22:45:00+00:00",
+  "hot_streets": [
+    {"street": "N Marshfield Ave", "count": 61},
+    {"street": "N Paulina St", "count": 44},
+    {"street": "W Roscoe St", "count": 38},
+    {"street": "N Hermitage Ave", "count": 31},
+    {"street": "W Belle Plaine Ave", "count": 27}
+  ]
+}

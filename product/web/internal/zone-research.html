@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zone Research — Internal | LV2 Park</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f7; color: #1a1a2e; font-size: 13px; }
+    .header { background: #1a1a2e; color: #fff; padding: 11px 18px; display: flex; align-items: center; gap: 12px; }
+    .header h1 { font-size: 15px; font-weight: 700; }
+    .badge { background: #f0a030; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 3px; letter-spacing: 0.07em; text-transform: uppercase; flex-shrink: 0; }
+    .layout { display: grid; grid-template-columns: 1fr 360px; height: calc(100vh - 42px); }
+    #map { height: 100%; width: 100%; }
+    .panel { background: #fff; overflow-y: auto; border-left: 1px solid #ddd; }
+    .section { padding: 14px 16px; border-bottom: 1px solid #eee; }
+    .section h2 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #6b6b80; margin-bottom: 10px; }
+    .tog { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; border-bottom: 1px solid #f5f5f7; cursor: pointer; line-height: 1.4; }
+    .tog:last-child { border-bottom: none; }
+    .tog input { cursor: pointer; width: 14px; height: 14px; margin-top: 2px; flex-shrink: 0; }
+    .sw { width: 22px; height: 6px; border-radius: 3px; flex-shrink: 0; margin-top: 5px; }
+    .tl { flex: 1; font-size: 12px; }
+    .tn { font-size: 10px; color: #999; margin-top: 1px; }
+    .note { font-size: 11px; line-height: 1.5; padding: 7px 10px; border-radius: 4px; margin-bottom: 6px; }
+    .note:last-child { margin-bottom: 0; }
+    .n-ok  { background: #f0faf0; border-left: 3px solid #4caf50; }
+    .n-bad { background: #fff0f0; border-left: 3px solid #e84040; }
+    .n-warn{ background: #fff8ed; border-left: 3px solid #f0a030; }
+    .n-info{ background: #f0f4ff; border-left: 3px solid #6b64d4; }
+    .note b { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+    #coords { font-family: monospace; font-size: 11px; color: #6b64d4; padding: 4px 9px; background: #f0f0ff; border-radius: 3px; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th { background: #f5f5f7; text-align: left; padding: 5px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #6b6b80; }
+    td { padding: 5px 8px; border-bottom: 1px solid #f0f0f0; vertical-align: top; line-height: 1.4; }
+    tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="badge">Internal</div>
+  <h1>Zone Research — Street-Level Lines: Zone 383 + LV2 (Nominatim-verified coordinates)</h1>
+</div>
+<div class="layout">
+  <div id="map"></div>
+  <div class="panel">
+
+    <div class="section">
+      <h2>Click map</h2>
+      <div id="coords">Click any point for lat/lng</div>
+    </div>
+
+    <div class="section">
+      <h2>Layers</h2>
+
+      <label class="tog">
+        <input type="checkbox" id="t-383-ns" checked>
+        <span class="sw" style="background:#6B64D4;"></span>
+        <span class="tl">Zone 383 N-S streets (solid = has FOIA data, dashed = missing)
+          <div class="tn">Sheffield, Kenmore, Clifton, Racine, Halsted, Southport, Greenview, Ashland</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-383-ew" checked>
+        <span class="sw" style="background:#6B64D4;opacity:0.5;"></span>
+        <span class="tl">Zone 383 E-W streets
+          <div class="tn">Belmont, Roscoe, Cornelia, Addison, Waveland, Berteau, Belle Plaine, etc.</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-lv2w-ns" checked>
+        <span class="sw" style="background:#f0a030;"></span>
+        <span class="tl">LV2 West Strip N-S streets (Ashland to Ravenswood)
+          <div class="tn">Marshfield, Honore, Paulina, Wood, Hermitage, Wolcott, Ravenswood — has FOIA data</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-lv2w-ew" checked>
+        <span class="sw" style="background:#f0a030;opacity:0.5;"></span>
+        <span class="tl">LV2 West Strip E-W streets
+          <div class="tn">Roscoe/Byron/Cornelia/Grace/Waveland western blocks (1600-1800W)</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-lv2n" checked>
+        <span class="sw" style="background:#e8a020;opacity:0.7;"></span>
+        <span class="tl">LV2 North streets (Irving Park to Montrose+)
+          <div class="tn">Hutchinson, Cullom, Sunnyside, Pensacola, Warner, Cuyler (4000–4700N)</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-commercial" checked>
+        <span class="sw" style="background:#aaa;"></span>
+        <span class="tl">Commercial arterials (not permit streets)
+          <div class="tn">Addison, Belmont, Irving Park, Clark (inside zone but commercial)</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-tickets" checked>
+        <span class="sw" style="background:#e84040;"></span>
+        <span class="tl">FOIA ticket dots
+          <div class="tn">8,046 geocoded tickets. Purple ring = Zone 383 area. Orange = LV2 outer.</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-bounds">
+        <span class="sw" style="background:transparent;border:2px dashed #6B64D4;"></span>
+        <span class="tl">Zone boundary polygons (reference)
+          <div class="tn">Zone 383 purple fill, LV2 orange fill</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-wards">
+        <span class="sw" style="background:transparent;border:2px solid #2a7f3d;"></span>
+        <span class="tl">Ward boundaries
+          <div class="tn" id="ward-status">Loading ward-boundaries.geojson…</div>
+        </span>
+      </label>
+
+      <label class="tog">
+        <input type="checkbox" id="t-geo">
+        <span class="sw" style="background:transparent;border:2px solid #e83;"></span>
+        <span class="tl">OSM real geometries (from Overpass)
+          <div class="tn" id="geo-status">Loading zone-streets.geojson…</div>
+        </span>
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>Legend</h2>
+      <table>
+        <tr><th>Color</th><th>What it means</th></tr>
+        <tr><td><span style="display:inline-block;width:24px;height:4px;background:#6B64D4;border-radius:2px;vertical-align:middle;"></span></td><td>Zone 383 street — solid = has FOIA data</td></tr>
+        <tr><td><span style="display:inline-block;width:24px;height:0;border-top:2px dashed #6B64D4;vertical-align:middle;margin:2px 0;"></span></td><td>Zone 383 street — dashed = FOIA gap</td></tr>
+        <tr><td><span style="display:inline-block;width:24px;height:4px;background:#f0a030;border-radius:2px;vertical-align:middle;"></span></td><td>LV2 West Strip street (has FOIA data)</td></tr>
+        <tr><td><span style="display:inline-block;width:24px;height:4px;background:#e8a020;border-radius:2px;vertical-align:middle;opacity:0.7;"></span></td><td>LV2 North street</td></tr>
+        <tr><td><span style="display:inline-block;width:24px;height:4px;background:#aaa;border-radius:2px;vertical-align:middle;"></span></td><td>Commercial arterial (Belmont, Irving, Clark, Broadway)</td></tr>
+        <tr><td><span style="display:inline-block;width:24px;height:0;border-top:3px dashed #888;vertical-align:middle;margin:3px 0;"></span></td><td>Lincoln Ave (diagonal, Nominatim-verified)</td></tr>
+        <tr><td><span style="display:inline-block;width:18px;height:14px;border:2px solid #2a7f3d;background:#2a7f3d22;vertical-align:middle;border-radius:2px;"></span></td><td>44th Ward (official City of Chicago 2023)</td></tr>
+        <tr><td><span style="display:inline-block;width:18px;height:14px;border:2px solid #1a5fa8;background:#1a5fa822;vertical-align:middle;border-radius:2px;"></span></td><td>47th Ward (official City of Chicago 2023)</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Why tickets cluster on the west</h2>
+      <div class="note n-bad">
+        <b>FOIA gap: entire eastern Zone 383 missing</b>
+        Sheffield, Kenmore, Clifton, Racine, Seminary — all shown as purple dashed lines — have zero tickets in the FOIA data. These streets are adjacent to Wrigley Field and almost certainly the most-ticketed streets in the zone. FOIA Request #2 targets these.
+      </div>
+      <div class="note n-warn">
+        <b>LV2 west strip is NOT Zone 383 — and is in the 47th Ward</b>
+        Marshfield (2,269 tickets), Paulina (1,323), Hermitage (901), Roscoe (851) are all WEST of Ashland — they are in the LV2 west strip zone (§9-68-023), not Zone 383 proper (§9-68-022). These streets are in the 47th Ward. Note: the official 2023 ward boundary shows the 44th Ward's western edge at Southport/Greenview (not Ashland), so the Zone 383 strip from Greenview to Ashland is also 47th Ward territory.
+      </div>
+      <div class="note n-info">
+        <b>Commercial streets inside Zone 383 have almost no tickets</b>
+        Addison (4 tickets), Irving Park Rd (1 ticket), Ashland (2 tickets). Bars, restaurants, parking lots along these corridors don't have residential permit requirements.
+      </div>
+      <div class="note n-ok">
+        <b>Zone 383 E-W streets do have data — western blocks only</b>
+        Belle Plaine (465 tickets at 1400-1558W), Berteau (268 at 1402-1533W), Waveland (222 at 1602-1798W). The EASTERN portions of these streets (800-1400W, near Sheffield/Kenmore) have zero tickets — same FOIA gap.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Coordinate accuracy</h2>
+      <div class="note n-ok">
+        <b>Streets use Nominatim-verified coordinates</b>
+        9 Nominatim-verified anchor streets (Belmont, Roscoe, Cornelia, Eddy, Addison, Grace, Irving Park, Montrose, Wilson — all error &lt;6m). All others interpolated from nearest anchors. Warning: 11 raw Nominatim results were &gt;100m wrong (returned the same street name from the wrong Chicago neighborhood) and were replaced with interpolated values. Worst offenders: Warner (1km off), Cuyler (1.35km off). Full table in <code>internal/street-coords.json</code>.
+      </div>
+      <div class="note n-warn">
+        <b>Grid math was off by up to 120m north</b>
+        The original formula (LAT_MADISON + n/100 * 0.001810) drifts. Hutchinson: grid said 41.9585 but actual is 41.9591. All grid-computed values replaced.
+      </div>
+      <div class="note n-info">
+        <b>LV2 North lines stop at Southport (1400W), not Clark</b>
+        The ordinance extends LV2 North east to Clark (~900W), but Clark at these latitudes is the western boundary of Graceland Cemetery. Flat horizontal lines at Clark longitude cross the cemetery. Lines are shown only to Southport (where permit enforcement actually clusters). The zone's full east boundary is shown by the Zone Boundaries polygon toggle.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Sources</h2>
+      <div class="note n-info" style="margin-bottom:4px;">§9-68-022 — Zone 383: Belmont to Irving, Broadway to Ashland. Ordinance text cites the 44th Ward, but official 2023 ward boundaries show the western strip (Greenview/Southport to Ashland) is in the 47th Ward.</div>
+      <div class="note n-info" style="margin-bottom:4px;">§9-68-023 — LV2: West strip (Roscoe–Irving, Ashland–Ravenswood) + North (Irving–Montrose, Clark–Ashland) + specific streets</div>
+      <div class="note n-info" style="margin-bottom:4px;">44th Ward: "LV-2 eliminated in 44th Ward July 1, 2008. Zone 383 is the only zone remaining east of Ashland."</div>
+      <div class="note n-info">Ward boundaries: official 2023 boundaries from City of Chicago Open Data (dataset p293-wvbd). Douglas-Peucker simplified to 37 pts (44th) and 50 pts (47th) for map performance. Saved to <code>internal/ward-boundaries.geojson</code>.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Nominatim-verified coordinate lookup ────────────────────────
+// E-W street latitudes (horizontal streets)
+const LAT_BELMONT    = 41.939777;  // nominatim
+const LAT_ALDINE     = 41.940579;  // interpolated from Belmont/Roscoe (Nominatim value was 2m off)
+// Anchors (Nominatim-verified, error < 6m): Belmont, Roscoe, Cornelia, Eddy, Addison, Grace, Irving, Montrose, Wilson
+// All others: interpolated from anchors. Cross-checked 2026-04-16 — some Nominatim results were >200m wrong
+// (returned same street name from a different Chicago neighborhood).
+const LAT_MELROSE    = 41.942657;  // interpolated — Nominatim returned wrong location (202m south)
+const LAT_SCHOOL     = 41.941600;  // interpolated from Belmont/Roscoe (Nominatim 41.941641, 5m diff, OK)
+const LAT_HENDERSON  = 41.944505;  // interpolated — Nominatim returned wrong location (225m south)
+const LAT_ROSCOE     = 41.943423;  // nominatim ANCHOR
+const LAT_DAKIN      = 41.944617;  // interpolated from Roscoe/Cornelia
+const LAT_NEWPORT    = 41.946397;  // interpolated — Nominatim returned wrong location (235m south)
+const LAT_CORNELIA   = 41.945288;  // nominatim ANCHOR (also Byron)
+const LAT_BROMPTON   = 41.946535;  // interpolated — Nominatim returned wrong location (187m south)
+const LAT_EDDY       = 41.946202;  // nominatim ANCHOR
+const LAT_ADDISON    = 41.947062;  // nominatim ANCHOR
+const LAT_WAVELAND   = 41.947647;  // interpolated — Nominatim off 138m (returned wrong block)
+const LAT_BERTEAU    = 41.948891;  // interpolated from Addison/Grace
+const LAT_GRACE      = 41.950720;  // nominatim ANCHOR (also Belle Plaine, error < 6m)
+const LAT_PATTERSON  = 41.953397;  // interpolated from Grace/Irving (error < 2m)
+const LAT_IRVING     = 41.954491;  // nominatim ANCHOR
+const LAT_HUTCHINSON = 41.959112;  // nominatim (45m from interpolated — acceptable)
+const LAT_MONTROSE   = 41.961693;  // nominatim ANCHOR
+// WARNING: streets below are SOUTH of Montrose despite higher N-addresses.
+// The geocoder's N-address values are wrong for these streets.
+// These latitudes come from Nominatim results in-zone (lng ≈ -87.675 to -87.681, North Center).
+const LAT_CULLOM     = 41.959654;  // nominatim North Center (lng=-87.677) — SOUTH of Montrose
+const LAT_PENSACOLA  = 41.960517;  // nominatim North Center (lng=-87.681) — just south of Montrose
+const LAT_WARNER     = 41.956940;  // nominatim North Center (lng=-87.675) — between Irving & Hutchinson
+const LAT_CUYLER     = 41.955448;  // nominatim Buena Park (lng=-87.653) — just above Irving Park
+const LAT_SUNNYSIDE  = 41.963617;  // interpolated Montrose–Wilson (Nominatim Portage Park: 41.962044, too far W)
+const LAT_WILSON     = 41.965542;  // nominatim ANCHOR (error < 1m)
+
+// N-S street longitudes (vertical streets)
+const LNG_HALSTED    = -87.649861; // nominatim
+const LNG_CLIFTON    = -87.650778; // extrapolated (Halsted + 40 units)
+const LNG_SHEFFIELD  = -87.654444; // nominatim
+const LNG_KENMORE    = -87.655361; // extrapolated (Sheffield + 40 units)
+const LNG_SEMINARY   = -87.657683; // extrapolated (Sheffield + 134 units)
+const LNG_RACINE     = -87.659278; // nominatim
+const LNG_WAYNE      = -87.660056; // extrapolated (Racine + 32 units)
+const LNG_SOUTHPORT  = -87.664141; // nominatim
+const LNG_GREENVIEW  = -87.666618; // nominatim
+const LNG_ASHLAND    = -87.669252; // nominatim
+const LNG_MARSHFIELD = -87.670190; // nominatim
+const LNG_HONORE     = -87.670144; // nominatim (essentially = Marshfield)
+const LNG_PAULINA    = -87.671418; // nominatim
+const LNG_HERMITAGE  = -87.672586; // nominatim
+const LNG_WOLCOTT    = -87.672540; // nominatim (essentially = Hermitage)
+const LNG_DAMEN      = -87.678666; // nominatim
+const LNG_SEELEY     = -87.681870; // extrapolated
+const LNG_HAMILTON   = -87.681093; // extrapolated
+const LNG_LEAVITT    = -87.683520; // nominatim
+const LNG_BELL       = -87.684317; // extrapolated
+const LNG_OAKLEY     = -87.686010; // nominatim
+
+// Diagonal streets — Nominatim-verified intersection anchor points
+const BROADWAY = [
+  [LAT_BELMONT, -87.644500],
+  [LAT_ADDISON, -87.651500],
+  [LAT_IRVING,  -87.655100]
+];
+const CLARK_ST = [
+  [LAT_BELMONT,  -87.641100],
+  [LAT_ADDISON,  -87.645800],
+  [LAT_IRVING,   -87.650800],
+  [LAT_MONTROSE, -87.647000]
+];
+// Lincoln Ave: Nominatim-verified intersections (runs NW through LV2 zone)
+const LINCOLN_AVE = [
+  [41.939304, -87.668278],   // at Belmont — nominatim
+  [41.943370, -87.670986],   // at Roscoe — nominatim
+  [41.946176, -87.673308],   // at Addison — nominatim
+  [41.948802, -87.675234],   // at Waveland — nominatim
+  [41.954491, -87.679197],   // at Irving Park — interpolated
+  [41.961460, -87.684210],   // at Montrose — nominatim
+];
+// Ravenswood Ave: diagonal, LV2 West Strip western boundary per §9-68-023
+// Only drawing Irving Park–Montrose where Nominatim data is reliable.
+// South of Irving Park, Ravenswood is within 15m of Hermitage — drawn there as gLV2wns.
+// Nominatim: Irving Park=(41.954662,-87.673906), Montrose=(41.961424,-87.67622)
+const RAVENSWOOD_AVE = [
+  [41.954662, -87.673906],   // at Irving Park — nominatim
+  [41.961424, -87.676220],   // at Montrose — nominatim
+];
+
+// ── Broadway longitude at each Zone 383 E-W street latitude ─────────────
+// Broadway runs NW (Belmont lng=-87.6445 → Addison lng=-87.6515 → Irving lng=-87.6551)
+// Zone 383 E-W streets extend east to Broadway's actual longitude at their latitude.
+// Previously all used BROADWAY[0][1]=-87.6445 (Broadway at Belmont), causing
+// streets near Addison to extend ~680m east of actual Broadway.
+const BW_ALDINE    = -87.645270;  // interpolated Belmont→Addison
+const BW_SCHOOL    = -87.646251;
+const BW_MELROSE   = -87.647265;
+const BW_ROSCOE    = -87.648002;
+const BW_HENDERSON = -87.649043;
+const BW_DAKIN     = -87.649151;
+const BW_CORNELIA  = -87.649795;
+const BW_EDDY      = -87.650674;
+const BW_NEWPORT   = -87.650860;
+const BW_BROMPTON  = -87.650994;
+// Addison: BROADWAY[1][1] = -87.651500
+const BW_WAVELAND  = -87.651784;  // interpolated Addison→Irving
+const BW_BERTEAU   = -87.652386;
+const BW_GRACE     = -87.653274;
+const BW_PATTERSON = -87.654570;
+// Irving: BROADWAY[2][1] = -87.655100
+
+// ── Clark St longitude at each LV2 North E-W street latitude ────────────
+// LV2 North zone eastern boundary is Clark St (§9-68-023).
+// Clark runs NE from Irving (-87.6508) to Montrose (-87.6470), then NE to Wilson.
+// Previously LV2 North lines ended at LNG_SOUTHPORT (-87.6641) — ~1.7km short of Clark.
+const CK_CUYLER     = -87.650295;  // interpolated Irving→Montrose
+const CK_WARNER     = -87.649508;
+const CK_HUTCHINSON = -87.648360;
+const CK_CULLOM     = -87.648075;
+const CK_PENSACOLA  = -87.647619;
+// Montrose: CLARK_ST[3][1] = -87.647000
+// North of Montrose, Clark curves NE (estimated):
+const CK_SUNNYSIDE  = -87.645500;
+const CK_WILSON     = -87.644000;
+
+// ── Map init ──────────────────────────────────────────────
+var map = L.map('map', { center: [41.9490, -87.6620], zoom: 15 });
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
+}).addTo(map);
+
+map.on('click', function(e) {
+  document.getElementById('coords').textContent =
+    e.latlng.lat.toFixed(6) + ',  ' + e.latlng.lng.toFixed(6);
+});
+
+// Wrigley label
+L.marker([41.9484, -87.6553], {
+  icon: L.divIcon({
+    html: '<div style="background:#1a1a2e;color:#f5e030;font-size:10px;font-weight:900;padding:3px 8px;border-radius:4px;white-space:nowrap;border:2px solid #f5e030;">WRIGLEY FIELD</div>',
+    className: '', iconSize: [0,0], iconAnchor: [52, 24]
+  }), interactive: false
+}).addTo(map);
+
+// ── Helper: draw street lines (direct lat/lng, no grid math) ──
+function nsLine(lngX, latS, latN, color, dash, weight, label, zone) {
+  return L.polyline([[latS, lngX],[latN, lngX]], {
+    color: color, weight: weight || 4,
+    opacity: 0.85, dashArray: dash || null
+  }).bindTooltip('<strong>' + label + '</strong><br>' + zone, { sticky: true });
+}
+
+function ewLine(latY, lngW, lngE, color, dash, weight, label, zone) {
+  return L.polyline([[latY, lngW],[latY, lngE]], {
+    color: color, weight: weight || 4,
+    opacity: 0.85, dashArray: dash || null
+  }).bindTooltip('<strong>' + label + '</strong><br>' + zone, { sticky: true });
+}
+
+// ── COLORS ────────────────────────────────────────────────
+const C383  = '#6B64D4';  // Zone 383
+const CLV2W = '#f0a030';  // LV2 west strip
+const CLV2N = '#d4870a';  // LV2 north
+const CCOMM = '#aaaaaa';  // Commercial
+const C44W  = '#2a7f3d';  // 44th Ward
+const C47W  = '#1a5fa8';  // 47th Ward
+
+// ── Zone 383 N-S streets (Broadway to Ashland, Belmont to Irving) ──────
+// Dashed = no FOIA data (gap). Solid = has data.
+var g383ns = L.layerGroup([
+  // FOIA GAP streets (dashed) — east of Ashland
+  nsLine(LNG_HALSTED,    LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Halsted St (800W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_CLIFTON,    LAT_BELMONT, LAT_WAVELAND, C383, '6 5', 3, 'Clifton Ave (840W)', 'Zone 383 — FOIA gap (ends ~Waveland)'),
+  nsLine(LNG_SHEFFIELD,  LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Sheffield Ave (1000W)', 'Zone 383 — FOIA gap (FOIA Request #2)'),
+  nsLine(LNG_KENMORE,    LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Kenmore Ave (1040W)', 'Zone 383 — FOIA gap (FOIA Request #2)'),
+  nsLine(LNG_SEMINARY,   LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Seminary / Magnolia Ave (1134W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_RACINE,     LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Racine Ave (1200W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_WAYNE,      LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Wayne Ave (1232W)', 'Zone 383 — FOIA gap'),
+  nsLine(LNG_SOUTHPORT,  LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Southport Ave (1400W)', 'Zone 383 — mostly FOIA gap (334 tickets at north edge only)'),
+  nsLine(LNG_GREENVIEW,  LAT_BELMONT, LAT_IRVING, C383, '6 5', 3, 'Greenview Ave (1500W)', 'Zone 383 — FOIA gap'),
+  // Ashland = western boundary of Zone 383 (commercial, 2 tickets)
+  nsLine(LNG_ASHLAND, LAT_BELMONT, LAT_IRVING, CCOMM, null, 3, 'Ashland Ave (1600W)', 'Zone 383 western boundary — commercial, 2 tickets'),
+]);
+
+// ── Zone 383 E-W streets (run from Ashland to Broadway's actual lng at each lat) ──
+// East endpoint uses Broadway's interpolated longitude — fixes streets that previously
+// extended 200–680m east of actual Broadway position.
+var g383ew = L.layerGroup([
+  ewLine(LAT_ALDINE,   LNG_ASHLAND, BW_ALDINE,       C383, '6 5', 2, 'Aldine Ave (3244N)', 'Zone 383'),
+  ewLine(LAT_SCHOOL,   LNG_ASHLAND, BW_SCHOOL,       C383, '6 5', 2, 'School St (3300N)', 'Zone 383'),
+  ewLine(LAT_MELROSE,  LNG_ASHLAND, BW_MELROSE,      C383, '6 5', 2, 'Melrose St (3358N)', 'Zone 383'),
+  ewLine(LAT_ROSCOE,   LNG_ASHLAND, BW_ROSCOE,       C383, '6 5', 2, 'Roscoe St (3400N) — eastern half', 'Zone 383 — eastern half FOIA gap'),
+  ewLine(LAT_DAKIN,    LNG_ASHLAND, BW_DAKIN,        C383, '6 5', 2, 'Dakin St (3464N)', 'Zone 383'),
+  ewLine(LAT_CORNELIA, LNG_ASHLAND, BW_CORNELIA,     C383, '6 5', 2, 'Cornelia Ave / Byron St (3500N) — eastern half', 'Zone 383 — eastern half FOIA gap'),
+  ewLine(LAT_EDDY,     LNG_ASHLAND, LNG_HERMITAGE,   C383, '6 5', 2, 'Eddy St (3525N)', 'Zone 383 — FOIA gap (short block)'),
+  ewLine(LAT_NEWPORT,  LNG_ASHLAND, BW_NEWPORT,      C383, '6 5', 2, 'Newport Ave (3542N) — eastern half', 'Zone 383 — eastern half FOIA gap'),
+  ewLine(LAT_BROMPTON, LNG_ASHLAND, BW_BROMPTON,     C383, '6 5', 2, 'Brompton Ave (3554N)', 'Zone 383'),
+  // Addison — commercial
+  ewLine(LAT_ADDISON,  LNG_ASHLAND, BROADWAY[1][1],  CCOMM, null, 3, 'Addison St (3600N)', 'Commercial — 4 tickets total'),
+  ewLine(LAT_WAVELAND, LNG_ASHLAND, BW_WAVELAND,     C383, '6 5', 2, 'Waveland Ave (3632N) — eastern half', 'Zone 383 — eastern half FOIA gap (near Wrigley)'),
+  ewLine(LAT_BERTEAU,  LNG_ASHLAND, BW_BERTEAU,      C383, '6 5', 2, 'Berteau Ave (3700N) — eastern half', 'Zone 383 — eastern half FOIA gap'),
+  ewLine(LAT_GRACE,    LNG_ASHLAND, BW_GRACE,        C383, '6 5', 2, 'Grace St / Belle Plaine Ave (3800N) — eastern half', 'Zone 383 — eastern half FOIA gap'),
+  ewLine(LAT_PATTERSON,LNG_ASHLAND, BW_PATTERSON,    C383, '6 5', 2, 'Patterson Ave (3942N)', 'Zone 383 — FOIA gap'),
+]);
+
+// ── LV2 West Strip N-S streets (Ashland to Ravenswood, Roscoe to Irving) ──
+// These have the most FOIA data. Solid lines.
+var gLV2wns = L.layerGroup([
+  nsLine(LNG_HONORE,    LAT_SCHOOL,   LAT_IRVING, CLV2W, null, 4, 'Honore St (1632W)', 'LV2 West Strip — has FOIA data'),
+  nsLine(LNG_MARSHFIELD,LAT_BELMONT,  LAT_IRVING, CLV2W, null, 5, 'Marshfield Ave (1634W)', 'LV2 West Strip — 2,269 tickets (most ticketed street)'),
+  nsLine(LNG_PAULINA,   LAT_BELMONT,  LAT_IRVING, CLV2W, null, 4, 'Paulina St / Wood St (1700W)', 'LV2 West Strip — 1,323 tickets'),
+  nsLine(LNG_WOLCOTT,   LAT_ROSCOE,   LAT_IRVING, CLV2W, null, 3, 'Wolcott Ave (1732W)', 'LV2 West Strip — has FOIA data'),
+  nsLine(LNG_HERMITAGE, LAT_ROSCOE,   LAT_IRVING, CLV2W, null, 4, 'Hermitage Ave (1734W)', 'LV2 West Strip — 901 tickets'),
+]);
+
+// ── LV2 West Strip E-W streets (western blocks, Ashland to Ravenswood) ──
+var gLV2wew = L.layerGroup([
+  ewLine(LAT_ROSCOE,   LNG_HERMITAGE,LNG_ASHLAND, CLV2W, null, 3, 'Roscoe St (3400N) — western blocks 1600-1755W', 'LV2 West Strip — 851 tickets'),
+  ewLine(LAT_CORNELIA, LNG_HERMITAGE, LNG_ASHLAND, CLV2W, null, 3, 'Cornelia Ave (3500N) — western blocks', 'LV2 West Strip — has FOIA data'),
+  ewLine(LAT_CORNELIA, LNG_HERMITAGE, LNG_ASHLAND, CLV2W, '4 3', 3, 'Byron St (3500N) — western blocks', 'LV2 West Strip — has FOIA data'),
+  ewLine(LAT_EDDY,    -87.675800,    LNG_HERMITAGE, CLV2W, null, 3, 'Eddy St (3525N) — Ravenswood to Wolcott', 'LV2 West Strip connector — 34 tickets'),
+  ewLine(LAT_NEWPORT,  LNG_HERMITAGE, LNG_ASHLAND, CLV2W, null, 3, 'Newport Ave (3542N) — western blocks', 'LV2 West Strip — 179 tickets'),
+  ewLine(LAT_WAVELAND, LNG_HERMITAGE, LNG_ASHLAND, CLV2W, null, 3, 'Waveland Ave (3632N) — western blocks 1600-1798W', 'LV2 West Strip — 222 tickets'),
+  ewLine(LAT_BERTEAU,  LNG_SOUTHPORT, LNG_ASHLAND, CLV2W, '4 3', 3, 'Berteau Ave (3700N) — western blocks', 'Zone 383 (Berteau at 1402-1533W — just inside Ashland)'),
+  ewLine(LAT_GRACE,    LNG_GREENVIEW, LNG_ASHLAND, CLV2W, '4 3', 3, 'Belle Plaine Ave (3800N) — western blocks', 'Zone 383 (Belle Plaine at 1400-1558W)'),
+  ewLine(LAT_GRACE,    LNG_HERMITAGE, LNG_ASHLAND, CLV2W, null, 3, 'Grace St (3800N) — western blocks', 'LV2 West Strip — 235 tickets'),
+]);
+
+// ── LV2 North streets (north of Irving Park, Ashland to Southport) ──────────
+// East limit: LNG_SOUTHPORT (-87.664, ~1400W). The actual LV2 North zone extends
+// to Clark (§9-68-023), but flat horizontal lines at Clark's longitude (~ -87.648)
+// cross Graceland Cemetery (which IS between Clark and Sheridan at these latitudes).
+// The zone's full east boundary (to Clark) is already shown by the gBounds polygon.
+// The CK_xxx constants below are kept for reference but not used for lines.
+var gLV2n = L.layerGroup([
+  ewLine(LAT_CUYLER,     LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, null, 3, 'Cuyler Ave (4700N)', 'LV2 North — 338 tickets (1400–1600W block)'),
+  ewLine(LAT_WARNER,     LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, null, 3, 'Warner Ave (4658N)', 'LV2 North — 280 tickets (1400–1600W block)'),
+  ewLine(LAT_HUTCHINSON, LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, null, 3, 'Hutchinson St (4234N)', 'LV2 North — 147 tickets (1400–1600W block)'),
+  ewLine(LAT_CULLOM,     LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, null, 3, 'Cullom Ave (4458N)', 'LV2 North — 203 tickets (1400–1600W block)'),
+  ewLine(LAT_PENSACOLA,  LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, null, 3, 'Pensacola Ave (4580N)', 'LV2 North — 100 tickets (1400–1600W block)'),
+  ewLine(LAT_MONTROSE,   LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, '5 3', 2, 'Montrose Ave (4400N)', 'LV2 North — 2 tickets'),
+  ewLine(LAT_SUNNYSIDE,  LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, null, 3, 'Sunnyside Ave (4500N)', 'LV2 North — 236 tickets (1400–1600W block)'),
+  ewLine(LAT_WILSON,     LNG_ASHLAND, LNG_SOUTHPORT, CLV2N, '5 3', 2, 'Wilson Ave (4600N)', 'LV2 North — 1 ticket'),
+  // Greenview N-S (Montrose to Wilson) — from ordinance §9-68-023
+  nsLine(LNG_GREENVIEW, LAT_MONTROSE, LAT_WILSON, CLV2N, '5 3', 2, 'Greenview Ave (1500W) — Montrose to Wilson', 'LV2 North from ordinance §9-68-023'),
+]);
+
+// ── Commercial arterials ─────────────────────────────────────
+var gComm = L.layerGroup([
+  ewLine(LAT_BELMONT, LNG_ASHLAND, BROADWAY[0][1], CCOMM, null, 3, 'Belmont Ave (3200N)', 'Commercial — Zone 383 south boundary'),
+  ewLine(LAT_IRVING,  LNG_ASHLAND, BROADWAY[2][1], CCOMM, null, 3, 'Irving Park Rd (4000N)', 'Commercial — Zone 383 north boundary / LV2 North south boundary'),
+  // Broadway (diagonal)
+  L.polyline(BROADWAY, { color: CCOMM, weight: 3, opacity: 0.7, dashArray: '5 3' })
+    .bindTooltip('Broadway — diagonal commercial, eastern boundary of Zone 383', { sticky: true }),
+  // Clark (diagonal)
+  L.polyline(CLARK_ST, { color: CCOMM, weight: 3, opacity: 0.7, dashArray: '5 3' })
+    .bindTooltip('Clark St — diagonal commercial, eastern boundary of LV2 North', { sticky: true }),
+  // Lincoln Ave (diagonal NW) — Nominatim-verified
+  L.polyline(LINCOLN_AVE, { color: '#888', weight: 3, opacity: 0.8, dashArray: '5 3' })
+    .bindTooltip('<strong>Lincoln Ave</strong><br>Diagonal commercial — cuts through LV2 zone NW. Nominatim-verified. FOIA data excluded Lincoln Ave tickets (grid math was ~0.75mi off).', { sticky: true }),
+  // Ravenswood Ave omitted: south of Irving Park it's within ~15m of Hermitage (not separately visible).
+  // North of Irving Park it is not a zone boundary. Zone boundary polygon covers the LV2 west strip extent.
+]);
+
+// ── Zone boundary reference polygons ─────────────────────────
+var gBounds = L.layerGroup([
+  L.polygon([
+    [LAT_IRVING,  LNG_ASHLAND],
+    [LAT_IRVING,  BROADWAY[2][1]],
+    [LAT_BELMONT, BROADWAY[0][1]],
+    [LAT_BELMONT, LNG_ASHLAND]
+  ], { color: C383, weight: 2, opacity: 0.5, fillColor: C383, fillOpacity: 0.05, dashArray: '6 4' })
+  .bindTooltip('Zone 383 boundary (§9-68-022)', { sticky: true }),
+
+  L.polygon([
+    [LAT_IRVING,  -87.675800],
+    [LAT_IRVING,  LNG_ASHLAND],
+    [LAT_ROSCOE,  LNG_ASHLAND],
+    [LAT_ROSCOE,  -87.675800]
+  ], { color: CLV2W, weight: 2, opacity: 0.5, fillColor: CLV2W, fillOpacity: 0.05, dashArray: '6 4' })
+  .bindTooltip('LV2 West Strip boundary (§9-68-023)', { sticky: true }),
+
+  L.polygon([
+    [LAT_MONTROSE, LNG_ASHLAND],
+    [LAT_MONTROSE, CLARK_ST[3][1]],
+    [LAT_IRVING,   CLARK_ST[2][1]],
+    [LAT_IRVING,   LNG_ASHLAND]
+  ], { color: CLV2N, weight: 2, opacity: 0.5, fillColor: CLV2N, fillOpacity: 0.05, dashArray: '6 4' })
+  .bindTooltip('LV2 North boundary (§9-68-023)', { sticky: true }),
+]);
+
+// ── Ward boundary overlays — official Chicago Open Data (p293-wvbd) ─────────
+// Source: data.cityofchicago.org Wards (2023-). Douglas-Peucker simplified.
+// Embedded directly to avoid file:// fetch restrictions.
+var WARD_GJ = {"type":"FeatureCollection","features":[
+  {"type":"Feature","properties":{"ward":44,"label":"44th Ward","color":"#2a7f3d"},"geometry":{"type":"Polygon","coordinates":[[[-87.65681542380315,41.95139799354678],[-87.65680645290765,41.951086731753584],[-87.65323484064666,41.951143625809905],[-87.65317327897375,41.949061763888594],[-87.64954158697878,41.949115002811446],[-87.64942985050739,41.94546126484843],[-87.64614785162901,41.94550178312233],[-87.64573955964441,41.94484114025138],[-87.64179723542811,41.946159926518725],[-87.64220671030796,41.94687217745875],[-87.6407434238908,41.94761758516729],[-87.6380363245517,41.94826724654733],[-87.63625294072166,41.94576362094624],[-87.63301001349335,41.94254819051868],[-87.6338695920618,41.94140361429568],[-87.63385627288004,41.94038499045798],[-87.63229203178673,41.93723516193391],[-87.63202766681478,41.935687288131426],[-87.63044280932964,41.93366614001121],[-87.63066379761574,41.93253440480535],[-87.63073061248495,41.93306326818322],[-87.65871047917963,41.932556206513766],[-87.6589685850161,41.93983803819245],[-87.66382092616092,41.939764881110875],[-87.66383290094625,41.940219266457994],[-87.66444777780144,41.94021179866598],[-87.66453953478332,41.943408264267696],[-87.66574741767856,41.94378099313464],[-87.6658176409866,41.946541674980416],[-87.66642634512712,41.946530336191344],[-87.66653019704539,41.95067393982403],[-87.6641181634995,41.9507113515076],[-87.66416875551991,41.9525334316996],[-87.66082656810016,41.95258115156098],[-87.66224996082232,41.95437810497724],[-87.65679197676974,41.954451508803714],[-87.65681542380315,41.95139799354678]]]}},
+  {"type":"Feature","properties":{"ward":47,"label":"47th Ward","color":"#1a5fa8"},"geometry":{"type":"Polygon","coordinates":[[[-87.65978566403044,41.97332400472591],[-87.65976791001175,41.97267625333766],[-87.66114028247796,41.97265246430216],[-87.66104646544504,41.96901903361903],[-87.66749666120914,41.96890048914182],[-87.66598649678389,41.96174601701734],[-87.66425807249774,41.957620744305046],[-87.66421530950424,41.95435490075211],[-87.6690488606186,41.95429035428986],[-87.66897065663157,41.9510970221946],[-87.66576339424576,41.951138269474455],[-87.66575153800379,41.95068602143428],[-87.66653019704539,41.95067393982403],[-87.66642634512712,41.946530336191344],[-87.6658176409866,41.946541674980416],[-87.66574741767856,41.94378099313464],[-87.6651426085563,41.94378699226283],[-87.6651321511479,41.94339887332851],[-87.67603112680123,41.94324697211859],[-87.67608032411114,41.94506250368338],[-87.6797149622082,41.9450254110305],[-87.67975151282745,41.94637664801217],[-87.68096893209778,41.94635826713004],[-87.6809812787037,41.946831483780784],[-87.68825771828546,41.94673081030085],[-87.68798678840396,41.93610394093644],[-87.69036736887955,41.93686524638789],[-87.69148630601163,41.93879180212737],[-87.69363310804529,41.94025506323335],[-87.69542825186058,41.943204244595485],[-87.69686355923712,41.95000625763125],[-87.6945546869739,41.95392229723957],[-87.69426710488615,41.957030244769605],[-87.69470348054406,41.96110153981486],[-87.69562386261246,41.96317916453586],[-87.69859628990828,41.96619981924659],[-87.69746299983292,41.966209999567376],[-87.69798425037965,41.966710159289036],[-87.68884838213513,41.96675825064067],[-87.68896461349809,41.97041223534247],[-87.67923885140226,41.97057353340557],[-87.67929591881901,41.97239773506536],[-87.67630854565658,41.97244460724525],[-87.67632328479665,41.973313970745274],[-87.66956039187856,41.97343570277849],[-87.66957684245486,41.974339401715405],[-87.66820802315243,41.97436578984672],[-87.66841697192183,41.976190594255556],[-87.65986612826194,41.97632276322761],[-87.65978566403044,41.97332400472591]]]}},
+  {"type":"Feature","properties":{"ward":32,"label":"32nd Ward","color":"#1a8a6e"},"geometry":{"type":"Polygon","coordinates":[[[-87.68096912508611,41.94636477041803],[-87.67975151282745,41.94637664801217],[-87.6797149622082,41.9450254110305],[-87.67608032411114,41.94506250368338],[-87.67603112680123,41.94324697211859],[-87.66453953478332,41.943408264267696],[-87.66444777780144,41.94021179866598],[-87.66382092616092,41.939764881110875],[-87.6589685850161,41.93983803819245],[-87.6584533871608,41.92529161345386],[-87.6681458152771,41.92515157985834],[-87.66811150695132,41.92427774266858],[-87.66318501725333,41.92074098962776],[-87.6630368755731,41.91929188587268],[-87.65778112869086,41.91616546409581],[-87.654387584081,41.91305218922876],[-87.65547934534241,41.91249852789532],[-87.65407963188241,41.910824100972725],[-87.68722069732127,41.91032086695694],[-87.68825771828546,41.94673081030085],[-87.68096912508611,41.94636477041803]]]}},
+  {"type":"Feature","properties":{"ward":43,"label":"43rd Ward","color":"#9b4a9b"},"geometry":{"type":"Polygon","coordinates":[[[-87.63182975888245,41.93305418270661],[-87.63068706670731,41.93186893062846],[-87.63091026555212,41.92932156285991],[-87.62961828668885,41.926718517634576],[-87.63027496896513,41.92574762813716],[-87.62993780214364,41.9235474682962],[-87.6283363065845,41.92307395562778],[-87.62947969787481,41.92239700024271],[-87.62853576795526,41.92103323109086],[-87.62770477853768,41.921368163666074],[-87.62891721217001,41.920729124228444],[-87.62795613005886,41.91950484337131],[-87.62732504025948,41.919746792890805],[-87.62841927325331,41.91925856781965],[-87.62815204148755,41.91880445853278],[-87.6268000822853,41.918251447101035],[-87.62790894609915,41.91760033550822],[-87.62670522575581,41.9164350092855],[-87.62609272712454,41.91683576408596],[-87.62681257560581,41.916285945108385],[-87.62319408520658,41.91377647627759],[-87.62057238140882,41.91337036030556],[-87.62020817007932,41.914555908996476],[-87.62098925838515,41.91478539896497],[-87.62015647630712,41.91457888680288],[-87.6205010826786,41.913359269445316],[-87.62329009013798,41.91247015883907],[-87.62509515201536,41.91026523262724],[-87.62357245935353,41.90407730707041],[-87.62871026439143,41.90485436457404],[-87.62888562417793,41.911223007566925],[-87.63168235155709,41.91118052890782],[-87.63281457097706,41.91310764035419],[-87.63986089957989,41.912874731745184],[-87.63980635988075,41.911096804877026],[-87.64435615713003,41.91098676000089],[-87.64444886647719,41.91388576143116],[-87.64836123578198,41.913827162279865],[-87.64827157340306,41.910919619702796],[-87.64950135467393,41.91090048646488],[-87.65828012022459,41.917193960765495],[-87.65827908575505,41.91984698534081],[-87.65706737859128,41.91986707685665],[-87.65712567418203,41.92167999276421],[-87.65833494855077,41.92166144216534],[-87.65839416734066,41.923476621287946],[-87.65718665420448,41.92349536109294],[-87.65722848413621,41.9248121434642],[-87.6584533871608,41.92529161345386],[-87.65871047917963,41.932556206513766],[-87.63182975888245,41.93305418270661]]]}},
+  {"type":"Feature","properties":{"ward":46,"label":"46th Ward","color":"#c47a2b"},"geometry":{"type":"Polygon","coordinates":[[[-87.64521285239933,41.96973539157894],[-87.64429753841335,41.969896789745675],[-87.64296523809683,41.96805536720933],[-87.64048626556189,41.96692491442254],[-87.63199476175619,41.965068382234314],[-87.63096173799524,41.96842075098213],[-87.63196935486246,41.96854120681439],[-87.63088210516729,41.968539992799535],[-87.63190691728778,41.96592326801659],[-87.63099581722116,41.963231547862684],[-87.63145423643749,41.96245294359343],[-87.6374576320995,41.9593656806756],[-87.6403687514876,41.95920656166302],[-87.64094715756171,41.96048977438019],[-87.63703130377554,41.96060205714027],[-87.63539567674562,41.96194361837751],[-87.63572601150285,41.962768338397694],[-87.6412496734336,41.9623377903227],[-87.64224003835606,41.96162130704683],[-87.64102186505957,41.95935112243317],[-87.641745141517,41.958364302940346],[-87.64101250223287,41.954761077858066],[-87.6380363245517,41.94826724654733],[-87.6407434238908,41.94761758516729],[-87.64220671030796,41.94687217745875],[-87.64179723542811,41.946159926518725],[-87.64573955964441,41.94484114025138],[-87.64614785162901,41.94550178312233],[-87.64942985050739,41.94546126484843],[-87.64954158697878,41.949115002811446],[-87.65317327897375,41.949061763888594],[-87.65323484064666,41.951143625809905],[-87.65680645290765,41.951086731753584],[-87.65679197676974,41.954451508803714],[-87.66224996082232,41.95437810497724],[-87.66082656810016,41.95258115156098],[-87.66416875551991,41.9525334316996],[-87.6641181634995,41.9507113515076],[-87.66897065663157,41.9510970221946],[-87.6690488606186,41.95429035428986],[-87.66421530950424,41.95435490075211],[-87.66425807249774,41.957620744305046],[-87.66598649678389,41.96174601701734],[-87.66749666120914,41.96890048914182],[-87.66104646544504,41.96901903361903],[-87.66110036265823,41.97119499495446],[-87.65866559191835,41.97152666900381],[-87.65040244970763,41.97159091517034],[-87.64968830005647,41.969361953578805],[-87.64521285239933,41.96973539157894]]]}
+}]};
+
+var gWards = L.layerGroup();
+var wardTips = {
+  44: '44th Ward — official 2023 boundary (City of Chicago Open Data). Western boundary runs along Southport near Belmont and Greenview near Irving Park, NOT Ashland. The Zone 383 strip from Greenview to Ashland is in the 47th Ward.',
+  47: '47th Ward — official 2023 boundary (City of Chicago Open Data). Covers LV2 West Strip, LV2 North, and the Zone 383 western strip (Greenview to Ashland).',
+  32: '32nd Ward — official 2023 boundary (City of Chicago Open Data). Covers Bucktown, Logan Square, and the area west of Damen/Ashland.',
+  43: '43rd Ward — official 2023 boundary (City of Chicago Open Data). Covers Lincoln Park, south of Belmont Avenue.',
+  46: '46th Ward — official 2023 boundary (City of Chicago Open Data). Covers East Lakeview from Clark/Broadway east to the lakefront.'
+};
+var wardCenter = { 44: [41.948, -87.657], 47: [41.960, -87.677], 32: [41.942, -87.671], 43: [41.930, -87.644], 46: [41.957, -87.641] };
+L.geoJSON(WARD_GJ, {
+  style: function(f) {
+    var c = f.properties.color;
+    return { color: c, weight: 2, opacity: 0.85, fillColor: c, fillOpacity: 0.04 };
+  },
+  onEachFeature: function(f, layer) {
+    var w = f.properties.ward;
+    layer.bindTooltip(wardTips[w], { sticky: true });
+    L.marker(wardCenter[w], {
+      icon: L.divIcon({
+        html: '<div style="background:'+f.properties.color+';color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap;opacity:0.9;">'+f.properties.label+'</div>',
+        className: '', iconSize: [0,0], iconAnchor: [38,10]
+      }), interactive: false
+    }).addTo(gWards);
+  }
+}).addTo(gWards);
+document.getElementById('ward-status').textContent = 'Official 2023 — Wards 32, 43, 44, 46, 47 (City of Chicago Open Data)';
+
+// ── FOIA ticket dots ─────────────────────────────────────────
+var gTickets = L.layerGroup();
+function tColor(c) {
+  return c >= 15 ? '#e84040' : c >= 8 ? '#f0a030' : c >= 4 ? '#c9a030' : '#8898aa';
+}
+fetch('../data/ticket-map-data.json')
+  .then(r => r.json())
+  .then(data => {
+    data.points.forEach(p => {
+      var isOuter = p.lng < LNG_ASHLAND || p.lat > LAT_IRVING;
+      L.circleMarker([p.lat, p.lng], {
+        radius: p.count >= 15 ? 7 : p.count >= 8 ? 5 : p.count >= 4 ? 4 : 3,
+        fillColor: tColor(p.count),
+        color: isOuter ? CLV2W : C383,
+        weight: 1.5, fillOpacity: 0.8
+      })
+      .bindTooltip('<strong>' + p.addr + '</strong><br>' + p.count + ' tickets<br>' +
+        '<em>' + (isOuter ? 'LV2 outer zone' : 'Zone 383 area') + '</em>', { sticky: true })
+      .addTo(gTickets);
+    });
+  }).catch(function(){});
+
+// ── OSM GeoJSON overlay (real street geometries from Overpass) ──────────
+// Loaded from zone-streets.geojson if available. Toggle separately from flat lines.
+var gGeo = L.layerGroup();
+fetch('zone-streets.geojson')
+  .then(r => r.json())
+  .then(function(gj) {
+    L.geoJSON(gj, {
+      style: function(f) {
+        return {
+          color: f.properties.color || '#888',
+          weight: f.properties.layer === 'ns' ? 3 : 2,
+          opacity: 0.9,
+          dashArray: null
+        };
+      },
+      onEachFeature: function(f, layer) {
+        layer.bindTooltip('<strong>' + f.properties.name + '</strong><br>OSM geometry', { sticky: true });
+      }
+    }).addTo(gGeo);
+    var n = gj.features.length;
+    var names = [...new Set(gj.features.map(f => f.properties.name))].length;
+    document.getElementById('geo-status').textContent = n + ' segments / ' + names + ' streets loaded';
+  })
+  .catch(function() {
+    document.getElementById('geo-status').textContent = 'zone-streets.geojson not found — run scripts/fetch_street_geojson_retry.py';
+  });
+
+// ── Add defaults to map ──────────────────────────────────────
+g383ns.addTo(map);
+g383ew.addTo(map);
+gLV2wns.addTo(map);
+gLV2wew.addTo(map);
+gLV2n.addTo(map);
+gComm.addTo(map);
+gTickets.addTo(map);
+// gWards not added by default — toggle on
+
+// ── Toggle handlers ──────────────────────────────────────────
+[
+  ['t-383-ns',    g383ns],
+  ['t-383-ew',    g383ew],
+  ['t-lv2w-ns',   gLV2wns],
+  ['t-lv2w-ew',   gLV2wew],
+  ['t-lv2n',      gLV2n],
+  ['t-commercial',gComm],
+  ['t-tickets',   gTickets],
+  ['t-bounds',    gBounds],
+  ['t-wards',     gWards],
+  ['t-geo',       gGeo],
+].forEach(function(pair) {
+  document.getElementById(pair[0]).addEventListener('change', function() {
+    this.checked ? pair[1].addTo(map) : map.removeLayer(pair[1]);
+  });
+});
+</script>
+</body>
+</html>

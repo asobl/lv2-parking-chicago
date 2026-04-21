@@ -11,10 +11,14 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    outputs:
+      pages_changed: ${{ steps.commit.outputs.pages_changed }}
 
     steps:
       - name: Checkout repo
@@ -26,51 +30,56 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
+        working-directory: product/web
         run: pip install requests pytz
 
       - name: Fetch data
+        working-directory: product/web
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
         run: python scripts/fetch_data.py
 
       - name: Send Monday digest
+        working-directory: product/web
         env:
           RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
           RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
         run: |
           if [ "$(date +%u)" = "1" ]; then
-            echo "Monday — sending digest"
+            echo "Monday -- sending digest"
             python scripts/send_digest.py
           else
-            echo "Not Monday (day $(date +%u)) — skipping digest"
+            echo "Not Monday (day $(date +%u)) -- skipping digest"
           fi
 
       - name: Check traffic + FlexOffers alert
+        working-directory: product/web
         env:
           RESEND_API_KEY:  ${{ secrets.RESEND_API_KEY }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           GOOGLE_SA_JSON:  ${{ secrets.GOOGLE_SA_JSON }}
         run: |
           if [ "$(date +%u)" = "1" ]; then
-            echo "Monday — checking traffic"
+            echo "Monday -- checking traffic"
             python scripts/check_traffic.py
           else
-            echo "Not Monday — skipping traffic check"
+            echo "Not Monday -- skipping traffic check"
           fi
 
       - name: Live ticker scan (game days only)
+        working-directory: product/web
         run: |
           LV2=$(python3 -c "import json; d=json.load(open('data/today.json')); print('yes' if d.get('lv2Active') else 'no')")
           if [ "$LV2" = "yes" ]; then
-            echo "LV2 active today — running ticker scan"
+            echo "LV2 active today -- running ticker scan"
             python scripts/scan_tickets.py --production
           else
-            echo "No LV2 today — skipping scan"
+            echo "No LV2 today -- skipping scan"
           fi
 
       - name: Generate game recap (morning after game days)
+        working-directory: product/web
         run: |
-          # Check if yesterday had a game (using week.json)
           YESTERDAY=$(date -d 'yesterday' +%Y-%m-%d 2>/dev/null || date -v-1d +%Y-%m-%d)
           HOUR=$(date +%H)
           HAD_GAME=$(python3 -c "
@@ -84,16 +93,45 @@ jobs:
           except: print('no')
           ")
           if [ "\$HAD_GAME" = "yes" ] && [ "\$HOUR" -lt "14" ]; then
-            echo "Morning after game day — generating recap"
+            echo "Morning after game day -- generating recap"
             python scripts/generate_recaps.py --date \$YESTERDAY
           else
             echo "No recap needed"
           fi
 
       - name: Commit updated data + recaps
+        id: commit
         run: |
           git config user.name  "lv2park-bot"
           git config user.email "bot@lv2park.com"
-          git add data/today.json data/week.json data/health.json data/ticker_state.json data/enforcement-today.json game-recaps/ || true
-          git diff --staged --quiet || git commit -m "Auto update $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
-          git push
+          git add product/web/data/today.json product/web/data/week.json product/web/data/health.json product/web/data/ticker_state.json product/web/data/enforcement-today.json product/web/game-recaps/ product/web/sitemap.xml || true
+          if git diff --staged --quiet; then
+            echo "pages_changed=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "Auto update $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+            git push
+            echo "pages_changed=true" >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: update
+    if: needs.update.outputs.pages_changed == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: main  # always deploy the latest committed state
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: product/web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

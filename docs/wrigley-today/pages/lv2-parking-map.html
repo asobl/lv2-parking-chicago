@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LV2 Parking Map Chicago: Zone Boundaries + Address Lookup | LV2 Park</title>
+  <meta name="description" content="Interactive LV2 parking zone map for Chicago's Wrigleyville neighborhood. Check if your address is inside the zone, see the boundary streets, and download a printable version.">
+  <link rel="canonical" href="https://lv2park.com/lv2-parking-map">
+  <meta property="og:title" content="LV2 Parking Map Chicago: Zone Boundaries + Address Lookup">
+  <meta property="og:description" content="Interactive LV2 parking zone map. Check if your address is in the LV2 zone and see where the boundaries run.">
+  <meta property="og:url" content="https://lv2park.com/lv2-parking-map">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="LV2 Park">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "LV2 Parking Map Chicago: Zone Boundaries + Address Lookup",
+    "description": "Interactive LV2 parking zone map for Chicago's Wrigleyville neighborhood.",
+    "url": "https://lv2park.com/lv2-parking-map",
+    "publisher": { "@type": "Organization", "name": "LV2 Park", "url": "https://lv2park.com" }
+  }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --color-bg: #FFFFFF; --color-bg-warm: #FFFBF0; --color-bg-surface: #F5F4F0;
+      --color-text: #1A1A2E; --color-text-soft: #6B6B80; --color-yellow: #F5E030;
+      --color-purple: #6B64D4; --color-green: #5B9EA0; --color-orange: #F0A030;
+      --color-red: #E84040; --font-main: 'Inter', system-ui, sans-serif;
+      --text-h1: 36px; --text-h2: 24px; --text-h3: 20px; --text-body: 17px;
+      --text-small: 14px; --text-label: 12px; --radius-sm: 8px; --radius-md: 16px;
+      --radius-lg: 24px; --content-max: 680px; --content-pad: 20px;
+    }
+    body { font-family: var(--font-main); background: var(--color-bg); color: var(--color-text); font-size: var(--text-body); line-height: 1.6; }
+    .site-nav { background: var(--color-text); padding: 0 var(--content-pad); display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 1000; }
+    .site-logo { font-size: 18px; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: 0.04em; }
+    .site-logo span { color: var(--color-yellow); }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link { color: #a0a0b8; text-decoration: none; font-size: var(--text-small); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 10px; border-radius: var(--radius-sm); transition: color 0.15s, background 0.15s; }
+    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    @media (max-width: 480px) { .nav-links { display: none; } }
+    .article-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad); }
+    .article-hero { padding: 48px 0 40px; border-bottom: 1px solid #EEEEF4; }
+    .article-badge { display: inline-block; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--color-purple); padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 16px; }
+    .article-h1 { font-size: var(--text-h1); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .article-intro { font-size: 19px; color: var(--color-text-soft); line-height: 1.6; max-width: 560px; }
+    .article-meta { font-size: var(--text-small); color: var(--color-text-soft); margin-top: 16px; }
+    .article-body { padding: 40px 0; }
+    .article-body h2 { font-size: var(--text-h2); font-weight: 900; margin: 40px 0 12px; letter-spacing: -0.01em; }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 { font-size: var(--text-h3); font-weight: 700; margin: 28px 0 10px; }
+    .article-body p { margin-bottom: 16px; line-height: 1.7; }
+    .article-body ul, .article-body ol { margin: 0 0 16px 24px; line-height: 1.8; }
+    .article-body li { margin-bottom: 4px; }
+    .article-body strong { font-weight: 700; }
+    .article-body a { color: var(--color-purple); text-decoration: underline; }
+    .callout { border-radius: var(--radius-md); padding: 20px 24px; margin: 24px 0; }
+    .callout-warning { background: #FFF8ED; border-left: 4px solid var(--color-orange); }
+    .callout-info { background: #F0F4FF; border-left: 4px solid var(--color-purple); }
+    .callout-tip { background: #F0F9F9; border-left: 4px solid var(--color-green); }
+    .callout-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; color: var(--color-text-soft); }
+    .callout p { margin-bottom: 0; }
+
+    /* MAP */
+    .map-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid #EEEEF4;
+      margin: 0 0 24px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    #lv2-map {
+      height: 420px;
+      width: 100%;
+      background: var(--color-bg-surface);
+    }
+    .map-legend {
+      padding: 16px 20px;
+      background: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--text-small);
+      font-weight: 700;
+    }
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ADDRESS CHECKER */
+    .address-checker {
+      background: var(--color-bg-surface);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      margin: 32px 0;
+      border: 1px solid #EEEEF4;
+    }
+    .checker-heading { font-size: var(--text-h2); font-weight: 900; margin-bottom: 8px; }
+    .checker-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 20px; }
+    .checker-form { display: flex; gap: 10px; flex-wrap: wrap; position: relative; }
+    .checker-input-wrap { flex: 1; min-width: 200px; position: relative; }
+    .checker-input {
+      width: 100%; height: 52px; border: 2px solid #E5E4F0;
+      border-radius: var(--radius-md); padding: 0 16px; font-family: var(--font-main);
+      font-size: var(--text-body); color: var(--color-text); background: #fff; outline: none;
+    }
+    .checker-input:focus { border-color: var(--color-purple); }
+    .checker-input.open { border-radius: var(--radius-md) var(--radius-md) 0 0; border-bottom-color: transparent; }
+    .checker-btn {
+      height: 52px; padding: 0 24px; background: var(--color-purple); color: #fff;
+      border: none; border-radius: var(--radius-md); font-family: var(--font-main);
+      font-size: var(--text-body); font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    /* AUTOCOMPLETE DROPDOWN */
+    .autocomplete-dropdown {
+      display: none; position: absolute; top: 52px; left: 0; right: 0; z-index: 300;
+      background: #fff; border: 2px solid var(--color-purple);
+      border-top: none; border-radius: 0 0 var(--radius-md) var(--radius-md);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); overflow: hidden;
+    }
+    .autocomplete-dropdown.visible { display: block; }
+    .autocomplete-item {
+      padding: 12px 16px; font-size: var(--text-small); cursor: pointer;
+      border-bottom: 1px solid #EEEEF4; color: var(--color-text); line-height: 1.4;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover { background: #F0F4FF; }
+    .autocomplete-item-icon { color: var(--color-purple); margin-top: 1px; flex-shrink: 0; font-size: 14px; }
+    .autocomplete-item-main { font-weight: 700; }
+    .autocomplete-item-sub { color: var(--color-text-soft); font-size: 12px; }
+    .autocomplete-loading {
+      padding: 12px 16px; font-size: var(--text-small); color: var(--color-text-soft);
+      font-style: italic;
+    }
+    /* RESULT */
+    .checker-result {
+      margin-top: 16px; padding: 16px 20px; border-radius: var(--radius-md);
+      font-weight: 700; display: none;
+    }
+    .checker-result.inside { background: #FFF8ED; color: var(--color-orange); border: 1px solid var(--color-orange); }
+    .checker-result.outside { background: #F0F9F9; color: var(--color-green); border: 1px solid var(--color-green); }
+
+    /* DOWNLOAD */
+    .download-card {
+      background: var(--color-text);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .download-info {}
+    .download-title { font-size: var(--text-h2); font-weight: 900; margin-bottom: 4px; }
+    .download-desc { font-size: var(--text-small); color: #a0a0b8; }
+    .download-btn {
+      height: 52px; padding: 0 24px; background: var(--color-yellow); color: var(--color-text);
+      border: none; border-radius: var(--radius-md); font-family: var(--font-main);
+      font-size: var(--text-body); font-weight: 900; cursor: pointer; white-space: nowrap; text-decoration: none;
+      display: inline-flex; align-items: center;
+    }
+
+    .data-table-wrap { overflow-x: auto; margin: 24px 0; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-small); }
+    .data-table th { background: var(--color-text); color: #fff; font-weight: 700; text-align: left; padding: 12px 16px; font-size: var(--text-label); text-transform: uppercase; letter-spacing: 0.06em; }
+    .data-table td { padding: 12px 16px; border-bottom: 1px solid #EEEEF4; vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: var(--color-bg-surface); }
+
+    .related-section { border-top: 1px solid #EEEEF4; padding: 40px 0; }
+    .related-label { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: 20px; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .related-card { display: block; background: var(--color-bg-surface); border-radius: var(--radius-md); padding: 20px; text-decoration: none; color: var(--color-text); border: 1px solid #EEEEF4; transition: border-color 0.15s, box-shadow 0.15s; }
+    .related-card:hover { border-color: var(--color-purple); box-shadow: 0 2px 12px rgba(107,100,212,0.1); }
+    .related-card-badge { font-size: var(--text-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-purple); margin-bottom: 8px; }
+    .related-card-title { font-size: var(--text-body); font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
+    .related-card-desc { font-size: var(--text-small); color: var(--color-text-soft); line-height: 1.5; }
+    .email-section { background: var(--color-bg-warm); border-radius: var(--radius-lg); padding: 32px 28px; margin: 40px 0; border: 1px solid #EDE9D0; }
+    .email-heading { font-size: var(--text-h2); font-weight: 900; margin-bottom: 8px; }
+    .email-sub { font-size: var(--text-body); color: var(--color-text-soft); margin-bottom: 20px; line-height: 1.5; }
+    .email-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .email-input { flex: 1; min-width: 200px; height: 52px; border: 2px solid #E5E4F0; border-radius: var(--radius-md); padding: 0 16px; font-family: var(--font-main); font-size: var(--text-body); color: var(--color-text); background: #fff; outline: none; }
+    .email-input:focus { border-color: var(--color-purple); }
+    .email-input::placeholder { color: var(--color-text-soft); }
+    .email-btn { height: 52px; padding: 0 24px; background: var(--color-text); color: #fff; border: none; border-radius: var(--radius-md); font-family: var(--font-main); font-size: var(--text-body); font-weight: 700; cursor: pointer; }
+    .email-disclaimer { font-size: 12px; color: var(--color-text-soft); margin-top: 10px; }
+    .site-footer { background: var(--color-text); color: #a0a0b8; padding: 40px var(--content-pad); margin-top: 60px; }
+    .footer-inner { max-width: var(--content-max); margin: 0 auto; }
+    .footer-logo { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .footer-logo span { color: var(--color-yellow); }
+    .footer-disclaimer { font-size: var(--text-small); line-height: 1.6; margin-bottom: 24px; max-width: 560px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-small); }
+    .footer-links a { color: #a0a0b8; text-decoration: none; }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy { margin-top: 24px; font-size: 12px; color: #6b6b80; }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="https://lv2park.com" class="site-logo">LV2 <span>PARK</span></a>
+    <div class="nav-links">
+      <a href="https://lv2park.com" class="nav-link">Today</a>
+      <a href="/lv2-parking-rules" class="nav-link">Rules</a>
+      <a href="/lv2-parking-map" class="nav-link">Map</a>
+      <a href="/cubs-game-day-parking" class="nav-link">Game Day</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="article-wrap">
+
+      <header class="article-hero">
+        <span class="article-badge">Zone Map</span>
+        <h1 class="article-h1">LV2 Parking Map Chicago</h1>
+        <p class="article-intro">The interactive LV2 zone map for Wrigleyville. Check if your address is inside the zone, see the boundary streets, and download a printable version.</p>
+        <p class="article-meta">Data from City of Chicago &middot; <a href="https://lv2park.com">Check today's LV2 status &rarr;</a></p>
+      </header>
+
+      <article class="article-body">
+
+        <h2>Interactive LV2 Zone Map</h2>
+        <p>The map below shows the LV2 permit parking zone boundary (purple) and the streets inside the zone. Zoom in on your block to see exactly where the boundary falls.</p>
+
+        <div class="map-card">
+          <div id="lv2-map"></div>
+          <div class="map-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#6B64D4;opacity:0.7;"></div>
+              LV2 Zone
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#E84040;opacity:0.7;"></div>
+              High-ticket streets (FOIA data)
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#F0A030;opacity:0.7;"></div>
+              Medium-ticket streets
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#5B9EA0;"></div>
+              Wrigley Field
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-label">Map note</div>
+          <p>The LV2 zone boundary shown is approximate based on city permit zone data. Street-level enforcement can vary. Always check the signs on your specific block. The permit sign reads: "RESIDENTIAL PERMIT PARKING LV2."</p>
+        </div>
+
+        <h2>Check If Your Address Is in the LV2 Zone</h2>
+        <p>Enter your street address to see if you're inside the LV2 zone. Residents inside the zone need a permit on game days. Visitors inside the zone cannot park during enforcement hours (5–10 PM).</p>
+
+        <div class="address-checker">
+          <div class="checker-heading">Is my address in the LV2 zone?</div>
+          <p class="checker-sub">Enter a Chicago street address to check the zone boundary.</p>
+          <div class="checker-form">
+            <div class="checker-input-wrap">
+              <input class="checker-input" type="text" id="address-input"
+                placeholder="e.g. 3700 N Sheffield Ave, Chicago"
+                autocomplete="off">
+              <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+            </div>
+            <button class="checker-btn" onclick="checkAddress()">Check Address</button>
+          </div>
+          <div class="checker-result" id="checker-result"></div>
+        </div>
+
+        <h2>LV2 Zone Boundary Streets</h2>
+        <p>The LV2 zone covers the dense residential blocks immediately surrounding Wrigley Field. The rough boundaries:</p>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Direction</th><th>Boundary street</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>North</td><td>Irving Park Road (4000 N)</td><td>Northern edge of zone</td></tr>
+              <tr><td>South</td><td>Belmont Avenue (3200 N)</td><td>Southern edge, varies by block</td></tr>
+              <tr><td>West</td><td>Clark Street (700 W)</td><td>Western edge along Clark</td></tr>
+              <tr><td>East</td><td>Halsted Street (800 W)</td><td>Eastern edge varies</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>The zone is not a perfect rectangle. Some blocks at the edges have partial coverage. The address checker above uses the official zone GeoJSON to give you a precise answer for your address.</p>
+
+        <h2>Streets with the Most LV2 Tickets (FOIA Data)</h2>
+        <p>Using a public records request, we obtained data on 9,434 LV2 parking tickets issued between 2018 and 2023. These are the streets where enforcement is heaviest:</p>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Street</th><th>Tickets (2018–2023)</th><th>Risk level</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>N Sheffield Ave</td><td>Highest concentration</td><td style="color:var(--color-red);font-weight:700;">High</td></tr>
+              <tr><td>N Kenmore Ave</td><td>High concentration</td><td style="color:var(--color-red);font-weight:700;">High</td></tr>
+              <tr><td>N Clifton Ave</td><td>High concentration</td><td style="color:var(--color-red);font-weight:700;">High</td></tr>
+              <tr><td>N Seminary Ave</td><td>Medium concentration</td><td style="color:var(--color-orange);font-weight:700;">Medium</td></tr>
+              <tr><td>N Southport Ave</td><td>Medium concentration</td><td style="color:var(--color-orange);font-weight:700;">Medium</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>See the full data breakdown in the <a href="/wrigley-parking-ticket-data">LV2 ticket data story</a>, including breakdowns by game type and month.</p>
+
+        <h2>Download the Printable LV2 Zone Map</h2>
+        <p>Need the map offline? Enter your email below and we'll send you a high-resolution printable PDF of the LV2 zone, including boundary streets and key landmarks.</p>
+
+        <div class="download-card">
+          <div class="download-info">
+            <div class="download-title">Printable LV2 Zone Map</div>
+            <div class="download-desc">PDF, 8.5&times;11, print-ready &middot; Updated 2026</div>
+          </div>
+          <a href="#download-form" class="download-btn">Get the PDF &darr;</a>
+        </div>
+
+        <div id="download-form" class="email-section">
+          <div class="email-heading">Send me the zone map PDF.</div>
+          <p class="email-sub">Enter your email and we'll send you the printable LV2 zone map plus a heads-up before each LV2 day.</p>
+          <form class="email-form" action="https://lv2park-worker.adam-945.workers.dev/subscribe" method="POST">
+            <input type="hidden" name="list" value="lv2-map-download">
+            <input class="email-input" type="email" name="email" placeholder="your@email.com" required>
+            <button class="email-btn" type="submit">Send the Map</button>
+          </form>
+          <p class="email-disclaimer">You'll get the PDF immediately plus the weekly LV2 digest. Unsubscribe any time.</p>
+        </div>
+
+        <h2>Neighboring Permit Zones</h2>
+        <p>The LV2 zone sits within a larger permit parking area. The streets just outside the LV2 boundary may fall under Zone 383 (Lakeview) or Zone 143 (Lincoln Park). Those zones operate year-round, not just on game days.</p>
+        <p>For a full comparison of how the zones overlap, see the <a href="/chicago-permit-zones-wrigley">Chicago permit zones guide</a>.</p>
+
+      </article>
+
+      <div class="related-section">
+        <div class="related-label">Related Resources</div>
+        <div class="related-grid">
+          <a href="/lv2-parking-rules" class="related-card">
+            <div class="related-card-badge">Rules</div>
+            <div class="related-card-title">LV2 Parking Rules Explained</div>
+            <div class="related-card-desc">When it activates, who's exempt, how to get a permit, and how to contest a ticket.</div>
+          </a>
+          <a href="/wrigley-parking-ticket-data" class="related-card">
+            <div class="related-card-badge">Data</div>
+            <div class="related-card-title">9,434 Tickets: FOIA Data Analysis</div>
+            <div class="related-card-desc">Which streets get the most tickets and when. Data from 6 years of city records.</div>
+          </a>
+          <a href="/chicago-permit-zones-wrigley" class="related-card">
+            <div class="related-card-badge">Zones</div>
+            <div class="related-card-title">Chicago Permit Zones Near Wrigley</div>
+            <div class="related-card-desc">How LV2, Zone 383, and Zone 143 overlap in the Lakeview neighborhood.</div>
+          </a>
+          <a href="/cubs-game-day-parking" class="related-card">
+            <div class="related-card-badge">Game Day</div>
+            <div class="related-card-title">Cubs Game Day Parking Guide</div>
+            <div class="related-card-desc">Where to park on game days. Garages, SpotHero, CTA, and the free Cubs shuttle.</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">LV2 <span>PARK</span></div>
+      <p class="footer-disclaimer">LV2 Park pulls from the MLB schedule and Ticketmaster, the same sources the 44th Ward uses to post LV2 enforcement dates. Zone map data is approximate. Always verify with the signs on your block or the 44th Ward site.</p>
+      <div class="footer-links">
+        <a href="https://lv2park.com">Today's Status</a>
+        <a href="/lv2-parking-rules">LV2 Rules</a>
+        <a href="/lv2-parking-map">Zone Map</a>
+        <a href="/cubs-game-day-parking">Game Day Parking</a>
+        <a href="/wrigley-field-parking-guide">Wrigley Parking Guide</a>
+        <a href="/wrigley-parking-ticket-data">Ticket Data</a>
+        <a href="/chicago-permit-zones-wrigley">Permit Zones</a>
+        <a href="/wrigley-field-parking-shuttle">Shuttle Guide</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 LV2 Park &middot; Not affiliated with the Chicago Cubs, Wrigley Field, or the City of Chicago.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Leaflet map centered on Wrigley Field
+    var map = L.map('lv2-map', { zoomControl: true, scrollWheelZoom: false }).setView([41.9484, -87.6553], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Wrigley Field marker
+    var wrigleyIcon = L.divIcon({
+      html: '<div style="background:#5B9EA0;color:#fff;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;white-space:nowrap;font-family:Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);">Wrigley Field</div>',
+      className: '', iconAnchor: [40, 20]
+    });
+    L.marker([41.9484, -87.6553], { icon: wrigleyIcon }).addTo(map);
+
+    // Approximate LV2 zone polygon (Wrigleyville)
+    var lv2Zone = L.polygon([
+      [41.9580, -87.6700],
+      [41.9580, -87.6480],
+      [41.9360, -87.6480],
+      [41.9360, -87.6700]
+    ], {
+      color: '#6B64D4', weight: 2, opacity: 0.8,
+      fillColor: '#6B64D4', fillOpacity: 0.12
+    }).addTo(map);
+
+    lv2Zone.bindTooltip('LV2 Permit Zone', { permanent: false, direction: 'center' });
+
+    // ── AUTOCOMPLETE + ADDRESS CHECKER ───────────────────
+
+    const input     = document.getElementById('address-input');
+    const dropdown  = document.getElementById('autocomplete-dropdown');
+    const resultBox = document.getElementById('checker-result');
+
+    let debounceTimer = null;
+    let activeIndex   = -1;
+    let suggestions   = [];
+
+    // Nominatim geocoder -- free, no key, restricted to Chicago bounding box
+    const CHICAGO_VIEW = 'viewbox=-87.9401,41.6446,-87.5239,42.0230&bounded=1';
+
+    async function fetchSuggestions(query) {
+      if (query.length < 4) return [];
+      const url = 'https://nominatim.openstreetmap.org/search?q='
+        + encodeURIComponent(query + ', Chicago, IL')
+        + '&format=json&limit=5&addressdetails=1&' + CHICAGO_VIEW;
+      try {
+        const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+        const data = await res.json();
+        return data.filter(d => d.address && d.address.state === 'Illinois');
+      } catch { return []; }
+    }
+
+    function formatSuggestion(item) {
+      const a = item.address;
+      const main = [a.house_number, a.road].filter(Boolean).join(' ') || item.display_name.split(',')[0];
+      const sub  = [a.suburb || a.neighbourhood, a.city || a.town, a.postcode].filter(Boolean).join(', ');
+      return { main, sub, lat: parseFloat(item.lat), lon: parseFloat(item.lon) };
+    }
+
+    function renderDropdown(items) {
+      if (!items.length) { closeDropdown(); return; }
+      suggestions = items.map(formatSuggestion);
+      activeIndex = -1;
+      dropdown.innerHTML = suggestions.map((s, i) =>
+        `<div class="autocomplete-item" data-index="${i}" onmousedown="selectSuggestion(${i})">
+          <span class="autocomplete-item-icon">&#9679;</span>
+          <div>
+            <div class="autocomplete-item-main">${s.main}</div>
+            <div class="autocomplete-item-sub">${s.sub}</div>
+          </div>
+        </div>`
+      ).join('');
+      dropdown.classList.add('visible');
+      input.classList.add('open');
+    }
+
+    function closeDropdown() {
+      dropdown.classList.remove('visible');
+      input.classList.remove('open');
+      activeIndex = -1;
+    }
+
+    function selectSuggestion(i) {
+      const s = suggestions[i];
+      input.value = s.main + (s.sub ? ', ' + s.sub : '');
+      closeDropdown();
+      checkAddressFromCoords(s.lat, s.lon, input.value);
+    }
+
+    // Keyboard navigation
+    input.addEventListener('keydown', function(e) {
+      const items = dropdown.querySelectorAll('.autocomplete-item');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = Math.min(activeIndex + 1, items.length - 1);
+        items.forEach((el, i) => el.style.background = i === activeIndex ? '#F0F4FF' : '');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, 0);
+        items.forEach((el, i) => el.style.background = i === activeIndex ? '#F0F4FF' : '');
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIndex >= 0 && suggestions[activeIndex]) selectSuggestion(activeIndex);
+        else checkAddress();
+      } else if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    });
+
+    input.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      const val = this.value.trim();
+      if (val.length < 4) { closeDropdown(); return; }
+      dropdown.innerHTML = '<div class="autocomplete-loading">Searching...</div>';
+      dropdown.classList.add('visible');
+      input.classList.add('open');
+      debounceTimer = setTimeout(async () => {
+        const results = await fetchSuggestions(val);
+        renderDropdown(results);
+      }, 350);
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!input.contains(e.target) && !dropdown.contains(e.target)) closeDropdown();
+    });
+
+    // ── ZONE CHECK ────────────────────────────────────────
+
+    const LV2_BOUNDS = { minLat: 41.936, maxLat: 41.958, minLon: -87.670, maxLon: -87.648 };
+
+    function isInsideLV2(lat, lon) {
+      return lat >= LV2_BOUNDS.minLat && lat <= LV2_BOUNDS.maxLat &&
+             lon >= LV2_BOUNDS.minLon && lon <= LV2_BOUNDS.maxLon;
+    }
+
+    function showResult(inside) {
+      resultBox.style.display = 'block';
+      if (inside) {
+        resultBox.className = 'checker-result inside';
+        resultBox.innerHTML = '&#9888; This address is inside the LV2 zone. LV2 restrictions apply 5&ndash;10 PM on game days and major events. Check the signs on your block to confirm.';
+      } else {
+        resultBox.className = 'checker-result outside';
+        resultBox.innerHTML = '&#10003; This address appears to be outside the LV2 zone. Always verify with the signs on your block. <a href="/lv2-parking-rules" style="color:inherit;">Learn more about LV2 rules.</a>';
+      }
+    }
+
+    function checkAddressFromCoords(lat, lon, addressText) {
+      const inside = isInsideLV2(lat, lon);
+      showResult(inside);
+      logSearch(addressText, inside ? 'inside' : 'outside', lat, lon, true);
+      if (window._searchMarker) map.removeLayer(window._searchMarker);
+      const color = inside ? '#F0A030' : '#5B9EA0';
+      window._searchMarker = L.circleMarker([lat, lon], {
+        radius: 10, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9
+      }).addTo(map).bindPopup(addressText).openPopup();
+      map.setView([lat, lon], 16);
+    }
+
+    async function checkAddress() {
+      const addr = input.value.trim();
+      if (!addr) return;
+      closeDropdown();
+      resultBox.style.display = 'block';
+      resultBox.className = 'checker-result';
+      resultBox.innerHTML = 'Checking...';
+      const results = await fetchSuggestions(addr);
+      if (results.length > 0) {
+        const s = formatSuggestion(results[0]);
+        checkAddressFromCoords(s.lat, s.lon, addr);
+      } else {
+        // Fallback keyword match
+        const lower = addr.toLowerCase();
+        const inside = ['sheffield','kenmore','clifton','seminary','southport','waveland',
+          'addison','clark','halsted','cornelia','school','roscoe','newport','grace',
+          'patterson','brompton','racine','lakewood','hermitage'].some(s => lower.includes(s));
+        showResult(inside);
+        logSearch(addr, inside ? 'inside' : 'outside', null, null, false);
+      }
+    }
+
+    function logSearch(address, result, lat, lon, resultFound) {
+      lv2Track('/log-search', {
+        address, result,
+        lat: lat !== null ? lat : '',
+        lon: lon !== null ? lon : '',
+        page: 'lv2-parking-map',
+        resultFound: resultFound || false
+      });
+    }
+  </script>
+
+
+  <script>
+    // ── LV2 Analytics ─────────────────────────────────────────────────────────
+    const LV2_WORKER = 'https://lv2park-worker.adam-945.workers.dev';
+    function getSessionId() {
+      let id = sessionStorage.getItem('lv2_sid');
+      if (!id) { id = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem('lv2_sid', id); }
+      return id;
+    }
+    function getDevice() { return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'; }
+    function getReferrer() { return document.referrer || 'direct'; }
+    function lv2Track(endpoint, data) {
+      try {
+        fetch(LV2_WORKER + endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...data, referrer: getReferrer(), device: getDevice(), sessionId: getSessionId() })
+        });
+      } catch(e) {}
+    }
+    document.addEventListener('click', function(e) {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+      const href = a.href || '';
+      if (href.includes('spothero') || href.includes('parkwhiz') || a.dataset.track) {
+        lv2Track('/log-click', { link: a.textContent.trim().slice(0, 60), destination: href, page: location.pathname });
+      }
+    });
+  </script>
+</body>
+</html>

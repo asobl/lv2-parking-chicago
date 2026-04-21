@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LV2 Park — Publish Kit</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Inter', system-ui, sans-serif;
+    background: #f5f5f7;
+    color: #1a1a2e;
+    padding: 48px 24px 80px;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  h1 { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+  .subtitle { font-size: 15px; color: #666; margin-bottom: 48px; }
+
+  .section {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e6;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e6;
+    background: #fafafa;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .platform-badge {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .badge-medium   { background: #e8f5e9; color: #2e7d32; }
+  .badge-linkedin { background: #e3f2fd; color: #1565c0; }
+  .badge-reddit   { background: #fff3e0; color: #e65100; }
+  .badge-facebook { background: #ede7f6; color: #4527a0; }
+  .badge-images   { background: #fce4ec; color: #880e4f; }
+
+  .copy-btn {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    background: #1a1a2e;
+    color: #F5E030;
+    cursor: pointer;
+    letter-spacing: .02em;
+  }
+  .copy-btn:active { opacity: 0.7; }
+  .copy-btn.copied { background: #2e7d32; color: #fff; }
+
+  .content-box {
+    padding: 28px 28px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #222;
+    white-space: pre-wrap;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  .content-box.mono {
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+
+  /* Image recommendations */
+  .img-rec {
+    padding: 24px 28px;
+  }
+  .img-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e8e8f0;
+    margin-bottom: 12px;
+    background: #fafafa;
+  }
+  .img-item:last-child { margin-bottom: 0; }
+  .img-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: #C8C6D4;
+    flex-shrink: 0;
+    width: 32px;
+    padding-top: 2px;
+  }
+  .img-info { flex: 1; }
+  .img-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: #1a1a2e; }
+  .img-where { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .img-note { font-size: 13px; color: #555; line-height: 1.5; }
+  .img-how {
+    font-size: 12px;
+    color: #6B64D4;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 0 28px;
+  }
+
+  .article-meta {
+    padding: 16px 28px;
+    background: #f9f9fb;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    gap: 24px;
+  }
+  .article-meta span { font-weight: 700; color: #1a1a2e; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>LV2 Park — Publish Kit</h1>
+  <p class="subtitle">Copy-paste ready. Medium article + LinkedIn + Reddit + Roscoe Village Facebook.</p>
+
+  <!-- ── IMAGE RECOMMENDATIONS ───────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Medium Article</div>
+      <span class="platform-badge badge-images">Image Recommendations</span>
+    </div>
+    <div class="img-rec">
+
+      <div class="img-item">
+        <div class="img-num">1</div>
+        <div class="img-info">
+          <div class="img-where">Hero — top of article</div>
+          <div class="img-title">The OG image / site hero card</div>
+          <div class="img-note">The dark navy "Can I park in LV2 today without a ticket?" card. Already exists as og-image.png. Strong visual hook that matches the article's question.</div>
+          <div class="img-how">Use og-image.png from the repo, or screenshot lv2park.com on desktop.</div>
+        </div>
+      </div>
+
+      <div class="img-item">
+        <div class="img-num">2</div>
+        <div class="img-info">
+          <div class="img-where">After "9,434 tickets worth of people guessed wrong"</div>
+          <div class="img-title">Zone Explorer ticket heat map</div>
+          <div class="img-note">The full zone-explorer map with ticket dots visible. Shows the density — lots of red on the west side, empty east. Makes the FOIA data feel real and visual.</div>
+          <div class="img-how">Open lv2park.com/resources/lv2-zone-explorer/ → screenshot at desktop width with all layers on.</div>
+        </div>
+      </div>
+
+      <div class="img-item">
+        <div class="img-num">3</div>
+        <div class="img-info">
+          <div class="img-where">After "Marshfield alone had 2,269 tickets"</div>
+          <div class="img-title">Data Explorer — top streets table</div>
+          <div class="img-note">The LV2 data explorer showing the top ticketed streets. Concrete numbers on screen reinforce the claim. The bar chart or address list works.</div>
+          <div class="img-how">Open lv2park.com/resources/lv2-data-explorer/ → screenshot the top-streets section.</div>
+        </div>
+      </div>
+
+      <div class="img-item">
+        <div class="img-num">4</div>
+        <div class="img-info">
+          <div class="img-where">After "it does one thing"</div>
+          <div class="img-title">lv2park.com homepage — YES or NO status</div>
+          <div class="img-note">The main hero showing the current day's status. Ideally on a game day so it shows "LV2 ACTIVE" in red/warning state. If not, the SAFE state still works. Mobile screenshot is fine here — it's a mobile-first site.</div>
+          <div class="img-how">Screenshot lv2park.com on iPhone or in browser at 390px width.</div>
+        </div>
+      </div>
+
+      <div class="img-item">
+        <div class="img-num">5</div>
+        <div class="img-info">
+          <div class="img-where">Optional — after "week ahead"</div>
+          <div class="img-title">The week view on lv2park.com</div>
+          <div class="img-note">The 7-day schedule showing which days have games. Good for showing the "plan ahead" angle. Only include if the article feels like it needs another visual break.</div>
+          <div class="img-how">Screenshot the week section on the lv2park.com homepage.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── MEDIUM ARTICLE ──────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Medium Article</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="platform-badge badge-medium">Medium</span>
+        <button class="copy-btn" onclick="copySection('medium-text', this)">Copy</button>
+      </div>
+    </div>
+    <div class="article-meta">
+      <div>Title: <span>I had 9,434 parking tickets sitting on my laptop and did nothing with them for two years</span></div>
+      <div>~650 words</div>
+    </div>
+    <div class="content-box" id="medium-text">I had 9,434 parking tickets sitting on my laptop and did nothing with them for two years.
+
+In 2023, I filed a FOIA request with the City of Chicago asking for every LV2 parking ticket issued near Wrigley Field.
+
+The city sent me a spreadsheet. 9,434 tickets. 2018 to 2023. Every address, every fine, every date. I put it in a folder and forgot about it.
+
+Fast forward to this spring. A friend texted me before a Cubs game: "Is LV2 active today or can I just park there?"
+
+I didn't know. I looked it up manually. It took ten minutes and three different sites. The answer was obvious once I found it, but finding it was annoying enough that I thought: someone should build a thing that just answers this question.
+
+Then I remembered the spreadsheet.
+
+---
+
+A little context if you don't live in Chicago. The LV2 zone is the residential parking enforcement zone around Wrigley Field. On game days and event days, you need a permit. Park without one and you get a ticket. The zone has been around for years, but there's no single place that tells you whether enforcement is active today, right now, before you drive there.
+
+Most people either know someone who knows, or they guess, or they circle the block looking for street sweeping signs and hoping.
+
+9,434 tickets worth of people guessed wrong.
+
+---
+
+I spent a weekend pulling the data out of the folder, building a map with it, and connecting it to the Cubs and Ticketmaster schedules so the site would update automatically.
+
+The site is called LV2 Park. It lives at lv2park.com. It does one thing: tells you if LV2 parking enforcement is active today, yes or no.
+
+It also shows the week ahead, a heat map of where tickets cluster by street (the blocks west of Ashland got hammered -- Marshfield alone had 2,269 tickets over five years), and a full schedule so you know which game days to avoid.
+
+The whole thing runs automatically. Four times a day it checks whether there's a game, whether events are scheduled, whether you should park there or not. No manual updates. I don't have to touch it.
+
+---
+
+Here's what I keep coming back to.
+
+I had the data in 2023. The question my friend asked has been asked thousands of times. Every Cubs fan, every Lakeview resident who parks on the street, every person who moved to Roscoe Village and had no idea the zone existed until they got a $65 ticket on a Tuesday afternoon in October. The question has always been there.
+
+I just sat on the answer for two years.
+
+This is the part of building I try to be honest about: ideas are not the bottleneck. I have a hard drive full of data, notes, half-built tools, and FOIA requests that never became anything. The bottleneck is the thing that makes you actually finish. For me it was a friend asking a simple question.
+
+Go check it out: lv2park.com. And if you've gotten an LV2 ticket in the past six years, your address is probably on the heat map.</div>
+  </div>
+
+  <!-- ── LINKEDIN ─────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">LinkedIn Post</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="platform-badge badge-linkedin">LinkedIn</span>
+        <button class="copy-btn" onclick="copySection('linkedin-text', this)">Copy</button>
+      </div>
+    </div>
+    <div class="content-box mono" id="linkedin-text">A friend texted me before a Cubs game: "Is LV2 active today or can I just park?"
+
+I didn't know. It took me ten minutes to find the answer.
+
+I also had 9,434 LV2 parking tickets sitting on my laptop from a 2023 FOIA request. I had done absolutely nothing with them.
+
+So I built lv2park.com.
+
+It does one thing: tells you if LV2 parking enforcement is active today. Yes or no. Updates automatically four times a day based on the Cubs schedule. Shows the week ahead so you can plan.
+
+The FOIA data is in there too. Heat map of every ticket, street by street, 2018-2023. Marshfield Ave had 2,269 tickets in five years. Some streets right next to Wrigley show zero, which means either the city didn't ticket there or the records are missing. Still working that one out.
+
+The thing I keep thinking about: I had the data and the question both in 2023. I just needed a friend to ask out loud before I did anything with it.
+
+lv2park.com -- free, no signup.
+
+#Chicago #BuildingInPublic #IndieFounder</div>
+  </div>
+
+  <!-- ── REDDIT ──────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Reddit — r/chicago</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="platform-badge badge-reddit">Reddit</span>
+        <button class="copy-btn" onclick="copySection('reddit-text', this)">Copy</button>
+      </div>
+    </div>
+    <div class="article-meta">
+      <div>Post title: <span>Built a site that answers "is LV2 parking active today" — one click, auto-updates</span></div>
+    </div>
+    <div class="content-box mono" id="reddit-text">I live near Wrigley and kept getting the question from friends before games: can I park in LV2 today without getting a ticket?
+
+There was no clean answer anywhere, so I built one. lv2park.com. Updates four times a day based on the Cubs and Ticketmaster schedule. Shows the week ahead so you can plan around game days.
+
+I also FOIA'd 9,434 LV2 tickets from 2018-2023 and mapped them by street. Marshfield got absolutely hammered (2,269 tickets). There's a weird gap in the data for the streets right next to Wrigley on the east side -- either the city wasn't enforcing there or the records are missing, not sure which.
+
+Anyway. Free, no signup, just the answer. Figured this sub would find it useful around opening day.</div>
+  </div>
+
+  <!-- ── FACEBOOK ────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Roscoe Village Community Facebook</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="platform-badge badge-facebook">Facebook</span>
+        <button class="copy-btn" onclick="copySection('facebook-text', this)">Copy</button>
+      </div>
+    </div>
+    <div class="content-box mono" id="facebook-text">Hey neighbors. Built something that might save a few people a headache this Cubs season.
+
+lv2park.com tells you whether LV2 parking enforcement is active today -- yes or no. It checks automatically so you don't have to guess before you park.
+
+I also pulled five years of LV2 ticket data through a city FOIA request and mapped it by street. If you've parked on Roscoe, Cornelia, or Grace during a game and come back to a ticket, you're very not alone. Marshfield between Roscoe and Irving had 2,269 tickets between 2018 and 2023.
+
+Free, no sign-up. Just the answer. Hope it's useful.</div>
+  </div>
+
+</div>
+
+<script>
+function copySection(id, btn) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

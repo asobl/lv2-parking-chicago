@@ -24,6 +24,7 @@ jobs:
       # No pip installs needed -- monthly_audit.py uses stdlib only
 
       - name: Run monthly audit
+        working-directory: product/web
         env:
           TM_API_KEY:         ${{ secrets.TM_API_KEY }}
           RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}

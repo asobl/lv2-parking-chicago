@@ -198,7 +198,7 @@ def api_post(path, payload):
 def get_subscriber_count():
     """Returns subscriber count from Resend, or None on error."""
     req = urllib.request.Request(
-        f'https://api.resend.com/audiences/{RESEND_AUDIENCE_ID}/contacts',
+        f'https://api.resend.com/contacts?segment_id={RESEND_AUDIENCE_ID}',
         headers={'Authorization': f'Bearer {RESEND_API_KEY}'}
     )
     try:
@@ -257,10 +257,10 @@ def main():
 
     print('[digest] Creating broadcast...')
     broadcast = api_post('/broadcasts', {
-        'audience_id': RESEND_AUDIENCE_ID,
-        'from':        FROM_EMAIL,
-        'subject':     subject,
-        'html':        html,
+        'segment_id': RESEND_AUDIENCE_ID,
+        'from':       FROM_EMAIL,
+        'subject':    subject,
+        'html':       html,
     })
 
     if not broadcast or 'id' not in broadcast:

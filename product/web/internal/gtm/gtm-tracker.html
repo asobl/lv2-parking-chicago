@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTM Tracker -- LV2 Park (Internal)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* ── TOKENS (mirrors style.css) ──────────────────────── */
+    :root {
+      --bg:         #F5F4F0;
+      --bg-warm:    #FFFBF0;
+      --bg-white:   #ffffff;
+      --text:       #1A1A2E;
+      --text-soft:  #6B6B80;
+      --border:     #C8C6D4;
+      --yellow:     #F5E030;
+      --purple:     #6B64D4;
+      --green:      #5B9EA0;
+      --orange:     #F0A030;
+      --red:        #E84040;
+      --indigo:     #5558cc;
+
+      --r-sm: 8px;
+      --r-md: 16px;
+      --r-lg: 24px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* ── TOP BAR ──────────────────────────────────────────── */
+    .top-bar {
+      background: var(--text);
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .top-bar-logo {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+    .top-bar-logo span { color: var(--yellow); }
+    .top-bar-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.1);
+      color: #9090b0;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .top-bar-note {
+      font-size: 11px;
+      color: #505068;
+    }
+
+    /* ── PAGE WRAP ─────────────────────────────────────────── */
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── PAGE HEADER ───────────────────────────────────────── */
+    .page-header {
+      margin-bottom: 32px;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+    .save-indicator {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      background: #EDF6F6;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-left: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .save-indicator.show { opacity: 1; }
+
+    /* ── SECTION LABEL ─────────────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+
+    /* ── METRICS GRID ──────────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 700px) {
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 440px) {
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+
+    .metric-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 20px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .metric-card.highlight {
+      border-left: 3px solid var(--purple);
+    }
+    .metric-card.complete {
+      border-left: 3px solid var(--green);
+      background: #f4fcfc;
+    }
+    .metric-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+    .metric-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .metric-current {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--text);
+    }
+    /* Editable metric input */
+    .metric-input {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--text);
+      border: none;
+      background: transparent;
+      width: 72px;
+      padding: 0;
+      outline: none;
+      cursor: text;
+      -moz-appearance: textfield;
+    }
+    .metric-input::-webkit-inner-spin-button,
+    .metric-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .metric-input:focus {
+      border-bottom: 2px dashed var(--purple);
+    }
+    .metric-target {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-soft);
+    }
+    .metric-sublabel {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    /* Progress bar */
+    .progress-bar-track {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--purple);
+      transition: width 0.4s ease;
+    }
+    .progress-bar-fill.green { background: var(--green); }
+    .progress-bar-fill.yellow { background: var(--orange); }
+    .progress-bar-fill.complete { background: var(--green); }
+
+    /* Revenue status card */
+    .revenue-status {
+      font-size: 15px;
+      font-weight: 900;
+      padding: 6px 0 4px;
+    }
+    .revenue-status.locked { color: var(--red); }
+    .revenue-status.unlocked { color: var(--green); }
+
+    /* ── OUTREACH BOARD ────────────────────────────────────── */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .board {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+
+    .board-header {
+      display: grid;
+      grid-template-columns: 100px 140px 1fr 110px 1fr;
+      gap: 0;
+      background: var(--text);
+      padding: 10px 20px;
+    }
+    .board-header-cell {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5a5a72;
+    }
+
+    .board-row {
+      display: grid;
+      grid-template-columns: 100px 140px 1fr 110px 1fr;
+      gap: 0;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .board-row:last-child { border-bottom: none; }
+    .board-row:hover { background: #fafaf8; }
+
+    .board-cell {
+      font-size: 13px;
+      color: var(--text);
+      padding-right: 12px;
+    }
+    .board-cell.soft { color: var(--text-soft); }
+
+    .board-cell-editable {
+      font-size: 13px;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'Inter', system-ui, sans-serif;
+      width: 100%;
+      padding: 2px 4px;
+      border-radius: 4px;
+      cursor: text;
+    }
+    .board-cell-editable:focus {
+      background: #F0EFFC;
+      outline: 1px solid var(--purple);
+    }
+    .board-cell-editable::placeholder { color: var(--border); }
+
+    @media (max-width: 700px) {
+      .board-header { display: none; }
+      .board-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: var(--r-sm);
+      white-space: nowrap;
+    }
+    .badge-draft    { background: #E8E8F0; color: var(--text-soft); }
+    .badge-sent     { background: #FEF3E8; color: #b85a00; }
+    .badge-responded { background: #EEF0FB; color: var(--indigo); }
+    .badge-linked   { background: #EDF6F6; color: #2e7d7f; }
+    .badge-pass     { background: #FDEAEA; color: #a02020; }
+
+    /* Status select dropdown */
+    .status-select {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: var(--r-sm);
+      border: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236B6B80'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 7px center;
+      padding-right: 20px;
+    }
+    .status-select.draft     { background-color: #E8E8F0; color: var(--text-soft); }
+    .status-select.sent      { background-color: #FEF3E8; color: #b85a00; }
+    .status-select.responded { background-color: #EEF0FB; color: var(--indigo); }
+    .status-select.linked    { background-color: #EDF6F6; color: #2e7d7f; }
+    .status-select.pass      { background-color: #FDEAEA; color: #a02020; }
+
+    /* ── ADD ROW BUTTON ────────────────────────────────────── */
+    .add-row-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+      background: transparent;
+      border: none;
+      border-top: 1px dashed var(--border);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .add-row-btn:hover { background: #F4F3FC; }
+
+    /* ── BACKLINK TARGETS TABLE ─────────────────────────────── */
+    .target-list {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .target-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .target-row:last-child { border-bottom: none; }
+    .target-row:hover { background: #fafaf8; }
+    .target-check {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .target-check.checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .target-check.checked::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translateY(-1px);
+    }
+    .target-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+    .target-name.done {
+      text-decoration: line-through;
+      color: var(--text-soft);
+    }
+    .target-desc {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .tier-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .tier-1 { background: #F0EFFC; color: var(--purple); }
+    .tier-2 { background: #EEF0FB; color: var(--indigo); }
+    .tier-3 { background: #E8E8F0; color: var(--text-soft); }
+
+    /* ── CHANNEL STATUS ─────────────────────────────────────── */
+    .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .channel-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 18px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .channel-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .channel-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .channel-note {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+    .channel-select {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 22px 4px 9px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      flex-shrink: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236B6B80'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 6px center;
+    }
+
+    /* ── NEXT ACTIONS ───────────────────────────────────────── */
+    .actions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .action-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+    }
+    .action-check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .action-check.checked {
+      background: var(--purple);
+      border-color: var(--purple);
+    }
+    .action-check.checked::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translateY(-1px);
+    }
+    .action-text {
+      flex: 1;
+    }
+    .action-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .action-title.done {
+      text-decoration: line-through;
+      color: var(--text-soft);
+    }
+    .action-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+    .action-priority {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .pri-now   { background: #FEF3E8; color: #b85a00; }
+    .pri-week  { background: #EEF0FB; color: var(--indigo); }
+    .pri-later { background: #E8E8F0; color: var(--text-soft); }
+
+    /* ── DIVIDER ────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 40px;
+    }
+
+    /* ── FOOTER NOTE ─────────────────────────────────────────── */
+    .internal-note {
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="top-bar-logo">LV2<span>Park</span></div>
+    <div class="top-bar-badge">Internal</div>
+  </div>
+  <div class="top-bar-right">
+    <div class="top-bar-note">Not committed to public repo</div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>GTM Tracker
+      <span id="save-indicator" class="save-indicator">Saved</span>
+    </h1>
+    <p>All metrics and status fields save automatically to localStorage. Update numbers by clicking and typing.</p>
+  </div>
+
+  <!-- METRICS -->
+  <div class="section-label">Key Metrics</div>
+  <div class="metrics-grid">
+
+    <!-- Sessions -->
+    <div class="metric-card highlight">
+      <div class="metric-label">Sessions / 28d</div>
+      <div class="metric-value-row">
+        <input class="metric-input" id="m-sessions" type="number" min="0" value="0" data-target="500">
+        <span class="metric-target">/ 500</span>
+      </div>
+      <div class="metric-sublabel">Target: FlexOffers approval</div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="pb-sessions" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Subscribers -->
+    <div class="metric-card highlight">
+      <div class="metric-label">Email Subscribers</div>
+      <div class="metric-value-row">
+        <input class="metric-input" id="m-subscribers" type="number" min="0" value="0" data-target="200">
+        <span class="metric-target">/ 200</span>
+      </div>
+      <div class="metric-sublabel">Target: local sponsorship pitch</div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill green" id="pb-subscribers" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Backlinks -->
+    <div class="metric-card">
+      <div class="metric-label">Tier 1 Backlinks</div>
+      <div class="metric-value-row">
+        <input class="metric-input" id="m-backlinks" type="number" min="0" value="0" data-target="2" style="width:48px;">
+        <span class="metric-target">/ 2</span>
+      </div>
+      <div class="metric-sublabel">Block Club + 44th Ward</div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill yellow" id="pb-backlinks" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="metric-card" id="revenue-card">
+      <div class="metric-label">Revenue Gate</div>
+      <div class="revenue-status locked" id="revenue-status">LOCKED</div>
+      <div class="metric-sublabel" id="revenue-sub">FlexOffers pending traffic</div>
+      <div style="margin-top:10px;">
+        <button onclick="toggleRevenue()" style="font-family:Inter,sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1.5px solid var(--border);background:transparent;color:var(--text-soft);cursor:pointer;">Toggle Status</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OUTREACH LOG -->
+  <div class="section">
+    <div class="section-label">Outreach Log</div>
+    <div class="board" id="outreach-board">
+      <div class="board-header">
+        <div class="board-header-cell">Date</div>
+        <div class="board-header-cell">Channel</div>
+        <div class="board-header-cell">Target</div>
+        <div class="board-header-cell">Status</div>
+        <div class="board-header-cell">Notes</div>
+      </div>
+      <!-- Rows injected by JS -->
+    </div>
+    <button class="add-row-btn" onclick="addOutreachRow()">+ Add row</button>
+  </div>
+
+  <!-- BACKLINK TARGETS -->
+  <div class="section">
+    <div class="section-label">Backlink Targets</div>
+    <div class="target-list" id="backlink-targets">
+
+      <div class="target-row" data-id="block-club">
+        <div class="target-check" onclick="toggleTarget(this)"></div>
+        <div style="flex:1;">
+          <div class="target-name">Block Club Chicago</div>
+          <div class="target-desc">FOIA data story -- highest priority. 1 editorial link = traffic spike.</div>
+        </div>
+        <div class="tier-badge tier-1">Tier 1</div>
+      </div>
+
+      <div class="target-row" data-id="44th-ward">
+        <div class="target-check" onclick="toggleTarget(this)"></div>
+        <div style="flex:1;">
+          <div class="target-name">44th Ward website</div>
+          <div class="target-desc">Resident resource link or newsletter mention. High relevance to LV2 zone.</div>
+        </div>
+        <div class="tier-badge tier-1">Tier 1</div>
+      </div>
+
+      <div class="target-row" data-id="lakeview-east">
+        <div class="target-check" onclick="toggleTarget(this)"></div>
+        <div style="flex:1;">
+          <div class="target-name">Lakeview East Chamber</div>
+          <div class="target-desc">Neighborhood resource page. lakevieweast.com</div>
+        </div>
+        <div class="tier-badge tier-2">Tier 2</div>
+      </div>
+
+      <div class="target-row" data-id="north-center">
+        <div class="target-check" onclick="toggleTarget(this)"></div>
+        <div style="flex:1;">
+          <div class="target-name">North Center Chamber</div>
+          <div class="target-desc">Adjacent neighborhood. northcenter.org</div>
+        </div>
+        <div class="tier-badge tier-2">Tier 2</div>
+      </div>
+
+      <div class="target-row" data-id="reddit-chicago">
+        <div class="target-check" onclick="toggleTarget(this)"></div>
+        <div style="flex:1;">
+          <div class="target-name">r/chicago (Reddit)</div>
+          <div class="target-desc">Traffic, not DA. Post once on a game day morning. FOIA angle.</div>
+        </div>
+        <div class="tier-badge tier-3">Tier 3</div>
+      </div>
+
+      <div class="target-row" data-id="nextdoor">
+        <div class="target-check" onclick="toggleTarget(this)"></div>
+        <div style="flex:1;">
+          <div class="target-name">Nextdoor Lakeview / Wrigleyville</div>
+          <div class="target-desc">Hyperlocal. High conversion to subscribers.</div>
+        </div>
+        <div class="tier-badge tier-3">Tier 3</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CHANNEL STATUS -->
+  <div class="section">
+    <div class="section-label">Channel Status</div>
+    <div class="channel-grid" id="channel-grid">
+
+      <div class="channel-card">
+        <div class="channel-card-top">
+          <div class="channel-name">Reddit r/chicago</div>
+          <select class="channel-select draft" onchange="updateChannelStatus(this)" data-id="reddit">
+            <option value="draft">Not Started</option>
+            <option value="sent">Posted</option>
+            <option value="responded">Traction</option>
+            <option value="pass">Flopped</option>
+          </select>
+        </div>
+        <div class="channel-note">FOIA data post. Game day morning. One shot.</div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-card-top">
+          <div class="channel-name">Nextdoor</div>
+          <select class="channel-select draft" onchange="updateChannelStatus(this)" data-id="nextdoor">
+            <option value="draft">Not Started</option>
+            <option value="sent">Posted</option>
+            <option value="responded">Replies</option>
+            <option value="pass">No traction</option>
+          </select>
+        </div>
+        <div class="channel-note">Lakeview + Wrigleyville neighborhoods. High neighbor conversion.</div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-card-top">
+          <div class="channel-name">Block Club Chicago</div>
+          <select class="channel-select draft" onchange="updateChannelStatus(this)" data-id="block-club">
+            <option value="draft">Not Pitched</option>
+            <option value="sent">Pitched</option>
+            <option value="responded">In Convo</option>
+            <option value="linked">Story Live</option>
+            <option value="pass">Passed</option>
+          </select>
+        </div>
+        <div class="channel-note">Lead with the data story. 9,434 tickets. Not "I built a website."</div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-card-top">
+          <div class="channel-name">44th Ward</div>
+          <select class="channel-select draft" onchange="updateChannelStatus(this)" data-id="44th-ward">
+            <option value="draft">Not Contacted</option>
+            <option value="sent">Email Sent</option>
+            <option value="responded">Replied</option>
+            <option value="linked">Linked / Mentioned</option>
+            <option value="pass">No response</option>
+          </select>
+        </div>
+        <div class="channel-note">Constituent tool framing. Ask for newsletter or resources page.</div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-card-top">
+          <div class="channel-name">Twitter / X</div>
+          <select class="channel-select draft" onchange="updateChannelStatus(this)" data-id="twitter">
+            <option value="draft">Not Posted</option>
+            <option value="sent">Posted</option>
+            <option value="responded">Engagement</option>
+          </select>
+        </div>
+        <div class="channel-note">Data angle tweet + game day reminders. Season-long cadence.</div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-card-top">
+          <div class="channel-name">LinkedIn</div>
+          <select class="channel-select draft" onchange="updateChannelStatus(this)" data-id="linkedin">
+            <option value="draft">Not Posted</option>
+            <option value="sent">Posted</option>
+            <option value="responded">Engagement</option>
+          </select>
+        </div>
+        <div class="channel-note">Founder story angle. Domain authority link + possible civic connections.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NEXT ACTIONS -->
+  <div class="section">
+    <div class="section-label">Next Actions</div>
+    <div class="actions-list" id="actions-list">
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Post on r/chicago -- FOIA data angle</div>
+          <div class="action-meta">Game day morning. See outreach-templates.md. One post, don't repeat.</div>
+        </div>
+        <div class="action-priority pri-now">Now</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Post on Nextdoor (Lakeview + Wrigleyville)</div>
+          <div class="action-meta">Same day or next. See outreach-templates.md for neighbor-voice copy.</div>
+        </div>
+        <div class="action-priority pri-now">Now</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Post on Twitter / X</div>
+          <div class="action-meta">FOIA data tweet + game day reminder. See templates.</div>
+        </div>
+        <div class="action-priority pri-now">Now</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Submit to Google Search Console + sitemap</div>
+          <div class="action-meta">Check if already submitted. Verify lv2park.com and blog pages are being crawled.</div>
+        </div>
+        <div class="action-priority pri-now">Now</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Pitch Block Club Chicago</div>
+          <div class="action-meta">Wait until Reddit/Nextdoor posts show some traction. Arm with early numbers. See contacts.md.</div>
+        </div>
+        <div class="action-priority pri-week">This Week</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Email 44th Ward office</div>
+          <div class="action-meta">Constituent tool. Ask for newsletter mention or resources page link. See outreach-templates.md.</div>
+        </div>
+        <div class="action-priority pri-week">This Week</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Post on LinkedIn (founder angle)</div>
+          <div class="action-meta">Backlink from LinkedIn domain + potential civic connections. See templates.</div>
+        </div>
+        <div class="action-priority pri-week">This Week</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Apply to AdSense</div>
+          <div class="action-meta">Don't wait for 500 sessions. Apply now, approval takes time. Revenue unlocks alongside traffic.</div>
+        </div>
+        <div class="action-priority pri-week">This Week</div>
+      </div>
+
+      <div class="action-row">
+        <div class="action-check" onclick="toggleAction(this)"></div>
+        <div class="action-text">
+          <div class="action-title">Re-enable SpotHero button when FlexOffers approves</div>
+          <div class="action-meta">Add back in renderHero() and buildDetailPanel() in app.js. GA4 alert fires at 500 sessions.</div>
+        </div>
+        <div class="action-priority pri-later">Later</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="internal-note">
+    Internal only. Not committed to the public repo. All state saved to localStorage.
+  </div>
+
+</div>
+
+<script>
+  /* ── STORAGE HELPERS ─────────────────────────────────────── */
+  const STORE_KEY = 'lv2park-gtm-tracker';
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch(e) { return {}; }
+  }
+
+  function saveState(state) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    flashSave();
+  }
+
+  function flashSave() {
+    const el = document.getElementById('save-indicator');
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 1600);
+  }
+
+  /* ── METRICS ─────────────────────────────────────────────── */
+  function updateProgressBar(inputEl) {
+    const id = inputEl.id;         // e.g. "m-sessions"
+    const pbId = 'pb-' + id.slice(2); // "pb-sessions"
+    const pb = document.getElementById(pbId);
+    if (!pb) return;
+    const val = parseInt(inputEl.value) || 0;
+    const target = parseInt(inputEl.dataset.target) || 100;
+    const pct = Math.min(100, Math.round(val / target * 100));
+    pb.style.width = pct + '%';
+
+    // Color flip at 100%
+    if (pct >= 100) {
+      pb.className = 'progress-bar-fill complete';
+    }
+  }
+
+  function initMetrics(state) {
+    ['m-sessions','m-subscribers','m-backlinks'].forEach(id => {
+      const el = document.getElementById(id);
+      if (state[id] !== undefined) el.value = state[id];
+      updateProgressBar(el);
+      el.addEventListener('input', () => {
+        updateProgressBar(el);
+        const s = loadState(); s[id] = el.value; saveState(s);
+      });
+    });
+  }
+
+  /* ── REVENUE TOGGLE ──────────────────────────────────────── */
+  let revenueUnlocked = false;
+
+  function toggleRevenue() {
+    revenueUnlocked = !revenueUnlocked;
+    const status = document.getElementById('revenue-status');
+    const sub    = document.getElementById('revenue-sub');
+    const card   = document.getElementById('revenue-card');
+    if (revenueUnlocked) {
+      status.textContent = 'UNLOCKED';
+      status.className   = 'revenue-status unlocked';
+      sub.textContent    = 'SpotHero + FlexOffers active';
+      card.className     = 'metric-card complete';
+    } else {
+      status.textContent = 'LOCKED';
+      status.className   = 'revenue-status locked';
+      sub.textContent    = 'FlexOffers pending traffic';
+      card.className     = 'metric-card';
+    }
+    const s = loadState(); s['revenue'] = revenueUnlocked; saveState(s);
+  }
+
+  /* ── OUTREACH LOG ────────────────────────────────────────── */
+  const OUTREACH_COLS = ['date','channel','target','status','notes'];
+
+  let outreachRows = [];
+
+  function renderOutreach() {
+    const board = document.getElementById('outreach-board');
+    // Remove all existing data rows (keep header)
+    const header = board.querySelector('.board-header');
+    board.innerHTML = '';
+    if (header) board.appendChild(header);
+
+    outreachRows.forEach((row, idx) => {
+      const el = document.createElement('div');
+      el.className = 'board-row';
+      el.innerHTML = `
+        <input class="board-cell-editable" placeholder="Apr 17" value="${esc(row.date)}" onchange="updateOutreachCell(${idx},'date',this.value)">
+        <input class="board-cell-editable" placeholder="Reddit" value="${esc(row.channel)}" onchange="updateOutreachCell(${idx},'channel',this.value)">
+        <input class="board-cell-editable" placeholder="r/chicago" value="${esc(row.target)}" onchange="updateOutreachCell(${idx},'target',this.value)">
+        <select class="status-select ${row.status}" onchange="updateOutreachCell(${idx},'status',this.value); this.className='status-select '+this.value;">
+          <option value="draft" ${row.status==='draft'?'selected':''}>Draft</option>
+          <option value="sent" ${row.status==='sent'?'selected':''}>Sent</option>
+          <option value="responded" ${row.status==='responded'?'selected':''}>Responded</option>
+          <option value="linked" ${row.status==='linked'?'selected':''}>Linked</option>
+          <option value="pass" ${row.status==='pass'?'selected':''}>Pass</option>
+        </select>
+        <input class="board-cell-editable" placeholder="Notes..." value="${esc(row.notes)}" onchange="updateOutreachCell(${idx},'notes',this.value)">
+      `;
+      board.appendChild(el);
+    });
+
+    if (outreachRows.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'padding:20px;font-size:13px;color:var(--text-soft);text-align:center;';
+      empty.textContent = 'No outreach logged yet. Click "+ Add row" to start.';
+      board.appendChild(empty);
+    }
+  }
+
+  function addOutreachRow() {
+    outreachRows.push({ date: '', channel: '', target: '', status: 'draft', notes: '' });
+    renderOutreach();
+    const s = loadState(); s['outreach'] = outreachRows; saveState(s);
+  }
+
+  function updateOutreachCell(idx, col, val) {
+    outreachRows[idx][col] = val;
+    const s = loadState(); s['outreach'] = outreachRows; saveState(s);
+  }
+
+  function esc(str) {
+    return (str || '').replace(/"/g, '&quot;');
+  }
+
+  /* ── BACKLINK TARGETS ────────────────────────────────────── */
+  function toggleTarget(el) {
+    el.classList.toggle('checked');
+    const name = el.parentElement.dataset.id;
+    const nameEl = el.parentElement.querySelector('.target-name');
+    nameEl && nameEl.classList.toggle('done', el.classList.contains('checked'));
+    const s = loadState();
+    if (!s.targets) s.targets = {};
+    s.targets[name] = el.classList.contains('checked');
+    saveState(s);
+  }
+
+  function initTargets(state) {
+    if (!state.targets) return;
+    document.querySelectorAll('.target-row').forEach(row => {
+      const id = row.dataset.id;
+      if (state.targets[id]) {
+        const check = row.querySelector('.target-check');
+        const name  = row.querySelector('.target-name');
+        check && check.classList.add('checked');
+        name  && name.classList.add('done');
+      }
+    });
+  }
+
+  /* ── CHANNEL STATUS ──────────────────────────────────────── */
+  const STATUS_COLORS = {
+    draft: '#E8E8F0',
+    sent: '#FEF3E8',
+    responded: '#EEF0FB',
+    linked: '#EDF6F6',
+    pass: '#FDEAEA'
+  };
+
+  function updateChannelStatus(selectEl) {
+    selectEl.className = 'channel-select ' + selectEl.value;
+    const s = loadState();
+    if (!s.channels) s.channels = {};
+    s.channels[selectEl.dataset.id] = selectEl.value;
+    saveState(s);
+  }
+
+  function initChannels(state) {
+    if (!state.channels) return;
+    document.querySelectorAll('[data-id]').forEach(el => {
+      if (el.tagName === 'SELECT' && el.classList.contains('channel-select')) {
+        const val = state.channels[el.dataset.id];
+        if (val) {
+          el.value = val;
+          el.className = 'channel-select ' + val;
+        }
+      }
+    });
+  }
+
+  /* ── NEXT ACTIONS ────────────────────────────────────────── */
+  function toggleAction(el) {
+    el.classList.toggle('checked');
+    const title = el.parentElement.querySelector('.action-title');
+    title && title.classList.toggle('done', el.classList.contains('checked'));
+    saveActions();
+  }
+
+  function saveActions() {
+    const rows = document.querySelectorAll('#actions-list .action-row');
+    const data = [];
+    rows.forEach(row => {
+      const check = row.querySelector('.action-check');
+      const title = row.querySelector('.action-title').textContent;
+      data.push({ title, done: check && check.classList.contains('checked') });
+    });
+    const s = loadState(); s.actions = data; saveState(s);
+  }
+
+  function initActions(state) {
+    if (!state.actions || !state.actions.length) return;
+    const rows = document.querySelectorAll('#actions-list .action-row');
+    rows.forEach((row, i) => {
+      if (state.actions[i] && state.actions[i].done) {
+        const check = row.querySelector('.action-check');
+        const title = row.querySelector('.action-title');
+        check && check.classList.add('checked');
+        title && title.classList.add('done');
+      }
+    });
+  }
+
+  /* ── INIT ─────────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    const state = loadState();
+
+    initMetrics(state);
+
+    // Revenue
+    if (state.revenue) {
+      revenueUnlocked = false; // start locked, then toggle
+      toggleRevenue();
+    }
+
+    // Outreach
+    outreachRows = state.outreach || [];
+    renderOutreach();
+
+    // Targets
+    initTargets(state);
+
+    // Channels
+    initChannels(state);
+
+    // Actions
+    initActions(state);
+  });
+</script>
+</body>
+</html>
