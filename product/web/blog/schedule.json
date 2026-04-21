@@ -88,6 +88,14 @@
     "accent": "#7B2FBE"
   },
   {
+    "slug": "wrigley-camera-data-analysis.html",
+    "title": "12 Years of Camera Data Near Wrigley Field. Here's What It Shows.",
+    "excerpt": "One policy change in 2021 turned a normal school zone camera into a 75,000-violation-a-year machine overnight. We combined FOIA tickets, speed cameras, red lights, attendance, and weather to build the full picture.",
+    "label": "Data Analysis",
+    "publish_date": "2026-06-23",
+    "accent": "#7B2FBE"
+  },
+  {
     "slug": "chicago-parking-signs-guide.html",
     "title": "Chicago Parking Signs Explained: Every Type, What It Means, and What It Costs to Ignore",
     "excerpt": "Permit zones, street cleaning, snow bans, loading zones, pay boxes. Here's every Chicago parking sign type with plain-English explanations and the ordinance behind each.",
@@ -109,6 +117,182 @@
     "excerpt": "The live ticket counter on the homepage isn't an estimate. It's a count of actual LV2 violations confirmed in the zone today. Here's exactly how the scanner works.",
     "label": "Data",
     "publish_date": "2026-07-09",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "worst-streets-park-wrigley.html",
+    "title": "The Worst Streets to Park Near Wrigley Field, Ranked by Ticket Volume",
+    "excerpt": "One street accounts for 28% of all LV2 tickets. We ranked every street in the zone by enforcement intensity using five years of FOIA data. If you're parking on Marshfield on game night, you need to know this.",
+    "label": "Data",
+    "publish_date": "2026-07-16",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "sold-out-cubs-game-parking.html",
+    "title": "Cubs Sold-Out Game Parking: What the Camera Data Says to Expect",
+    "excerpt": "When Cubs attendance tops 40,000, red light violations at Clark and Irving jump to four times what they are on small-crowd days. The data explains exactly what happens to traffic near Wrigley on a full house.",
+    "label": "Data",
+    "publish_date": "2026-07-23",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "lv2-parking-before-5pm.html",
+    "title": "LV2 Parking Before 5 PM: What's Actually Legal and What Isn't",
+    "excerpt": "The LV2 zone activates at 5 PM on Cubs home game days. But there are things happening on those streets before 5 that still get people ticketed. Here's the full picture of what's legal when.",
+    "label": "Rules",
+    "publish_date": "2026-07-30",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "uber-vs-driving-wrigley.html",
+    "title": "Uber vs. Driving to Wrigley Field: The Actual Cost Breakdown",
+    "excerpt": "If there are two of you, driving usually wins. If there are four, it's a wash. Here's the real math on time, parking cost, and convenience for every scenario.",
+    "label": "Guide",
+    "publish_date": "2026-08-06",
+    "accent": "#9a7f00"
+  },
+  {
+    "slug": "hot-day-cubs-game-parking.html",
+    "title": "Hot Day Cubs Game Parking: Why Summer Games Get More Violations",
+    "excerpt": "On Cubs game days above 80 degrees, red light violations near Wrigley run 52% higher than on cold days. The data shows temperature predicts traffic behavior better than almost anything else.",
+    "label": "Data",
+    "publish_date": "2026-08-13",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "chicago-speed-camera-wrigley-2021.html",
+    "title": "How One Policy Change Made the Speed Camera Near Wrigley Go 4x Overnight",
+    "excerpt": "In March 2021, Chicago lowered the speed camera enforcement threshold from 10 mph over to 6 mph over. The camera at 1142 W Irving Park went from 19,000 violations to 75,000 in a single year. Here's the full story.",
+    "label": "Data",
+    "publish_date": "2026-08-20",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "parking-garages-near-wrigley.html",
+    "title": "Parking Garages Near Wrigley Field: Every Option, Prices, and Walk Times",
+    "excerpt": "Every garage within reasonable walking distance of Wrigley Field, with typical game-day prices, distance, and what to know before you book. Updated for the 2026 Cubs season.",
+    "label": "Guide",
+    "publish_date": "2026-08-27",
+    "accent": "#9a7f00"
+  },
+  {
+    "slug": "cubs-playoff-parking-lv2.html",
+    "title": "Cubs Playoff Parking and LV2: What Changes, What Doesn't",
+    "excerpt": "LV2 still applies during postseason games. But the schedule, timing, and crowd dynamics are different from the regular season. Here's exactly what to expect if the Cubs make October.",
+    "label": "Seasonal",
+    "publish_date": "2026-09-03",
+    "accent": "#E05A00"
+  },
+  {
+    "slug": "wrigley-permit-parking-zones.html",
+    "title": "Every Permit Parking Zone Within 10 Blocks of Wrigley, Explained",
+    "excerpt": "LV2 is the most famous permit zone near Wrigley, but it's not the only one. Here's a map and plain-English guide to every residential permit zone in the area and what each one means for game-day parking.",
+    "label": "Resource",
+    "publish_date": "2026-09-10",
+    "accent": "#3d7d7f"
+  },
+  {
+    "slug": "rain-day-cubs-parking.html",
+    "title": "Rain Day Cubs Game Parking: The Data Shows a 22% Difference",
+    "excerpt": "On Cubs game days with more than 0.1 inches of rain, red light violations near Wrigley run 22% lower than on dry days. Rain changes driver behavior in measurable ways. Here's what it means for your parking strategy.",
+    "label": "Data",
+    "publish_date": "2026-09-17",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "rideshare-wrigley-traffic.html",
+    "title": "How Rideshare Changed Game-Day Traffic Near Wrigley Field",
+    "excerpt": "Red light violations at Ashland and Irving Park grew 4x between 2014 and 2023. The camera didn't move. The street didn't change. The rideshare pickup pattern did. Here's what the data shows.",
+    "label": "Data",
+    "publish_date": "2026-09-24",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "lv2-postseason-rules.html",
+    "title": "LV2 During the Cubs Postseason: Exactly What the Rules Say",
+    "excerpt": "The LV2 zone expanded to cover all Cubs home games in 2023, including postseason. Here's what that means, how enforcement works for playoff games, and what's different from a regular season night.",
+    "label": "Rules",
+    "publish_date": "2026-10-01",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "best-neighborhoods-park-wrigley.html",
+    "title": "The Best Neighborhoods to Park Near Wrigley and Walk In",
+    "excerpt": "Park two neighborhoods away, walk 15 minutes, skip the LV2 zone entirely. Here's the honest guide to which surrounding neighborhoods are the best bets for street parking and what the walk actually looks like.",
+    "label": "Guide",
+    "publish_date": "2026-10-08",
+    "accent": "#9a7f00"
+  },
+  {
+    "slug": "can-you-park-clark-wrigley.html",
+    "title": "Can You Park on Clark Street Near Wrigley Field?",
+    "excerpt": "Clark Street near Wrigley has meters, bus stops, loading zones, and no-parking windows that change by time of day and game status. Here's the full breakdown of what's legal and when.",
+    "label": "Rules",
+    "publish_date": "2026-10-15",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "lv2-violations-by-year.html",
+    "title": "LV2 Violations By Year: How Enforcement Has Changed Since 2018",
+    "excerpt": "Camera violations near Wrigley spiked in 2021, peaked in different years for different cameras, and have been declining since. The five-year ticket data tells a story about how the neighborhood and enforcement have evolved.",
+    "label": "Data",
+    "publish_date": "2026-10-22",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "lv2-ticket-true-cost.html",
+    "title": "What an LV2 Parking Ticket Actually Costs With Late Fees and Towing",
+    "excerpt": "The base fine is $65. If your car gets towed, add $175 for the tow plus $35 per day in storage. If you ignore it, the city doubles the fine. Here's the full cost breakdown at every stage.",
+    "label": "Rules",
+    "publish_date": "2026-10-29",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "when-does-lv2-end.html",
+    "title": "When Does LV2 Parking End for the Season?",
+    "excerpt": "LV2 enforcement is tied to the Cubs home schedule, not a calendar date. Once the last home game is played, the zone goes dormant. Here's how to know exactly when that is and what changes in the off-season.",
+    "label": "Seasonal",
+    "publish_date": "2026-11-05",
+    "accent": "#E05A00"
+  },
+  {
+    "slug": "wrigley-offseason-events-parking.html",
+    "title": "Wrigley Field Off-Season Events: Does LV2 Still Apply?",
+    "excerpt": "Concerts, college games, and other events happen at Wrigley outside of Cubs season. LV2 rules are tied to the Cubs schedule specifically. Here's what that means for non-baseball events.",
+    "label": "Rules",
+    "publish_date": "2026-11-12",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "lv2-neighborhood-trends.html",
+    "title": "5 Years of LV2 Tickets: The Neighborhood Trends Nobody's Talking About",
+    "excerpt": "The FOIA data covers 9,434 tickets across 23 streets from 2018 to 2023. Zoom out and patterns emerge: which streets are growing, which are flat, and where enforcement pressure is shifting over time.",
+    "label": "Data",
+    "publish_date": "2026-11-19",
+    "accent": "#7B2FBE"
+  },
+  {
+    "slug": "lv2-permit-what-you-get.html",
+    "title": "What an LV2 Permit Actually Gets You (And What It Doesn't)",
+    "excerpt": "An LV2 permit lets you park in your own zone during Cubs games. It does not protect you from street sweeping, other permit zones, or tow zones. Here's the precise scope of what the permit covers.",
+    "label": "Rules",
+    "publish_date": "2026-12-03",
+    "accent": "#b85a00"
+  },
+  {
+    "slug": "chicago-speed-cameras-history.html",
+    "title": "Chicago Speed Camera Rules: How They've Changed and What's Coming",
+    "excerpt": "Chicago's speed camera program started in 2013, expanded in 2014, and lowered its enforcement threshold in 2021. Here's the full legislative history and what it means for drivers near school zones and parks.",
+    "label": "Policy",
+    "publish_date": "2026-12-10",
+    "accent": "#3d7d7f"
+  },
+  {
+    "slug": "wrigley-2027-parking-preview.html",
+    "title": "Wrigley Field 2027 Season Parking: What the Data Predicts",
+    "excerpt": "Based on 12 years of camera data and five years of FOIA tickets, here's what the trends suggest about parking enforcement near Wrigley in 2027 and what drivers should be watching for.",
+    "label": "Forward-looking",
+    "publish_date": "2026-12-17",
     "accent": "#7B2FBE"
   }
 ]

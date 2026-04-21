@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12 Years of Camera Data Near Wrigley Field. Here's What It Shows. — LV2 Park</title>
+  <meta name="description" content="We combined FOIA parking tickets, speed camera records, red light data, MLB attendance figures, and weather to build the most complete picture of what actually drives parking enforcement near Wrigley Field.">
+  <link rel="canonical" href="https://lv2park.com/blog/wrigley-camera-data-analysis.html">
+  <meta property="og:title" content="12 Years of Camera Data Near Wrigley Field. Here's What It Shows.">
+  <meta property="og:description" content="FOIA tickets, speed cameras, red lights, attendance, weather. 12 years of data. One policy change turned a normal street into a $75,000-violation-a-year camera in a single night.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lv2park.com/blog/wrigley-camera-data-analysis.html">
+  <meta property="og:site_name" content="LV2 Park">
+  <meta property="og:image" content="https://lv2park.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="12 Years of Camera Data Near Wrigley Field. Here's What It Shows.">
+  <meta name="twitter:description" content="FOIA tickets, speed cameras, red lights, attendance, weather. 12 years of data near Wrigley Field.">
+  <meta name="twitter:image" content="https://lv2park.com/og-image.png">
+  <meta name="theme-color" content="#1A1A2E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-body { max-width: 680px; margin: 0 auto; padding: 0 var(--content-pad) var(--space-xl); }
+    .post-body h2 { font-size: var(--text-h2); font-weight: 700; margin: 44px 0 12px; }
+    .post-body p  { font-size: var(--text-body); line-height: 1.75; margin-bottom: 20px; color: var(--color-text); }
+    .post-body ul { margin: 0 0 20px 20px; }
+    .post-body li { font-size: var(--text-body); line-height: 1.75; margin-bottom: 10px; }
+    .post-stat {
+      background: var(--color-bg-warm);
+      border-left: 4px solid var(--color-purple);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 18px 22px;
+      margin: 32px 0;
+      font-size: var(--text-body);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .post-stat.orange { border-color: var(--color-orange); }
+    .post-stat.red    { border-color: #E84040; }
+    .post-stat.green  { border-color: #16a34a; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 28px 0;
+      font-size: 15px;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--color-bg-warm);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-text-soft);
+      border-bottom: 2px solid var(--color-border);
+    }
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .method-note {
+      background: var(--color-bg-surface);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin: 40px 0;
+      font-size: 14px;
+      color: var(--color-text-soft);
+      line-height: 1.7;
+    }
+    .method-note strong { color: var(--color-text); }
+    .fig-note {
+      font-size: 13px;
+      color: var(--color-text-soft);
+      margin-top: -12px;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/resources/lv2-parking-rules/" class="top-nav-link">Rules</a>
+        <a href="/resources/lv2-parking-map/" class="top-nav-link">Map</a>
+        <a href="/resources/cubs-game-day-parking/" class="top-nav-link">Game Day</a>
+        <a href="/resources/lv2-data-explorer/" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="post-body">
+    <div style="padding-top:40px;margin-bottom:32px;">
+      <span class="cat-tag rc-foia" style="margin-bottom:12px;">Data</span>
+      <h1 style="font-size:42px;font-weight:900;line-height:1.1;margin-bottom:16px;">12 years of camera data near Wrigley Field. Here's what it shows.</h1>
+      <p style="color:var(--color-text-soft);">FOIA parking tickets, speed cameras, red lights, MLB attendance, and weather. Combined for the first time into one picture of what actually drives enforcement in this neighborhood.</p>
+      <p style="color:var(--color-text-soft);font-size:14px;margin-top:-8px;">Published June 2026 &nbsp;·&nbsp; Data through 2025 Cubs season</p>
+    </div>
+
+    <div class="post-stat red">In March 2021, Chicago changed one number: the speed camera enforcement threshold dropped from 10 mph over the limit to 6 mph over. The camera at 1142 W Irving Park, one block from Wrigley Field, went from 19,064 violations in 2019 to 75,077 violations in 2021. Almost 4x. In a single year.</div>
+
+    <p>That is not a traffic behavior change. That is a policy change. One decision in City Hall turned a normal school zone camera into one of the highest-volume enforcement cameras on the North Side. The street didn't get more dangerous. The threshold got lower.</p>
+
+    <p>That finding is the clearest thing in 12 years of camera data near Wrigley Field. But it is not the only thing. We pulled FOIA parking ticket records from 2018 to 2023, cross-referenced speed and red light camera violations from the Chicago Data Portal against the full 2025 Cubs schedule, matched game-day attendance figures from the MLB Stats API, and folded in historical weather from Open-Meteo and air quality data from the EPA. Here is what the data actually shows.</p>
+
+    <h2>One street carries 28% of all LV2 parking tickets</h2>
+
+    <p>The FOIA dataset covers 9,434 LV2 parking tickets issued near Wrigley Field between 2018 and 2023. Those tickets are not spread evenly. They cluster hard on specific streets and specific blocks.</p>
+
+    <div class="post-stat orange">N Marshfield Ave collected 2,269 of 8,046 mapped tickets over five years. That is 28% of every LV2 ticket written in the zone, on a single street. Add N Paulina St (1,323 tickets) and two streets account for 44.6% of all mapped violations.</div>
+
+    <p>The hottest individual block is 3406 N Marshfield Ave, with 45 tickets over the five-year period. That sounds modest until you consider that there are 2,607 geocoded address points in the dataset. The top 26 blocks represent roughly 1% of all addresses but carry a disproportionate share of the enforcement weight.</p>
+
+    <p>Enforcement is real across the zone. But it is not random. If you are parking on Marshfield on a game night, you are not just parking in the zone. You are parking in the part of the zone that officers work hardest.</p>
+
+    <p>One caveat: 1,388 of the 9,434 tickets (about 15%) could not be geocoded. Those tickets fall on diagonal streets like Clark and Lincoln, where the Chicago grid address system breaks down. Those streets run directly through the Wrigley neighborhood and see heavy game-day traffic. The mapped picture shows 85% of the story.</p>
+
+    <h2>Game days change the cameras, but not how you'd expect</h2>
+
+    <p>Speed camera CHI095 at 1142 W Irving Park is a school zone camera. It is active during school hours, roughly 7am to 4pm. Cubs home games skew heavily toward evenings and weekends, when schools are out and the camera is in its low-enforcement window.</p>
+
+    <p>The result: on Cubs home game days in 2025, the speed camera averaged 75 violations per day. On non-game days, it averaged 109. A 31% drop. The game is not making drivers safer on Irving Park. The game is just moving the action to times when the camera was never going to catch much anyway.</p>
+
+    <div class="post-stat green">The red light cameras at Clark and Irving Park tell a different story. On 2025 Cubs home game days, those cameras averaged 9.7 combined violations per day, versus 7.9 on non-game days. A 23% lift. More cars coming and going from Wrigley means more people pushing through the yellow.</div>
+
+    <p>The peak was August 17, 2025, a Sunday day game against the Cardinals, with 21 violations at Clark and Irving in a single day. The red light cameras at Ashland and Irving, which capture traffic heading south after games, showed no meaningful game-day difference. Different intersection geometry, different post-game routing pattern.</p>
+
+    <h2>Crowd size drives violations more than any other factor</h2>
+
+    <p>Of everything in the game-day factors data, attendance is the strongest signal. On days when Cubs attendance topped 40,000, Clark and Irving red light cameras averaged 18.1 combined violations per day. On small-crowd days under 30,000, that dropped to 4.5.</p>
+
+    <div class="post-stat red">Big crowds generate four times the red light violations of small crowds. Not 20% more. Not double. Four times.</div>
+
+    <p>Temperature is the second-strongest factor. On hot game days above 80F, violations averaged 17.3. On cold days below 60F, the average was 11.4. A 52% difference. When it is hot, people drive. When it is cold, fewer do, and those who show up drive more carefully.</p>
+
+    <p>Rain cuts violations by about 22%. Game days with more than 0.1 inches of precipitation averaged 12.2 violations versus 15.7 on dry days. Rain reduces driving, reduces speed, and signals to people that walking or transit might be a better call. The intersection still gets busy. Just less recklessly so.</p>
+
+    <p>Day games average slightly more violations (15.9) than night games (13.4), likely because day games draw a different crowd mix and have more post-game foot-traffic overlap with the evening rush. The air quality data showed no game-day effect at all. One stadium's worth of cars, spread over a few hours, is invisible at the county scale where the EPA measures daily AQI.</p>
+
+    <h2>Drivers adapted to the 2021 policy change</h2>
+
+    <p>The 75,077-violation year of 2021 was not a permanent new normal. From that peak, the CHI095 speed camera has declined every year since: 57,283 in 2022, 43,867 in 2023, 37,249 in 2024, and roughly 35,824 through early 2025.</p>
+
+    <p>That is a 52% decline from peak in four years. Drivers near Wrigley learned where the camera is. Whether that represents genuine slower driving or just foot-off-the-gas at that specific block is a different question. The camera does not know.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>CHI095 Speed Violations</th>
+          <th>Clark/Irving Red Light</th>
+          <th>Ashland/Irving Red Light</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2014</td><td>21,193</td><td>1,097</td><td>721</td></tr>
+        <tr><td>2015</td><td>30,313</td><td>2,000</td><td>1,208</td></tr>
+        <tr><td>2016</td><td>28,227</td><td>2,532</td><td>1,970</td></tr>
+        <tr><td>2017</td><td>25,792</td><td>2,762</td><td>1,723</td></tr>
+        <tr><td>2018</td><td>24,906</td><td>2,747</td><td>1,747</td></tr>
+        <tr><td>2019</td><td>19,064</td><td>2,497</td><td>1,643</td></tr>
+        <tr><td>2020</td><td>25,309</td><td>2,115</td><td>1,577</td></tr>
+        <tr><td>2021</td><td style="font-weight:700;color:#E84040;">75,077</td><td>3,207</td><td>1,946</td></tr>
+        <tr><td>2022</td><td>57,283</td><td>2,608</td><td>2,046</td></tr>
+        <tr><td>2023</td><td>43,867</td><td>2,841</td><td>2,850</td></tr>
+        <tr><td>2024</td><td>37,249</td><td style="font-weight:700;color:#E84040;">3,423</td><td>2,220</td></tr>
+        <tr><td>2025</td><td>35,824</td><td>2,824</td><td>1,960</td></tr>
+      </tbody>
+    </table>
+    <p class="fig-note">2020: 30 Cubs home games, all without fans. 2021: enforcement threshold lowered to 6mph over. 2025: partial year through approximately April publication lag.</p>
+
+    <p>The red light cameras at Clark and Irving tell a slower, steadier growth story. From 1,097 violations in 2014 to a record 3,423 in 2024, a nearly 4x increase over a decade with no obvious policy cliff. Ashland and Irving followed a similar pattern, growing from 721 in 2014 to a peak of 2,850 in 2023 before pulling back slightly.</p>
+
+    <p>That gradual increase likely tracks the general rise in post-game traffic volume, rideshare pickups on Irving, and broader North Side traffic trends over the past decade. Unlike the speed camera, there was no single moment. Just slow, steady growth.</p>
+
+    <p>2020 shows up clearly in the red light data. The Cubs played 30 home games instead of 81, all without fans. Clark and Irving dropped to 2,115 violations, the lowest since 2016. Ashland dipped to 1,577. The speed camera, which captures all-day school-zone traffic, barely moved, because game-day traffic was never its primary input anyway.</p>
+
+    <h2>The full picture</h2>
+
+    <p>Parking enforcement near Wrigley is not a random system and it is not a simple one. The LV2 ticket zone runs like a machine on game days, concentrated on specific streets (especially Marshfield) with officers staged and moving the moment the zone activates. Camera enforcement is shaped by policy as much as behavior. And what happens on game days is less about the game itself and more about how many people showed up and how warm it was.</p>
+
+    <p>The interactive data behind this article is available at <a href="/lv2-analysis.html" style="color:var(--color-purple);font-weight:700;">lv2park.com/lv2-analysis.html</a>. All four datasets, filterable and charted, with the full methodology and sources documented in each tab.</p>
+
+    <div class="method-note">
+      <strong>Data sources and methodology.</strong> LV2 parking tickets: City of Chicago FOIA request, 9,434 records, 2018-2023. Speed camera violations: Chicago Data Portal dataset hhkd-xvj4, camera CHI095 at 1142 W Irving Park. Red light camera violations: Chicago Data Portal dataset spqx-js37, cameras 1091/1093 (Clark/Irving) and 1151/1153 (Ashland/Irving). Game schedule and attendance: MLB Stats API, 2025 Cubs season. Weather: Open-Meteo historical weather API, Wrigley Field coordinates. Air quality: EPA AQS daily AQI by county, Cook County 2025. Year-over-year camera data covers 2014 through approximately April 2025 with a 14-day publication lag on speed camera data.
+    </div>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4FCPSHLCTX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4FCPSHLCTX');
+  </script>
+</body>
+</html>
