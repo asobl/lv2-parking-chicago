@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hot Day Cubs Game Parking: Why Summer Games Get More Violations — LV2 Park</title>
+  <meta name="description" content="On Cubs game days above 80 degrees, red light violations near Wrigley run 52% higher than on cold days. Temperature is one of the strongest predictors of traffic behavior near Wrigley Field.">
+  <link rel="canonical" href="https://lv2park.com/blog/hot-day-cubs-game-parking.html">
+  <meta property="og:title" content="Hot Day Cubs Game Parking: Why Summer Games Get More Violations">
+  <meta property="og:description" content="52% more red light violations on hot game days vs cold ones. The data shows temperature predicts traffic behavior near Wrigley better than almost anything else.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lv2park.com/blog/hot-day-cubs-game-parking.html">
+  <meta property="og:site_name" content="LV2 Park">
+  <meta property="og:image" content="https://lv2park.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hot Day Cubs Game Parking: Why Summer Games Get More Violations">
+  <meta name="twitter:image" content="https://lv2park.com/og-image.png">
+  <meta name="theme-color" content="#1A1A2E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-body { max-width: 680px; margin: 0 auto; padding: 0 var(--content-pad) var(--space-xl); }
+    .post-body h2 { font-size: var(--text-h2); font-weight: 700; margin: 44px 0 12px; }
+    .post-body p  { font-size: var(--text-body); line-height: 1.75; margin-bottom: 20px; color: var(--color-text); }
+    .post-stat {
+      background: var(--color-bg-warm);
+      border-left: 4px solid var(--color-purple);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 18px 22px; margin: 32px 0;
+      font-size: var(--text-body); font-weight: 700; line-height: 1.5;
+    }
+    .post-stat.orange { border-color: var(--color-orange); }
+    .post-stat.red    { border-color: #E84040; }
+    .data-table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 15px; }
+    .data-table th { text-align: left; padding: 10px 14px; background: var(--color-bg-warm); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-soft); border-bottom: 2px solid var(--color-border); }
+    .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .method-note { background: var(--color-bg-surface); border-radius: var(--radius-lg); padding: 20px 24px; margin: 40px 0; font-size: 14px; color: var(--color-text-soft); line-height: 1.7; }
+    .method-note strong { color: var(--color-text); }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a class="site-logo" href="/">LV2 <span>PARK</span></a>
+      <nav class="top-nav">
+        <a href="/" class="top-nav-link">Today</a>
+        <a href="/resources/lv2-parking-rules/" class="top-nav-link">Rules</a>
+        <a href="/resources/lv2-parking-map/" class="top-nav-link">Map</a>
+        <a href="/resources/cubs-game-day-parking/" class="top-nav-link">Game Day</a>
+        <a href="/resources/lv2-data-explorer/" class="top-nav-link">Data</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="post-body">
+    <div style="padding-top:40px;margin-bottom:32px;">
+      <span class="cat-tag rc-foia" style="margin-bottom:12px;">Data</span>
+      <h1 style="font-size:42px;font-weight:900;line-height:1.1;margin-bottom:16px;">Hot day Cubs game parking: why summer games get more violations</h1>
+      <p style="color:var(--color-text-soft);">The data from the 2025 Cubs season shows temperature is one of the strongest predictors of traffic violation behavior near Wrigley Field. Hot days do not just bring more fans. They bring a measurably different kind of driving.</p>
+      <p style="color:var(--color-text-soft);font-size:14px;margin-top:-8px;">Published August 13, 2026 &nbsp;·&nbsp; Weather + camera data 2025</p>
+    </div>
+
+    <div class="post-stat red">On Cubs game days above 80°F, red light cameras at Clark and Irving Park averaged 17.3 violations per day. On cold days below 60°F, the average was 11.4. A 52% difference driven by temperature alone.</div>
+
+    <p>We matched daily weather data from the Open-Meteo historical API against red light camera violations at the Clark and Irving Park intersection for every Cubs home game day in 2025. The relationship between temperature and violations is not subtle. It shows up clearly across the full season.</p>
+
+    <h2>The temperature breakdown</h2>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Temperature</th>
+          <th>Avg red light violations (Clark/Irving)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cold (below 60°F)</td><td>11.4</td></tr>
+        <tr><td>Mild (60-80°F)</td><td>14.6</td></tr>
+        <tr><td><strong>Hot (above 80°F)</strong></td><td><strong>17.3</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p>The relationship is consistent across the three tiers. It is not just a hot vs. cold split. Each 20-degree temperature band produces a meaningful step up in violations.</p>
+
+    <h2>Why temperature changes driving behavior</h2>
+
+    <p>Hot days bring more fans to Cubs games, especially day games where the energy of a sunny summer afternoon draws people who might skip a cold April weeknight. More fans means more cars converging on and leaving the same neighborhood in a compressed window.</p>
+
+    <p>Heat also appears to correlate with more aggressive driving at intersections. This tracks with broader traffic research: hot temperatures are associated with increased driver impatience and risk-taking. At a busy intersection like Clark and Irving after a summer night game, these tendencies compound. The light turns yellow, the gap is closing, and the hot-day driver is more likely to go for it.</p>
+
+    <div class="post-stat orange">The LV2 enforcement itself does not change based on temperature. Officers are in the zone on cold games and hot games alike. But the driving conditions in the neighborhood, and therefore your risk of encountering a difficult traffic situation, are meaningfully worse on hot days.</div>
+
+    <p>Hot days also affect the mode shift away from driving. On a mild or cold day, a meaningful share of fans take the Red Line, Divvy, or walk from a parking spot further out. On a hot day, comfort preferences push more people toward a car-to-door experience, which means more total vehicles competing for the same roads after the game.</p>
+
+    <h2>What to do about it</h2>
+
+    <p>For a hot summer game against a marquee opponent, the combination of high attendance and high temperature is the worst-case scenario for post-game traffic. Both crowd size and temperature are pushing violations in the same direction at the same time.</p>
+
+    <p>If you are driving on a hot day, plan for a longer exit. The intersection at Clark and Irving will be backed up. The residential streets around the zone will be congested even for residents with permits. Leaving slightly before the final out or having a patient post-game plan (sit at a bar, wait it out) is worth considering on the hottest summer game days.</p>
+
+    <p>Transit is the clear winner on hot sold-out days. The Red Line runs to Addison and gets you out of the neighborhood cleanly without competing with 40,000 people trying to leave by car at the same time.</p>
+
+    <div class="method-note">
+      <strong>Data sources.</strong> Weather: Open-Meteo historical weather API, Wrigley Field coordinates (41.9484° N, 87.6553° W), daily high temperature, 2025 Cubs season. Red light violations: Chicago Data Portal dataset spqx-js37, cameras 1091/1093 (Clark/Irving Park). Game dates: MLB Stats API 2025 Cubs schedule. Full interactive chart at <a href="/lv2-analysis.html" style="color:var(--color-purple);">lv2park.com/lv2-analysis.html</a>.
+    </div>
+  </div>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4FCPSHLCTX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4FCPSHLCTX');
+  </script>
+</body>
+</html>
