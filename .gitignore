@@ -5,8 +5,9 @@
 *sa-*.json
 *-sa-*.json
 
-# Planning and private docs -- never in the public repo
+# Planning, private docs, and backend code -- never in the public repo
 docs/
+product/workers/
 product/web/internal/
 product/web/og-image*src.html
 lv2park-parking-lot.md

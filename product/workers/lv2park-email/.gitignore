@@ -1,7 +1,0 @@
-# Never commit credentials
-*.json
-.dev.vars
-.env
-.env.*
-node_modules/
-.wrangler/
