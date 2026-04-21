@@ -1,9 +1,8 @@
 name: LV2 Live Ticker
 
 on:
-  schedule:
-    # Every 30 min, 5-10 PM CT (10 PM-3 AM UTC, covers CDT offset)
-    - cron: '0,30 22,23,0,1,2 * * *'
+  # Ticker scan disabled -- eHearing portal scraping is fragile and the Data Portal
+  # has a 14-day lag. Re-enable if a real-time API becomes available.
   workflow_dispatch:
 
 # Only one scan at a time -- let in-progress finish before next run starts

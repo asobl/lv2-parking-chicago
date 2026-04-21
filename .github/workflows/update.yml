@@ -68,17 +68,6 @@ jobs:
             echo "Not Monday -- skipping traffic check"
           fi
 
-      - name: Live ticker scan (game days only)
-        working-directory: product/web
-        run: |
-          LV2=$(python3 -c "import json; d=json.load(open('data/today.json')); print('yes' if d.get('lv2Active') else 'no')")
-          if [ "$LV2" = "yes" ]; then
-            echo "LV2 active today -- running ticker scan"
-            python scripts/scan_tickets.py --production
-          else
-            echo "No LV2 today -- skipping scan"
-          fi
-
       - name: Generate game recap (morning after game days)
         working-directory: product/web
         run: |
@@ -106,7 +95,7 @@ jobs:
         run: |
           git config user.name  "lv2park-bot"
           git config user.email "bot@lv2park.com"
-          git add product/web/data/today.json product/web/data/week.json product/web/data/health.json product/web/data/ticker_state.json product/web/data/enforcement-today.json product/web/game-recaps/ product/web/sitemap.xml product/web/index.html || true
+          git add product/web/data/today.json product/web/data/week.json product/web/data/health.json product/web/game-recaps/ product/web/sitemap.xml product/web/index.html || true
           if git diff --staged --quiet; then
             echo "pages_changed=false" >> $GITHUB_OUTPUT
           else
