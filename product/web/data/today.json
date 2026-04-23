@@ -1,6 +1,6 @@
 {
-  "date": "2026-04-22",
-  "updated": "2026-04-23T01:33:28.010766+00:00",
+  "date": "2026-04-23",
+  "updated": "2026-04-23T05:43:09.398942+00:00",
   "source": "mlb",
   "hasEvent": true,
   "lv2Active": true,
@@ -8,7 +8,7 @@
   "events": [
     {
       "name": "Philadelphia Phillies vs. Cubs",
-      "time": "6:40 PM",
+      "time": "1:20 PM",
       "type": "game"
     }
   ]
