@@ -1,23 +1,7 @@
 {
-  "updated": "2026-04-24T01:33:44.068653+00:00",
+  "updated": "2026-04-24T05:43:49.170209+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-04-23",
-      "dayLabel": "Thu Apr 23",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Philadelphia Phillies vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-04-23"
-        }
-      ]
-    },
     {
       "date": "2026-04-24",
       "dayLabel": "Fri Apr 24",
@@ -1944,6 +1928,14 @@
     {
       "date": "2026-10-19",
       "dayLabel": "Mon Oct 19",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-20",
+      "dayLabel": "Tue Oct 20",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
