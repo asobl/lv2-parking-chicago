@@ -2,11 +2,21 @@ name: Daily Data Update
 
 on:
   schedule:
-    - cron: '0 5 * * *'    # 12 AM CT (UTC-5) -- midnight run, resets today.json for new date
-    - cron: '0 11 * * *'   # 6 AM CT (UTC-5) -- morning run
-    - cron: '0 20 * * *'   # 3 PM CT (UTC-5) -- afternoon run + game day scan
-    - cron: '0 22 * * *'   # 5 PM CT (UTC-5) -- enforcement window opens
-    - cron: '0 01 * * *'   # 8 PM CT (UTC-5) -- mid-enforcement scan
+    # Primary runs. Offset to :07 to avoid top-of-hour GitHub Actions load
+    # (scheduled workflows at :00 get queued or dropped when runner load spikes).
+    - cron: '7 5 * * *'    # 12:07 AM CT (UTC-5) -- midnight run, resets today.json for new date
+    - cron: '7 11 * * *'   # 6:07 AM CT (UTC-5) -- morning run
+    - cron: '7 20 * * *'   # 3:07 PM CT (UTC-5) -- afternoon run + game day scan
+    - cron: '7 22 * * *'   # 5:07 PM CT (UTC-5) -- enforcement window opens
+    - cron: '7 1 * * *'    # 8:07 PM CT (UTC-5) -- mid-enforcement scan
+    # Backup runs. If GitHub drops a primary slot, the :32 backup catches up
+    # within 25 minutes. Workflow is idempotent -- it commits only when data
+    # changed, so a successful primary makes the backup a no-op.
+    - cron: '32 5 * * *'   # 12:32 AM CT -- backup for midnight rollover
+    - cron: '32 11 * * *'  # 6:32 AM CT -- backup for morning run
+    - cron: '32 20 * * *'  # 3:32 PM CT -- backup for afternoon run
+    - cron: '32 22 * * *'  # 5:32 PM CT -- backup for enforcement window
+    - cron: '32 1 * * *'   # 8:32 PM CT -- backup for mid-enforcement scan
   workflow_dispatch:         # Manual trigger from GitHub Actions UI
 
 permissions:
@@ -37,7 +47,19 @@ jobs:
         working-directory: product/web
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
-        run: python scripts/fetch_data.py
+        run: |
+          # Retry up to 3 times with 30-second backoff. Handles transient
+          # MLB / Ticketmaster API failures that would otherwise fail the run.
+          for attempt in 1 2 3; do
+            if python scripts/fetch_data.py; then
+              echo "fetch_data succeeded on attempt $attempt"
+              exit 0
+            fi
+            echo "fetch_data attempt $attempt failed"
+            [ $attempt -lt 3 ] && sleep 30
+          done
+          echo "All 3 fetch_data attempts failed"
+          exit 1
 
       - name: Send Monday digest
         working-directory: product/web
