@@ -1,23 +1,7 @@
 {
-  "updated": "2026-05-02T02:22:45.383750+00:00",
+  "updated": "2026-05-02T05:54:15.949799+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-01",
-      "dayLabel": "Fri May 1",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Arizona Diamondbacks vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-05-01"
-        }
-      ]
-    },
     {
       "date": "2026-05-02",
       "dayLabel": "Sat May 2",
@@ -1938,6 +1922,14 @@
     {
       "date": "2026-10-27",
       "dayLabel": "Tue Oct 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-28",
+      "dayLabel": "Wed Oct 28",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
