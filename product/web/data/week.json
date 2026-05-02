@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-02T20:22:57.274540+00:00",
+  "updated": "2026-05-02T20:50:41.517950+00:00",
   "source": "mlb",
   "days": [
     {
@@ -10,14 +10,16 @@
       "note": null,
       "events": [
         {
-          "name": "Arizona Diamondbacks vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game"
-        },
-        {
           "name": "Chicago HBCU Baseball Classic",
           "time": "TBD",
           "type": "sports"
+        },
+        {
+          "name": "Arizona Diamondbacks vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-05-02"
         }
       ]
     },
