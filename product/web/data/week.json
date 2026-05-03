@@ -1,18 +1,20 @@
 {
-  "updated": "2026-05-03T20:51:02.637067+00:00",
+  "updated": "2026-05-03T22:22:21.217560+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-05-03",
       "dayLabel": "Sun May 3",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Arizona Diamondbacks vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-05-03"
         }
       ]
     },
