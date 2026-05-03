@@ -1,28 +1,7 @@
 {
-  "updated": "2026-05-03T02:23:25.398392+00:00",
+  "updated": "2026-05-03T06:10:25.661472+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-02",
-      "dayLabel": "Sat May 2",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Chicago HBCU Baseball Classic",
-          "time": "TBD",
-          "type": "sports"
-        },
-        {
-          "name": "Arizona Diamondbacks vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-05-02"
-        }
-      ]
-    },
     {
       "date": "2026-05-03",
       "dayLabel": "Sun May 3",
@@ -1932,6 +1911,14 @@
     {
       "date": "2026-10-28",
       "dayLabel": "Wed Oct 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-29",
+      "dayLabel": "Thu Oct 29",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
