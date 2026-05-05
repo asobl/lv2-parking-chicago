@@ -1,21 +1,7 @@
 {
-  "updated": "2026-05-05T02:21:16.413128+00:00",
+  "updated": "2026-05-05T06:00:32.230467+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-04",
-      "dayLabel": "Mon May 4",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Cincinnati Reds vs. Cubs",
-          "time": "6:10 PM",
-          "type": "game"
-        }
-      ]
-    },
     {
       "date": "2026-05-05",
       "dayLabel": "Tue May 5",
@@ -1913,6 +1899,14 @@
     {
       "date": "2026-10-30",
       "dayLabel": "Fri Oct 30",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-10-31",
+      "dayLabel": "Sat Oct 31",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
