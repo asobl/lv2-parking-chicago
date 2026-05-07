@@ -1,18 +1,20 @@
 {
-  "updated": "2026-05-07T20:54:04.061682+00:00",
+  "updated": "2026-05-07T22:31:26.739479+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-05-07",
       "dayLabel": "Thu May 7",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Cincinnati Reds vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-05-07"
         }
       ]
     },
