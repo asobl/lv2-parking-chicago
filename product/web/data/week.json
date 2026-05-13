@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-13T12:16:16.829956+00:00",
+  "updated": "2026-05-13T20:44:38.483175+00:00",
   "source": "mlb",
   "days": [
     {
@@ -308,8 +308,10 @@
       "events": [
         {
           "name": "San Francisco Giants vs. Cubs",
-          "time": "7:20 PM",
-          "type": "game"
+          "time": "7:30 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "7:20 PM"
         }
       ]
     },
