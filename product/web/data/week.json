@@ -1,21 +1,7 @@
 {
-  "updated": "2026-05-16T02:22:57.363767+00:00",
+  "updated": "2026-05-16T06:06:40.769418+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-15",
-      "dayLabel": "Fri May 15",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Upper Deck Golf",
-          "time": "TBD",
-          "type": "sports"
-        }
-      ]
-    },
     {
       "date": "2026-05-16",
       "dayLabel": "Sat May 16",
@@ -1883,6 +1869,14 @@
     {
       "date": "2026-11-10",
       "dayLabel": "Tue Nov 10",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-11-11",
+      "dayLabel": "Wed Nov 11",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
