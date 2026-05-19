@@ -1,21 +1,7 @@
 {
-  "updated": "2026-05-17T22:48:29.177752+00:00",
+  "updated": "2026-05-19T01:48:55.382787+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-17",
-      "dayLabel": "Sun May 17",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Mayday Parade (Gallagher Way)",
-          "time": "6:45 PM",
-          "type": "concert"
-        }
-      ]
-    },
     {
       "date": "2026-05-18",
       "dayLabel": "Mon May 18",
@@ -1871,6 +1857,14 @@
     {
       "date": "2026-11-12",
       "dayLabel": "Thu Nov 12",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-11-13",
+      "dayLabel": "Fri Nov 13",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,

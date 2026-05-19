@@ -1,15 +1,15 @@
 {
-  "date": "2026-05-17",
-  "updated": "2026-05-17T22:48:29.177752+00:00",
+  "date": "2026-05-18",
+  "updated": "2026-05-19T01:48:55.382787+00:00",
   "source": "mlb",
   "hasEvent": true,
   "lv2Active": true,
   "note": null,
   "events": [
     {
-      "name": "Mayday Parade (Gallagher Way)",
-      "time": "6:45 PM",
-      "type": "concert"
+      "name": "Milwaukee Brewers vs. Cubs",
+      "time": "6:40 PM",
+      "type": "game"
     }
   ]
 }
