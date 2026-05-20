@@ -236,13 +236,15 @@ function renderWeek(data) {
   const todayStr = new Date().toISOString().split('T')[0];
   list.innerHTML = buildDayRows(data.days, todayStr);
 
-  // Scroll so today is at the top — defer until after browser layout
+  // Scroll so today lands just below the sticky month header
   setTimeout(() => {
-    const todayRow = list.querySelector(`[data-date="${todayStr}"]`);
+    const todayRow     = list.querySelector(`[data-date="${todayStr}"]`);
+    const stickyHeader = list.querySelector('.week-month-header');
     if (todayRow) {
       const listRect = list.getBoundingClientRect();
       const rowRect  = todayRow.getBoundingClientRect();
-      list.scrollTop += rowRect.top - listRect.top;
+      const stickyH  = stickyHeader ? stickyHeader.offsetHeight : 0;
+      list.scrollTop += (rowRect.top - listRect.top) - stickyH;
     }
   }, 0);
 }
