@@ -1,9 +1,15 @@
 {
-  "date": "2026-05-19",
-  "updated": "2026-05-20T04:46:51.326523+00:00",
+  "date": "2026-05-20",
+  "updated": "2026-05-20T06:30:18.043892+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "Milwaukee Brewers vs. Cubs",
+      "time": "6:40 PM",
+      "type": "game"
+    }
+  ]
 }
