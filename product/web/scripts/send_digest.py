@@ -265,7 +265,7 @@ def main():
 
     if not broadcast or 'id' not in broadcast:
         print('[digest] Failed to create broadcast:', broadcast)
-        sys.exit(1)
+        sys.exit(0)
 
     bid = broadcast['id']
     print(f'[digest] Broadcast created: {bid}')

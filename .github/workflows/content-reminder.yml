@@ -8,6 +8,9 @@ on:
     - cron: "0 14 1 * *"
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   remind:
     runs-on: ubuntu-latest

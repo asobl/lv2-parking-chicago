@@ -5,6 +5,9 @@ on:
   # has a 14-day lag. Re-enable if a real-time API becomes available.
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 # Only one scan at a time -- let in-progress finish before next run starts
 concurrency:
   group: ticker

@@ -5,6 +5,9 @@ on:
     - cron: '0 15 1 * *'   # 1st of each month at 10 AM CT (15:00 UTC)
   workflow_dispatch:         # Run manually from GitHub Actions UI
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 permissions:
   contents: read
 
