@@ -239,7 +239,11 @@ function renderWeek(data) {
   // Scroll so today is at the top — defer until after browser layout
   setTimeout(() => {
     const todayRow = list.querySelector(`[data-date="${todayStr}"]`);
-    if (todayRow) list.scrollTop = todayRow.offsetTop;
+    if (todayRow) {
+      const listRect = list.getBoundingClientRect();
+      const rowRect  = todayRow.getBoundingClientRect();
+      list.scrollTop += rowRect.top - listRect.top;
+    }
   }, 0);
 }
 
