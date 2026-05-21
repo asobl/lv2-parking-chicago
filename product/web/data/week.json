@@ -1,23 +1,7 @@
 {
-  "updated": "2026-05-21T02:26:44.551486+00:00",
+  "updated": "2026-05-21T06:31:17.369283+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-20",
-      "dayLabel": "Wed May 20",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Milwaukee Brewers vs. Cubs",
-          "time": "6:40 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-05-20"
-        }
-      ]
-    },
     {
       "date": "2026-05-21",
       "dayLabel": "Thu May 21",
@@ -1855,6 +1839,14 @@
     {
       "date": "2026-11-15",
       "dayLabel": "Sun Nov 15",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-11-16",
+      "dayLabel": "Mon Nov 16",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
