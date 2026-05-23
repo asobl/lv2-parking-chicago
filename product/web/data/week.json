@@ -1,23 +1,7 @@
 {
-  "updated": "2026-05-23T02:23:44.522633+00:00",
+  "updated": "2026-05-23T06:13:20.803146+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-05-22",
-      "dayLabel": "Fri May 22",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Houston Astros vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-05-22"
-        }
-      ]
-    },
     {
       "date": "2026-05-23",
       "dayLabel": "Sat May 23",
@@ -1849,6 +1833,14 @@
     {
       "date": "2026-11-17",
       "dayLabel": "Tue Nov 17",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-11-18",
+      "dayLabel": "Wed Nov 18",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
