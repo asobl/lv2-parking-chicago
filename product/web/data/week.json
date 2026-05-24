@@ -1,18 +1,20 @@
 {
-  "updated": "2026-05-24T20:52:00.564328+00:00",
+  "updated": "2026-05-24T22:28:16.341467+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-05-24",
       "dayLabel": "Sun May 24",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Houston Astros vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-05-24"
         }
       ]
     },
