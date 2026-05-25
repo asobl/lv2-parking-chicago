@@ -1,15 +1,9 @@
 {
-  "date": "2026-05-24",
-  "updated": "2026-05-25T02:26:04.177900+00:00",
+  "date": "2026-05-25",
+  "updated": "2026-05-25T06:42:02.137642+00:00",
   "source": "mlb",
-  "hasEvent": true,
-  "lv2Active": true,
+  "hasEvent": false,
+  "lv2Active": false,
   "note": null,
-  "events": [
-    {
-      "name": "Houston Astros vs. Cubs",
-      "time": "1:20 PM",
-      "type": "game"
-    }
-  ]
+  "events": []
 }
