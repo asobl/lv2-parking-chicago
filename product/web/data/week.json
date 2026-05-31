@@ -1,6 +1,6 @@
 {
-  "updated": "2026-05-31T11:41:53.660961+00:00",
-  "source": "mlb",
+  "updated": "2026-05-31T12:01:11.659847+00:00",
+  "source": "espn",
   "days": [
     {
       "date": "2026-05-31",
@@ -880,8 +880,10 @@
       "events": [
         {
           "name": "St. Louis Cardinals vs. Cubs",
-          "time": "2:10 PM",
-          "type": "game"
+          "time": "2:00 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "2:10 PM"
         }
       ]
     },
