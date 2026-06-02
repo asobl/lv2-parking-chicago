@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-02T21:16:24.111715+00:00",
+  "updated": "2026-06-02T21:34:09.005740+00:00",
   "source": "mlb",
   "days": [
     {
@@ -1076,9 +1076,7 @@
         {
           "name": "Milwaukee Brewers vs. Cubs",
           "time": "6:15 PM",
-          "type": "game",
-          "changed": "time",
-          "prevTime": "6:40 PM"
+          "type": "game"
         }
       ]
     },
