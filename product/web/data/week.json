@@ -1,15 +1,7 @@
 {
-  "updated": "2026-06-03T02:25:08.816179+00:00",
+  "updated": "2026-06-03T06:44:47.410423+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-02",
-      "dayLabel": "Tue Jun 2",
-      "hasEvent": false,
-      "lv2Active": false,
-      "note": null,
-      "events": []
-    },
     {
       "date": "2026-06-03",
       "dayLabel": "Wed Jun 3",
@@ -1831,6 +1823,14 @@
     {
       "date": "2026-11-28",
       "dayLabel": "Sat Nov 28",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-11-29",
+      "dayLabel": "Sun Nov 29",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
