@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-03T02:01:52.366124+00:00",
+  "updated": "2026-06-03T02:25:08.816179+00:00",
   "source": "mlb",
   "days": [
     {
@@ -14,13 +14,15 @@
       "date": "2026-06-03",
       "dayLabel": "Wed Jun 3",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Athletics vs. Cubs",
           "time": "7:05 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-06-02"
         }
       ]
     },
