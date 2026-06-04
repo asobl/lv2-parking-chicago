@@ -1,10 +1,10 @@
 {
-  "updated": "2026-06-04T02:24:22.482985+00:00",
+  "updated": "2026-06-04T06:43:06.853440+00:00",
   "source": "mlb",
   "days": [
     {
-      "date": "2026-06-03",
-      "dayLabel": "Wed Jun 3",
+      "date": "2026-06-04",
+      "dayLabel": "Thu Jun 4",
       "hasEvent": true,
       "lv2Active": false,
       "note": null,
@@ -14,21 +14,7 @@
           "time": "7:05 PM",
           "type": "game",
           "changed": "cancelled",
-          "changedAt": "2026-06-02"
-        }
-      ]
-    },
-    {
-      "date": "2026-06-04",
-      "dayLabel": "Thu Jun 4",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Athletics vs. Cubs",
-          "time": "7:05 PM",
-          "type": "game"
+          "changedAt": "2026-06-04"
         }
       ]
     },
@@ -1831,6 +1817,14 @@
     {
       "date": "2026-11-29",
       "dayLabel": "Sun Nov 29",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-11-30",
+      "dayLabel": "Mon Nov 30",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
