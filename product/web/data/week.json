@@ -1,18 +1,20 @@
 {
-  "updated": "2026-06-05T21:06:35.382143+00:00",
+  "updated": "2026-06-05T22:34:51.601618+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-06-05",
       "dayLabel": "Fri Jun 5",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "San Francisco Giants vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-06-05"
         },
         {
           "name": "Athletics vs. Cubs",
