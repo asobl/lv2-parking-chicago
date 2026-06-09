@@ -1,23 +1,7 @@
 {
-  "updated": "2026-06-09T02:24:57.579627+00:00",
+  "updated": "2026-06-09T06:30:12.663402+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-08",
-      "dayLabel": "Mon Jun 8",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "San Francisco Giants vs. Cubs",
-          "time": "7:30 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-06-08"
-        }
-      ]
-    },
     {
       "date": "2026-06-09",
       "dayLabel": "Tue Jun 9",
@@ -1802,6 +1786,14 @@
     {
       "date": "2026-12-04",
       "dayLabel": "Fri Dec 4",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-05",
+      "dayLabel": "Sat Dec 5",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
