@@ -1,14 +1,14 @@
 {
-  "date": "2026-06-11",
-  "updated": "2026-06-12T02:24:57.712736+00:00",
+  "date": "2026-06-12",
+  "updated": "2026-06-12T06:42:51.231690+00:00",
   "source": "mlb",
   "hasEvent": true,
   "lv2Active": true,
   "note": null,
   "events": [
     {
-      "name": "Mumford & Sons - Prizefighter Tour",
-      "time": "6:30 PM",
+      "name": "R\u00dcF\u00dcS DU SOL NORTH AMERICA 2026",
+      "time": "7:30 PM",
       "type": "concert"
     }
   ]

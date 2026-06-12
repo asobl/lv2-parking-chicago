@@ -1,21 +1,7 @@
 {
-  "updated": "2026-06-12T02:24:57.712736+00:00",
+  "updated": "2026-06-12T06:42:51.231690+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-11",
-      "dayLabel": "Thu Jun 11",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Mumford & Sons - Prizefighter Tour",
-          "time": "6:30 PM",
-          "type": "concert"
-        }
-      ]
-    },
     {
       "date": "2026-06-12",
       "dayLabel": "Fri Jun 12",
@@ -1794,6 +1780,14 @@
     {
       "date": "2026-12-07",
       "dayLabel": "Mon Dec 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-08",
+      "dayLabel": "Tue Dec 8",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
