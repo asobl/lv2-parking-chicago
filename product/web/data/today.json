@@ -1,14 +1,14 @@
 {
-  "date": "2026-06-12",
-  "updated": "2026-06-13T02:25:46.429311+00:00",
+  "date": "2026-06-13",
+  "updated": "2026-06-13T06:33:22.109485+00:00",
   "source": "mlb",
   "hasEvent": true,
   "lv2Active": true,
   "note": null,
   "events": [
     {
-      "name": "R\u00dcF\u00dcS DU SOL NORTH AMERICA 2026",
-      "time": "7:30 PM",
+      "name": "OK Go (Gallagher Way)",
+      "time": "6:45 PM",
       "type": "concert"
     }
   ]

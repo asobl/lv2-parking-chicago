@@ -1,21 +1,7 @@
 {
-  "updated": "2026-06-13T02:25:46.429311+00:00",
+  "updated": "2026-06-13T06:33:22.109485+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-12",
-      "dayLabel": "Fri Jun 12",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "R\u00dcF\u00dcS DU SOL NORTH AMERICA 2026",
-          "time": "7:30 PM",
-          "type": "concert"
-        }
-      ]
-    },
     {
       "date": "2026-06-13",
       "dayLabel": "Sat Jun 13",
@@ -1788,6 +1774,14 @@
     {
       "date": "2026-12-08",
       "dayLabel": "Tue Dec 8",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-09",
+      "dayLabel": "Wed Dec 9",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
