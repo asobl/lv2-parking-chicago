@@ -1,15 +1,9 @@
 {
-  "date": "2026-06-13",
-  "updated": "2026-06-14T02:25:14.847474+00:00",
+  "date": "2026-06-14",
+  "updated": "2026-06-14T06:42:45.528913+00:00",
   "source": "mlb",
-  "hasEvent": true,
-  "lv2Active": true,
+  "hasEvent": false,
+  "lv2Active": false,
   "note": null,
-  "events": [
-    {
-      "name": "OK Go (Gallagher Way)",
-      "time": "6:45 PM",
-      "type": "concert"
-    }
-  ]
+  "events": []
 }
