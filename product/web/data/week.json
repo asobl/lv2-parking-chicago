@@ -1,26 +1,20 @@
 {
-  "updated": "2026-06-16T02:25:36.632884+00:00",
+  "updated": "2026-06-16T06:58:36.075920+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-15",
-      "dayLabel": "Mon Jun 15",
-      "hasEvent": false,
-      "lv2Active": false,
-      "note": null,
-      "events": []
-    },
     {
       "date": "2026-06-16",
       "dayLabel": "Tue Jun 16",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Colorado Rockies vs. Cubs",
           "time": "7:05 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-06-16"
         }
       ]
     },
@@ -1776,6 +1770,14 @@
     {
       "date": "2026-12-11",
       "dayLabel": "Fri Dec 11",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-12",
+      "dayLabel": "Sat Dec 12",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
