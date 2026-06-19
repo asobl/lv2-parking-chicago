@@ -1,9 +1,15 @@
 {
-  "date": "2026-06-18",
-  "updated": "2026-06-19T02:30:04.753322+00:00",
+  "date": "2026-06-19",
+  "updated": "2026-06-19T06:50:10.469384+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "Toronto Blue Jays vs. Cubs",
+      "time": "1:20 PM",
+      "type": "game"
+    }
+  ]
 }
