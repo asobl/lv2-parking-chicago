@@ -1,18 +1,20 @@
 {
-  "updated": "2026-06-20T20:56:27.463064+00:00",
+  "updated": "2026-06-20T22:34:33.084562+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-06-20",
       "dayLabel": "Sat Jun 20",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Toronto Blue Jays vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-06-20"
         }
       ]
     },
