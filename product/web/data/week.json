@@ -1,23 +1,7 @@
 {
-  "updated": "2026-06-20T02:25:13.283261+00:00",
+  "updated": "2026-06-20T06:38:49.538485+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-19",
-      "dayLabel": "Fri Jun 19",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Toronto Blue Jays vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-06-19"
-        }
-      ]
-    },
     {
       "date": "2026-06-20",
       "dayLabel": "Sat Jun 20",
@@ -1760,6 +1744,14 @@
     {
       "date": "2026-12-15",
       "dayLabel": "Tue Dec 15",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-16",
+      "dayLabel": "Wed Dec 16",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
