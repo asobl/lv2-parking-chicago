@@ -1,18 +1,20 @@
 {
-  "updated": "2026-06-21T12:16:10.513713+00:00",
+  "updated": "2026-06-21T20:42:30.328767+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-06-21",
       "dayLabel": "Sun Jun 21",
       "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
+      "lv2Active": false,
+      "note": "Game postponed -- LV2 not in effect today",
       "events": [
         {
           "name": "Toronto Blue Jays vs. Cubs",
           "time": "1:20 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-06-21"
         }
       ]
     },
@@ -531,10 +533,16 @@
     {
       "date": "2026-08-06",
       "dayLabel": "Thu Aug 6",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Toronto Blue Jays vs. Cubs",
+          "time": "1:20 PM",
+          "type": "game"
+        }
+      ]
     },
     {
       "date": "2026-08-07",

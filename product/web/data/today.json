@@ -1,15 +1,9 @@
 {
   "date": "2026-06-21",
-  "updated": "2026-06-21T12:16:10.513713+00:00",
+  "updated": "2026-06-21T20:42:30.328767+00:00",
   "source": "mlb",
-  "hasEvent": true,
-  "lv2Active": true,
-  "note": null,
-  "events": [
-    {
-      "name": "Toronto Blue Jays vs. Cubs",
-      "time": "1:20 PM",
-      "type": "game"
-    }
-  ]
+  "hasEvent": false,
+  "lv2Active": false,
+  "note": "Game postponed -- LV2 not in effect today",
+  "events": []
 }
