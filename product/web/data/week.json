@@ -1,21 +1,7 @@
 {
-  "updated": "2026-06-27T02:23:47.423947+00:00",
+  "updated": "2026-06-27T06:17:12.598330+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-06-26",
-      "dayLabel": "Fri Jun 26",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Guster (Gallagher Way)",
-          "time": "6:45 PM",
-          "type": "concert"
-        }
-      ]
-    },
     {
       "date": "2026-06-27",
       "dayLabel": "Sat Jun 27",
@@ -1746,6 +1732,14 @@
     {
       "date": "2026-12-22",
       "dayLabel": "Tue Dec 22",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-23",
+      "dayLabel": "Wed Dec 23",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
