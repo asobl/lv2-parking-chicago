@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T06:57:21.650640+00:00",
+  "updated": "2026-07-01T12:11:30.435109+00:00",
   "source": "mlb",
   "days": [
     {
@@ -282,8 +282,10 @@
       "events": [
         {
           "name": "Detroit Tigers vs. Cubs",
-          "time": "7:05 PM",
-          "type": "game"
+          "time": "7:10 PM",
+          "type": "game",
+          "changed": "time",
+          "prevTime": "7:05 PM"
         }
       ]
     },
