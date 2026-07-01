@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T12:24:14.001943+00:00",
+  "updated": "2026-07-01T20:45:14.811753+00:00",
   "source": "mlb",
   "days": [
     {
@@ -770,10 +770,16 @@
     {
       "date": "2026-09-06",
       "dayLabel": "Sun Sep 6",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "BIG 10 X SEC Volleyball Challenge",
+          "time": "6:00 PM",
+          "type": "concert"
+        }
+      ]
     },
     {
       "date": "2026-09-07",
