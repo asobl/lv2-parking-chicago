@@ -1,9 +1,15 @@
 {
   "date": "2026-07-01",
-  "updated": "2026-07-01T21:06:03.403264+00:00",
+  "updated": "2026-07-01T22:37:41.402601+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "San Diego Padres vs. Cubs",
+      "time": "1:20 PM",
+      "type": "game"
+    }
+  ]
 }
