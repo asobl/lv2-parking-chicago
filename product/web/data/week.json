@@ -1,23 +1,7 @@
 {
-  "updated": "2026-07-02T02:24:22.508175+00:00",
+  "updated": "2026-07-02T06:24:09.050155+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-01",
-      "dayLabel": "Wed Jul 1",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "San Diego Padres vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-07-01"
-        }
-      ]
-    },
     {
       "date": "2026-07-02",
       "dayLabel": "Thu Jul 2",
@@ -1740,6 +1724,14 @@
     {
       "date": "2026-12-27",
       "dayLabel": "Sun Dec 27",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-28",
+      "dayLabel": "Mon Dec 28",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
