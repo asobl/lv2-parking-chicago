@@ -1,18 +1,20 @@
 {
-  "updated": "2026-07-03T21:41:17.512729+00:00",
+  "updated": "2026-07-03T23:14:54.398337+00:00",
   "source": "mlb",
   "days": [
     {
       "date": "2026-07-03",
       "dayLabel": "Fri Jul 3",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "St. Louis Cardinals vs. Cubs",
           "time": "3:05 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-07-03"
         }
       ]
     },
