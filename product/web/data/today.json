@@ -1,9 +1,15 @@
 {
   "date": "2026-07-05",
-  "updated": "2026-07-05T21:35:48.711096+00:00",
+  "updated": "2026-07-05T23:12:58.342225+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "St. Louis Cardinals vs. Cubs",
+      "time": "1:30 PM",
+      "type": "game"
+    }
+  ]
 }
