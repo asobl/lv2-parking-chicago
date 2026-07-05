@@ -1,15 +1,7 @@
 {
-  "updated": "2026-07-04T23:29:05.352432+00:00",
+  "updated": "2026-07-05T05:05:20.794532+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-04",
-      "dayLabel": "Sat Jul 4",
-      "hasEvent": false,
-      "lv2Active": false,
-      "note": null,
-      "events": []
-    },
     {
       "date": "2026-07-05",
       "dayLabel": "Sun Jul 5",
@@ -17,13 +9,6 @@
       "lv2Active": true,
       "note": null,
       "events": [
-        {
-          "name": "St. Louis Cardinals vs. Cubs",
-          "time": "7:08 PM",
-          "type": "game",
-          "changed": "time",
-          "prevTime": "1:30 PM"
-        },
         {
           "name": "St. Louis Cardinals vs. Cubs",
           "time": "1:30 PM",
@@ -268,10 +253,16 @@
     {
       "date": "2026-07-25",
       "dayLabel": "Sat Jul 25",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "The Firefighters vs. Savannah Bananas",
+          "time": "4:00 PM",
+          "type": "concert"
+        }
+      ]
     },
     {
       "date": "2026-07-26",
@@ -1732,6 +1723,14 @@
     {
       "date": "2026-12-30",
       "dayLabel": "Wed Dec 30",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2026-12-31",
+      "dayLabel": "Thu Dec 31",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
