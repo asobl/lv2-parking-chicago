@@ -1,23 +1,7 @@
 {
-  "updated": "2026-07-05T23:33:50.696237+00:00",
+  "updated": "2026-07-06T05:20:37.278138+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-05",
-      "dayLabel": "Sun Jul 5",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "St. Louis Cardinals vs. Cubs",
-          "time": "1:30 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-07-05"
-        }
-      ]
-    },
     {
       "date": "2026-07-06",
       "dayLabel": "Mon Jul 6",
@@ -1739,6 +1723,14 @@
     {
       "date": "2026-12-31",
       "dayLabel": "Thu Dec 31",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2027-01-01",
+      "dayLabel": "Fri Jan 1",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
