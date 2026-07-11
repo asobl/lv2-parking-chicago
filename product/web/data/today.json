@@ -1,9 +1,20 @@
 {
-  "date": "2026-07-10",
-  "updated": "2026-07-11T04:41:32.516927+00:00",
+  "date": "2026-07-11",
+  "updated": "2026-07-11T07:17:39.567881+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "John Mulaney: Mister Whatever",
+      "time": "8:00 PM",
+      "type": "concert"
+    },
+    {
+      "name": "John Mulaney",
+      "time": "8:00 PM",
+      "type": "concert"
+    }
+  ]
 }
