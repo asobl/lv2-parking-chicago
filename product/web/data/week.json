@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-11T23:23:35.593834+00:00",
+  "updated": "2026-07-12T04:32:08.585989+00:00",
   "source": "mlb",
   "days": [
     {
@@ -17,7 +17,9 @@
         {
           "name": "John Mulaney",
           "time": "8:00 PM",
-          "type": "concert"
+          "type": "concert",
+          "changed": "cancelled",
+          "changedAt": "2026-07-11"
         }
       ]
     },
