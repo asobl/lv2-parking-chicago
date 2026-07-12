@@ -1,28 +1,7 @@
 {
-  "updated": "2026-07-12T04:53:10.892751+00:00",
+  "updated": "2026-07-12T07:35:08.932267+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-11",
-      "dayLabel": "Sat Jul 11",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "John Mulaney: Mister Whatever",
-          "time": "8:00 PM",
-          "type": "concert"
-        },
-        {
-          "name": "John Mulaney",
-          "time": "8:00 PM",
-          "type": "concert",
-          "changed": "cancelled",
-          "changedAt": "2026-07-11"
-        }
-      ]
-    },
     {
       "date": "2026-07-12",
       "dayLabel": "Sun Jul 12",
@@ -1733,6 +1712,14 @@
     {
       "date": "2027-01-06",
       "dayLabel": "Wed Jan 6",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2027-01-07",
+      "dayLabel": "Thu Jan 7",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,

@@ -1,14 +1,14 @@
 {
-  "date": "2026-07-11",
-  "updated": "2026-07-12T04:53:10.892751+00:00",
+  "date": "2026-07-12",
+  "updated": "2026-07-12T07:35:08.932267+00:00",
   "source": "mlb",
   "hasEvent": true,
   "lv2Active": true,
   "note": null,
   "events": [
     {
-      "name": "John Mulaney: Mister Whatever",
-      "time": "8:00 PM",
+      "name": "Tyler Childers - Snipe Hunt",
+      "time": "6:45 PM",
       "type": "concert"
     }
   ]
