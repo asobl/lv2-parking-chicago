@@ -1,21 +1,7 @@
 {
-  "updated": "2026-07-13T04:59:41.579323+00:00",
+  "updated": "2026-07-13T08:25:28.142748+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-12",
-      "dayLabel": "Sun Jul 12",
-      "hasEvent": true,
-      "lv2Active": true,
-      "note": null,
-      "events": [
-        {
-          "name": "Tyler Childers - Snipe Hunt",
-          "time": "6:45 PM",
-          "type": "concert"
-        }
-      ]
-    },
     {
       "date": "2026-07-13",
       "dayLabel": "Mon Jul 13",
@@ -1720,6 +1706,14 @@
     {
       "date": "2027-01-07",
       "dayLabel": "Thu Jan 7",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2027-01-08",
+      "dayLabel": "Fri Jan 8",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
