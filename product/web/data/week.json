@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-14T23:23:12.000817+00:00",
+  "updated": "2026-07-15T04:13:23.146997+00:00",
   "source": "mlb",
   "days": [
     {
@@ -17,7 +17,9 @@
         {
           "name": "Noah Kahan w/ Gigi Perez",
           "time": "6:30 PM",
-          "type": "concert"
+          "type": "concert",
+          "changed": "cancelled",
+          "changedAt": "2026-07-14"
         }
       ]
     },
