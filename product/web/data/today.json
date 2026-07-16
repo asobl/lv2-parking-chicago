@@ -1,6 +1,6 @@
 {
   "date": "2026-07-15",
-  "updated": "2026-07-15T23:26:33.371868+00:00",
+  "updated": "2026-07-16T04:18:34.414386+00:00",
   "source": "mlb",
   "hasEvent": true,
   "lv2Active": true,
@@ -8,11 +8,6 @@
   "events": [
     {
       "name": "Noah Kahan: The Great Divide Tour ",
-      "time": "6:30 PM",
-      "type": "concert"
-    },
-    {
-      "name": "Noah Kahan w/ Gigi Perez",
       "time": "6:30 PM",
       "type": "concert"
     }
