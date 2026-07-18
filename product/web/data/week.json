@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-17T23:15:23.360691+00:00",
+  "updated": "2026-07-18T04:08:55.700632+00:00",
   "source": "mlb",
   "days": [
     {
@@ -17,13 +17,6 @@
       "lv2Active": true,
       "note": null,
       "events": [
-        {
-          "name": "Minnesota Twins vs. Cubs",
-          "time": "7:05 PM",
-          "type": "game",
-          "changed": "time",
-          "prevTime": "1:20 PM"
-        },
         {
           "name": "Minnesota Twins vs. Cubs",
           "time": "1:20 PM",
