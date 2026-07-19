@@ -1,9 +1,15 @@
 {
   "date": "2026-07-19",
-  "updated": "2026-07-19T21:27:13.838853+00:00",
+  "updated": "2026-07-19T23:02:34.855857+00:00",
   "source": "mlb",
-  "hasEvent": false,
-  "lv2Active": false,
+  "hasEvent": true,
+  "lv2Active": true,
   "note": null,
-  "events": []
+  "events": [
+    {
+      "name": "Minnesota Twins vs. Cubs",
+      "time": "1:20 PM",
+      "type": "game"
+    }
+  ]
 }
