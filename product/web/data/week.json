@@ -1,23 +1,7 @@
 {
-  "updated": "2026-07-19T04:47:40.942688+00:00",
+  "updated": "2026-07-19T07:33:20.667152+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-18",
-      "dayLabel": "Sat Jul 18",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Minnesota Twins vs. Cubs",
-          "time": "1:20 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-07-18"
-        }
-      ]
-    },
     {
       "date": "2026-07-19",
       "dayLabel": "Sun Jul 19",
@@ -1687,6 +1671,14 @@
     {
       "date": "2027-01-13",
       "dayLabel": "Wed Jan 13",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2027-01-14",
+      "dayLabel": "Thu Jan 14",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
