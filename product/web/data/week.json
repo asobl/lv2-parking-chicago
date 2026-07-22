@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-21T23:27:03.896832+00:00",
+  "updated": "2026-07-22T04:26:52.368747+00:00",
   "source": "mlb",
   "days": [
     {
@@ -22,13 +22,15 @@
       "date": "2026-07-22",
       "dayLabel": "Wed Jul 22",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "Detroit Tigers vs. Cubs",
           "time": "7:05 PM",
-          "type": "game"
+          "type": "game",
+          "changed": "cancelled",
+          "changedAt": "2026-07-21"
         }
       ]
     },
