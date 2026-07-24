@@ -1,23 +1,7 @@
 {
-  "updated": "2026-07-24T04:47:57.978449+00:00",
+  "updated": "2026-07-24T07:39:51.620886+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-23",
-      "dayLabel": "Thu Jul 23",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "Detroit Tigers vs. Cubs",
-          "time": "7:10 PM",
-          "type": "game",
-          "changed": "cancelled",
-          "changedAt": "2026-07-22"
-        }
-      ]
-    },
     {
       "date": "2026-07-24",
       "dayLabel": "Fri Jul 24",
@@ -1663,6 +1647,14 @@
     {
       "date": "2027-01-18",
       "dayLabel": "Mon Jan 18",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2027-01-19",
+      "dayLabel": "Tue Jan 19",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
