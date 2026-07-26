@@ -1,15 +1,9 @@
 {
   "date": "2026-07-26",
-  "updated": "2026-07-26T12:36:26.429562+00:00",
+  "updated": "2026-07-26T21:08:35.030042+00:00",
   "source": "mlb",
-  "hasEvent": true,
-  "lv2Active": true,
+  "hasEvent": false,
+  "lv2Active": false,
   "note": null,
-  "events": [
-    {
-      "name": "The Firefighters vs. Savannah Bananas",
-      "time": "3:00 PM",
-      "type": "concert"
-    }
-  ]
+  "events": []
 }
