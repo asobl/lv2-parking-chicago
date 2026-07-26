@@ -1,23 +1,7 @@
 {
-  "updated": "2026-07-26T04:57:46.483247+00:00",
+  "updated": "2026-07-26T07:43:23.343397+00:00",
   "source": "mlb",
   "days": [
-    {
-      "date": "2026-07-25",
-      "dayLabel": "Sat Jul 25",
-      "hasEvent": true,
-      "lv2Active": false,
-      "note": null,
-      "events": [
-        {
-          "name": "The Firefighters vs. Savannah Bananas",
-          "time": "4:00 PM",
-          "type": "concert",
-          "changed": "cancelled",
-          "changedAt": "2026-07-25"
-        }
-      ]
-    },
     {
       "date": "2026-07-26",
       "dayLabel": "Sun Jul 26",
@@ -1651,6 +1635,14 @@
     {
       "date": "2027-01-20",
       "dayLabel": "Wed Jan 20",
+      "hasEvent": false,
+      "lv2Active": false,
+      "note": null,
+      "events": []
+    },
+    {
+      "date": "2027-01-21",
+      "dayLabel": "Thu Jan 21",
       "hasEvent": false,
       "lv2Active": false,
       "note": null,
