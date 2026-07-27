@@ -26,6 +26,24 @@ FLEXOFFERS_THRESHOLD = 500
 # Once the alert fires, don't fire again until this many more sessions gained
 REPEAT_BUFFER = 200
 
+# Once-per-day guard. This runs on every Monday cron trigger (~8/day) and
+# "Always send weekly status" fired each time. The marker (committed by
+# update.yml) makes it one status email per Monday.
+SENT_MARKER = 'data/last_traffic_sent.txt'
+
+
+def already_sent_today():
+    try:
+        with open(SENT_MARKER) as f:
+            return f.read().strip() == datetime.now().strftime('%Y-%m-%d')
+    except FileNotFoundError:
+        return False
+
+
+def mark_sent_today():
+    with open(SENT_MARKER, 'w') as f:
+        f.write(datetime.now().strftime('%Y-%m-%d') + '\n')
+
 
 def get_ga4_sessions(property_id, sa_json_str):
     """Returns (sessions_28d, users_28d) from GA4 Data API."""
@@ -331,6 +349,10 @@ def main():
         print('[traffic] GOOGLE_SA_JSON not set — skipping')
         sys.exit(0)
 
+    if already_sent_today():
+        print('[traffic] Weekly status already sent today — skipping.')
+        sys.exit(0)
+
     print('[traffic] Querying GA4...')
     try:
         sessions, users = get_ga4_sessions(GA4_PROPERTY_ID, GOOGLE_SA_JSON)
@@ -358,6 +380,7 @@ def main():
     try:
         send_weekly_status(sessions, users, top_pages, top_sources)
         print('[traffic] Weekly status email sent')
+        mark_sent_today()
     except Exception as e:
         print(f'[traffic] Could not send status email: {e}')
 

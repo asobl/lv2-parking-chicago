@@ -20,6 +20,25 @@ SPOTHERO_URL       = 'https://spothero.com/search?latitude=41.9484&longitude=-87
 SUBSCRIBER_WARN_AT = 80
 NOTIFY_EMAIL       = os.environ.get('NOTIFY_EMAIL', '')
 
+# Once-per-day guard. The workflow fires this step on every cron run (~8 on a
+# Monday), and the only gate is "is it Monday." Without this marker, each run
+# sends a fresh broadcast, so subscribers get one digest per cron trigger.
+# The marker is committed by update.yml so later runs on the same day see it.
+SENT_MARKER        = 'data/last_digest_sent.txt'
+
+
+def already_sent_today():
+    try:
+        with open(SENT_MARKER) as f:
+            return f.read().strip() == datetime.now().strftime('%Y-%m-%d')
+    except FileNotFoundError:
+        return False
+
+
+def mark_sent_today():
+    with open(SENT_MARKER, 'w') as f:
+        f.write(datetime.now().strftime('%Y-%m-%d') + '\n')
+
 
 def load_week():
     with open('data/week.json') as f:
@@ -243,6 +262,10 @@ def main():
         print('[digest] RESEND_AUDIENCE_ID not set — skipping')
         sys.exit(0)
 
+    if already_sent_today():
+        print('[digest] Digest already sent today — skipping duplicate broadcast.')
+        sys.exit(0)
+
     # Check subscriber count before sending digest
     count = get_subscriber_count()
     if count is not None:
@@ -275,6 +298,9 @@ def main():
     print('[digest] Sending...')
     result = api_post(f'/broadcasts/{bid}/send', {})
     print('[digest] Result:', result)
+    if result is not None:
+        mark_sent_today()
+        print(f'[digest] Marked {SENT_MARKER} — no more sends today.')
     print('[digest] Done.')
 
 
