@@ -91,6 +91,7 @@ def main():
         data=payload,
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
+            "User-Agent": "lv2park-monitor/1.0 (+https://lv2park.com)",
             "Content-Type": "application/json",
         },
         method="POST",

@@ -182,6 +182,7 @@ def api_post(path, payload):
         data=data,
         headers={
             'Authorization': f'Bearer {RESEND_API_KEY}',
+            'User-Agent': 'lv2park-monitor/1.0 (+https://lv2park.com)',
             'Content-Type':  'application/json',
         },
         method='POST'
@@ -199,7 +200,8 @@ def get_subscriber_count():
     """Returns subscriber count from Resend, or None on error."""
     req = urllib.request.Request(
         f'https://api.resend.com/contacts?segment_id={RESEND_AUDIENCE_ID}',
-        headers={'Authorization': f'Bearer {RESEND_API_KEY}'}
+        headers={'Authorization': f'Bearer {RESEND_API_KEY}',
+                 'User-Agent': 'lv2park-monitor/1.0 (+https://lv2park.com)'}
     )
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:

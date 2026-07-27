@@ -319,7 +319,8 @@ def send_email(subject, html):
             r = _requests.post(
                 'https://api.resend.com/emails',
                 json=payload,
-                headers={'Authorization': f'Bearer {RESEND_API_KEY}'},
+                headers={'Authorization': f'Bearer {RESEND_API_KEY}',
+                         'User-Agent': 'lv2park-monitor/1.0 (+https://lv2park.com)'},
                 timeout=15
             )
             if r.status_code in (200, 201):
@@ -334,7 +335,8 @@ def send_email(subject, html):
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(
         'https://api.resend.com/emails', data=data,
-        headers={'Authorization': f'Bearer {RESEND_API_KEY}', 'Content-Type': 'application/json'},
+        headers={'Authorization': f'Bearer {RESEND_API_KEY}', 'Content-Type': 'application/json',
+                 'User-Agent': 'lv2park-monitor/1.0 (+https://lv2park.com)'},
         method='POST'
     )
     try:
