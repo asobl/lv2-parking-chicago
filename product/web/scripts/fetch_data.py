@@ -85,6 +85,16 @@ def day_label(date_str):
     d = datetime.strptime(date_str, '%Y-%m-%d').date()
     return d.strftime('%a %b %-d')
 
+def utc_to_ct_date(utc_iso):
+    """UTC ISO string → CT calendar date 'YYYY-MM-DD'.
+    A 7:05 PM CT night game is 00:05 UTC the NEXT day -- slicing the UTC
+    string shifts it forward a day."""
+    try:
+        dt = datetime.fromisoformat(utc_iso.replace('Z', '+00:00'))
+        return dt.astimezone(CT).date().isoformat()
+    except Exception:
+        return utc_iso[:10]
+
 
 # ─── MLB STATS API ────────────────────────────────────
 def fetch_mlb():
@@ -115,8 +125,10 @@ def parse_mlb(data):
                 continue  # Away game
 
             status = game.get('status', {}).get('detailedState', 'Scheduled')
-            date_str = game.get('gameDate', '')[:10]  # '2026-04-17'
             time_utc = game.get('gameDate', '')
+            # officialDate is the local calendar date; gameDate is UTC and
+            # lands night games (7:05 PM CT = 00:05 UTC) on the next day
+            date_str = game.get('officialDate') or utc_to_ct_date(time_utc)
 
             # Build a human-readable name
             away = game.get('teams', {}).get('away', {}).get('team', {}).get('name', 'Away Team')
@@ -161,7 +173,7 @@ def parse_espn(data):
         if 'Wrigley' not in venue_name:
             continue
 
-        date_str = event.get('date', '')[:10]
+        date_str = utc_to_ct_date(event.get('date', ''))
         if date_str < today.isoformat() or date_str > cutoff.isoformat():
             continue
 
@@ -485,6 +497,40 @@ def main():
         if not d:
             continue
         by_date.setdefault(d, []).append(ev)
+
+    # ── Step 4b: Day-of carry-forward.
+    # Ticketmaster delists events when they go off-sale at showtime. Absence
+    # from the feed on the day of the event is NOT a cancellation -- the LV2
+    # window still runs 5-10 PM. Until 10 PM CT, keep any event we already
+    # published for today unless it was explicitly postponed/cancelled.
+    if now_ct.hour < 22:
+        prev_today_events = []
+        try:
+            with open(os.path.join(DATA_DIR, 'week.json')) as f:
+                for prev_day in json.load(f).get('days', []):
+                    if prev_day.get('date') == today_str:
+                        prev_today_events = prev_day.get('events', [])
+                        break
+        except Exception as e:
+            print(f'[carry-forward] could not read previous week.json: {e}', file=sys.stderr)
+
+        current_names = {e['name'] for e in by_date.get(today_str, [])}
+        for prev_ev in prev_today_events:
+            name = prev_ev.get('name', '')
+            if not name or name in current_names:
+                continue
+            if '(Gallagher Way)' in name:
+                continue  # never triggered LV2 in the first place
+            print(f'[carry-forward] keeping today\'s event absent from feed: {name}')
+            by_date.setdefault(today_str, []).append({
+                'date':    today_str,
+                'name':    name,
+                'time':    prev_ev.get('time', 'TBD'),
+                'timeUtc': '',
+                'type':    prev_ev.get('type', 'other'),
+                'status':  'Scheduled',
+                'source':  'carryforward'
+            })
 
     # ── Step 5: Build today.json
     today_events = by_date.get(today_str, [])

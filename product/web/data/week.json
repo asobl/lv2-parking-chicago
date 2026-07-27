@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-27T04:47:22.628143+00:00",
+  "updated": "2026-07-27T04:49:22.629871+00:00",
   "source": "mlb",
   "days": [
     {
@@ -95,10 +95,16 @@
     {
       "date": "2026-08-03",
       "dayLabel": "Mon Aug 3",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Los Angeles Dodgers vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
     },
     {
       "date": "2026-08-04",
@@ -121,13 +127,6 @@
       "lv2Active": true,
       "note": null,
       "events": [
-        {
-          "name": "Los Angeles Dodgers vs. Cubs",
-          "time": "7:05 PM",
-          "type": "game",
-          "changed": "time",
-          "prevTime": "1:20 PM"
-        },
         {
           "name": "Los Angeles Dodgers vs. Cubs",
           "time": "1:20 PM",
@@ -250,10 +249,16 @@
     {
       "date": "2026-08-17",
       "dayLabel": "Mon Aug 17",
-      "hasEvent": false,
-      "lv2Active": false,
+      "hasEvent": true,
+      "lv2Active": true,
       "note": null,
-      "events": []
+      "events": [
+        {
+          "name": "Chicago White Sox vs. Cubs",
+          "time": "7:05 PM",
+          "type": "game"
+        }
+      ]
     },
     {
       "date": "2026-08-18",
@@ -276,13 +281,6 @@
       "lv2Active": true,
       "note": null,
       "events": [
-        {
-          "name": "Chicago White Sox vs. Cubs",
-          "time": "7:05 PM",
-          "type": "game",
-          "changed": "time",
-          "prevTime": "1:20 PM"
-        },
         {
           "name": "Chicago White Sox vs. Cubs",
           "time": "1:20 PM",
@@ -478,13 +476,15 @@
       "date": "2026-09-06",
       "dayLabel": "Sun Sep 6",
       "hasEvent": true,
-      "lv2Active": true,
+      "lv2Active": false,
       "note": null,
       "events": [
         {
           "name": "BIG 10 X SEC Volleyball Challenge",
           "time": "6:00 PM",
-          "type": "concert"
+          "type": "concert",
+          "changed": "cancelled",
+          "changedAt": "2026-07-26"
         }
       ]
     },

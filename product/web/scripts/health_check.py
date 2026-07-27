@@ -60,8 +60,14 @@ LOGS_DIR = os.path.join(ROOT, 'logs')
 # Uses `requests` when available (handles macOS SSL certs correctly).
 # Falls back to urllib for GitHub Actions (Linux has certs installed).
 
+# Cloudflare blocks default python-urllib/python-requests User-Agents with
+# error 1010 (browser signature ban) -- both the Resend API and our Worker sit
+# behind Cloudflare. Send a descriptive UA on every request.
+UA_HEADER = {'User-Agent': 'lv2park-monitor/1.0 (+https://lv2park.com)'}
+
 def http_get(url, params=None, headers=None, timeout=12):
     """GET returning (status_code, body_str). Never raises."""
+    headers = {**UA_HEADER, **(headers or {})}
     if _USE_REQUESTS:
         try:
             r = _requests.get(url, params=params, headers=headers, timeout=timeout, allow_redirects=True)
@@ -72,7 +78,7 @@ def http_get(url, params=None, headers=None, timeout=12):
     if params:
         from urllib.parse import urlencode
         url = url + '?' + urlencode(params)
-    req = urllib.request.Request(url, headers=headers or {})
+    req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.status, resp.read().decode('utf-8', errors='replace')
@@ -86,11 +92,11 @@ def http_head(url, timeout=10):
     """HEAD request, follows redirects. Returns final status code."""
     if _USE_REQUESTS:
         try:
-            r = _requests.head(url, timeout=timeout, allow_redirects=True)
+            r = _requests.head(url, timeout=timeout, allow_redirects=True, headers=UA_HEADER)
             return r.status_code
         except Exception:
             return 0
-    req = urllib.request.Request(url, method='HEAD')
+    req = urllib.request.Request(url, method='HEAD', headers=dict(UA_HEADER))
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.status
