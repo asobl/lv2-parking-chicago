@@ -68,23 +68,46 @@ function initTurnstile() {
     setTimeout(initTurnstile, 300);
     return;
   }
-  tsWidgetId = turnstile.render(el, {
-    sitekey:   TURNSTILE_SITE_KEY,
-    size:      'invisible',
-    execution: 'execute',
-    callback: token => { if (tsResolve) { tsResolve(token); tsResolve = null; } },
-    'error-callback': () => { if (tsResolve) { tsResolve(''); tsResolve = null; } },
-    'expired-callback': () => { if (tsResolve) { tsResolve(''); tsResolve = null; } }
+  // appearance:'interaction-only' keeps the widget hidden unless Turnstile
+  // needs the user to click a checkbox (Managed mode). With an Invisible-mode
+  // widget the appearance param is ignored, so this is safe for both.
+  // Do NOT pass size:'invisible' -- newer api.js rejects it for Managed widgets.
+  try {
+    tsWidgetId = turnstile.render(el, {
+      sitekey:    TURNSTILE_SITE_KEY,
+      appearance: 'interaction-only',
+      execution:  'execute',
+      callback: token => { if (tsResolve) { tsResolve(token); tsResolve = null; } },
+      'error-callback': () => { if (tsResolve) { tsResolve(''); tsResolve = null; } },
+      'expired-callback': () => { if (tsResolve) { tsResolve(''); tsResolve = null; } }
+    });
+  } catch (e) {
+    console.warn('Turnstile render failed:', e);
+    tsWidgetId = null;
+  }
+}
+
+function executeTurnstileOnce(timeoutMs) {
+  return new Promise(resolve => {
+    const timeout = setTimeout(() => { tsResolve = null; resolve('__timeout__'); }, timeoutMs);
+    tsResolve = token => { clearTimeout(timeout); resolve(token); };
+    try { turnstile.execute(tsWidgetId); } catch { clearTimeout(timeout); tsResolve = null; resolve(''); }
   });
 }
 
-function getTurnstileToken() {
-  if (!TURNSTILE_SITE_KEY || tsWidgetId === null) return Promise.resolve('');
-  return new Promise(resolve => {
-    const timeout = setTimeout(() => { tsResolve = null; resolve('__timeout__'); }, 4000);
-    tsResolve = token => { clearTimeout(timeout); resolve(token); };
-    try { turnstile.execute(tsWidgetId); } catch { clearTimeout(timeout); resolve(''); }
-  });
+async function getTurnstileToken() {
+  if (!TURNSTILE_SITE_KEY || tsWidgetId === null) return '';
+  // 60s window: with interaction-only appearance the widget may become
+  // visible and wait for a human click. 4s was only enough for the silent path.
+  let token = await executeTurnstileOnce(60000);
+  if (token === '') {
+    // Silent verification failed (VPN, private relay, strict privacy settings).
+    // Reset and retry once -- the second run is more likely to escalate to a
+    // visible checkbox the user can actually click.
+    try { turnstile.reset(tsWidgetId); } catch {}
+    token = await executeTurnstileOnce(60000);
+  }
+  return token;
 }
 
 /* ─── ENFORCEMENT TICKER ─────────────────────────── */
@@ -794,15 +817,24 @@ function closeIcsModal() {
 
 async function icsSubscribeAndDownload() {
   const email = document.getElementById('ics-email').value.trim();
+  // Download immediately -- never make the user wait on the captcha for this.
+  icsDownloadOnly();
   if (email && email.includes('@')) {
-    // Non-blocking subscribe -- download regardless of result
+    // Best-effort background subscribe. The worker requires a captcha token,
+    // so send one -- but only attempt the silent path (short timeout, no
+    // visible challenge popping up after the modal already closed).
+    let token = '';
+    if (TURNSTILE_SITE_KEY && tsWidgetId !== null) {
+      token = await executeTurnstileOnce(6000);
+      try { turnstile.reset(tsWidgetId); } catch {}
+    }
+    if (!token || token === '__timeout__') return;  // they still got their download
     fetch(`${WORKER_URL}/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, cf_turnstile_response: token })
     }).catch(() => {});
   }
-  icsDownloadOnly();
 }
 
 function icsDownloadOnly() {
@@ -922,12 +954,16 @@ async function handleEmailSubmit(e) {
   btn.classList.add('loading');
   btn.disabled = true;
   const tsToken = await getTurnstileToken();
-  if (tsWidgetId !== null) turnstile.reset(tsWidgetId);
+  if (tsWidgetId !== null) { try { turnstile.reset(tsWidgetId); } catch {} }
 
-  if (tsToken === '__timeout__') {
-    btn.textContent = 'Subscribe';
+  // A missing token means the browser could not clear the security check.
+  // Don't fire a request we know the worker will reject -- tell the user and
+  // record it so a broken captcha never fails silently again.
+  if (!tsToken || tsToken === '__timeout__') {
+    btn.classList.remove('loading');
     btn.disabled = false;
-    alert('Security check timed out. Please try again.');
+    if (typeof gtag !== 'undefined') gtag('event', 'signup_captcha_failed', { reason: tsToken === '__timeout__' ? 'timeout' : 'no_token' });
+    alert('The security check did not complete. Please try again, or email hello@lv2park.com and we will add you.');
     return;
   }
 
@@ -976,7 +1012,12 @@ async function handleEmailSubmit(e) {
           </div>
         </div>`;
       success.style.display = 'block';
-    } else throw new Error();
+    } else {
+      let reason = 'http_' + res.status;
+      try { const j = await res.json(); if (j && j.error) reason = j.error; } catch {}
+      if (typeof gtag !== 'undefined') gtag('event', 'signup_failed', { reason });
+      throw new Error(reason);
+    }
   } catch {
     btn.classList.remove('loading');
     btn.disabled = false;
