@@ -115,7 +115,35 @@ async function loadToday() {
   try {
     const res = await fetch(DATA_TODAY + '?v=' + Date.now());
     if (!res.ok) throw new Error('fetch failed');
-    renderHero(await res.json());
+    let data = await res.json();
+
+    // Midnight-gap rescue: between 12:00 AM and the midnight cron, today.json
+    // still carries yesterday's date. week.json covers 180 days from the same
+    // generation run, so it always has an entry for the new day -- render from
+    // that instead of showing the "Status refreshing" placeholder.
+    const todayCT = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+    if (data.date && data.date !== todayCT) {
+      try {
+        const wres = await fetch(DATA_WEEK + '?v=' + Date.now());
+        if (wres.ok) {
+          const week = await wres.json();
+          const day = (week.days || []).find(d => d.date === todayCT);
+          if (day) {
+            const evs = (day.events || []).filter(e => e.changed !== 'cancelled');
+            data = {
+              date:      day.date,
+              updated:   week.updated,
+              hasEvent:  evs.length > 0,
+              lv2Active: day.lv2Active,
+              note:      day.note,
+              events:    evs
+            };
+          }
+        }
+      } catch { /* fall through to the stale guard in renderHero */ }
+    }
+
+    renderHero(data);
   } catch {
     renderHeroError();
   }
